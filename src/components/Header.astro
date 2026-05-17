@@ -166,6 +166,11 @@ const contactHref = `/${locale}/contact/`;
       window.addEventListener('scroll', update, { passive: true });
     }
   }
+  // Initial page load: call directly. The script sits below </header>,
+  // so the toggle DOM is already parsed. Mobile especially needs this —
+  // astro:page-load can fire before the listener is registered.
+  setupHeader();
+  // Subsequent view-transition navigations: rebind on the new DOM.
   document.addEventListener('astro:page-load', setupHeader);
 </script>
 
