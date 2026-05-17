@@ -52,12 +52,12 @@ export const contact = {
       mapsUrl: 'https://maps.google.com/?q=Infinity+Centre+Avenue+du+24+novembre+Gombe+Kinshasa',
     },
     training: {
-      street: 'Carrefour des Jeunes',
-      detail: 'Victoire',
+      street: '5151, avenue Kasavubu',
+      detail: 'Kalamu — Réf. carrefour de jeunes',
       city: 'Kinshasa',
       country: 'République Démocratique du Congo',
       countryCode: 'CD',
-      mapsUrl: 'https://maps.google.com/?q=Carrefour+des+Jeunes+Victoire+Kinshasa',
+      mapsUrl: 'https://maps.google.com/?q=5151+avenue+Kasavubu+Kalamu+Kinshasa',
     },
   },
 
