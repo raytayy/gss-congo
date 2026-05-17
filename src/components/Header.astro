@@ -85,47 +85,49 @@ const contactHref = `/${locale}/contact/`;
       </svg>
     </button>
   </div>
-
-  {/* Mobile panel — full-screen when toggled. Visibility driven by the
-      .is-open class set by the inline script below (not the `hidden`
-      attribute, which fought with the author display rule on mobile). */}
-  <div class="mobile-panel" id="mobile-panel" data-mobile-panel>
-    <div class="mobile-panel-bar">
-      <Logo size="md" variant="on-light" href={`/${locale}/`} />
-      <button
-        class="mobile-close"
-        type="button"
-        aria-label={locale === 'fr' ? 'Fermer le menu' : 'Close menu'}
-        data-mobile-close
-      >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-          <path d="M6 6 18 18M18 6 6 18" stroke-linecap="round" />
-        </svg>
-      </button>
-    </div>
-    <nav aria-label={locale === 'fr' ? 'Navigation mobile' : 'Mobile navigation'}>
-      <ul class="mobile-nav-list">
-        <li>
-          <a class="mobile-nav-link" href={`/${locale}/`}>
-            {locale === 'fr' ? 'Accueil' : 'Home'}
-          </a>
-        </li>
-        {navItems.map((item) => (
-          <li><a class="mobile-nav-link" href={item.href}>{item.label}</a></li>
-        ))}
-        <li><a class="mobile-nav-link" href={contactHref}>{t(ui.nav.contact, locale)}</a></li>
-      </ul>
-      <div class="mobile-footer">
-        <a class="mobile-phone" href={`tel:${contact.phones.primary.tel}`}>
-          {contact.phones.primary.display}
-        </a>
-        <a class="mobile-lang" href={altLocaleHref}>
-          {t(ui.language[altLocale], locale)}
-        </a>
-      </div>
-    </nav>
-  </div>
 </header>
+
+{/* Mobile panel — must live OUTSIDE <header>. The header carries
+    backdrop-filter, which per CSS spec creates a containing block
+    for any `position: fixed` descendant — so an inside-the-header
+    panel was being clipped to the header's box (~60–80px tall on
+    mobile) instead of covering the viewport. Sibling of <header>. */}
+<div class="mobile-panel" id="mobile-panel" data-mobile-panel>
+  <div class="mobile-panel-bar">
+    <Logo size="md" variant="on-light" href={`/${locale}/`} />
+    <button
+      class="mobile-close"
+      type="button"
+      aria-label={locale === 'fr' ? 'Fermer le menu' : 'Close menu'}
+      data-mobile-close
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <path d="M6 6 18 18M18 6 6 18" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+  <nav aria-label={locale === 'fr' ? 'Navigation mobile' : 'Mobile navigation'}>
+    <ul class="mobile-nav-list">
+      <li>
+        <a class="mobile-nav-link" href={`/${locale}/`}>
+          {locale === 'fr' ? 'Accueil' : 'Home'}
+        </a>
+      </li>
+      {navItems.map((item) => (
+        <li><a class="mobile-nav-link" href={item.href}>{item.label}</a></li>
+      ))}
+      <li><a class="mobile-nav-link" href={contactHref}>{t(ui.nav.contact, locale)}</a></li>
+    </ul>
+    <div class="mobile-footer">
+      <a class="mobile-phone" href={`tel:${contact.phones.primary.tel}`}>
+        {contact.phones.primary.display}
+      </a>
+      <a class="mobile-lang" href={altLocaleHref}>
+        {t(ui.language[altLocale], locale)}
+      </a>
+    </div>
+  </nav>
+</div>
 
 <script is:inline>
   // Event-delegation init guarded by window.__gssHeaderBound so it runs
