@@ -44,7 +44,7 @@ export function localBusinessSchema(locale: Locale, siteUrl: string) {
     '@type': ['LocalBusiness', 'SecurityService'],
     '@id': ORG_ID,
     name: 'Guarde Security Services',
-    alternateName: 'GSS',
+    alternateName: 'GSS Congo',
     legalName: 'Guarde Security Services SARL',
     url: abs(siteUrl, '/'),
     logo: abs(siteUrl, '/images/logo.png'),

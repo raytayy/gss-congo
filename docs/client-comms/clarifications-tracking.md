@@ -36,8 +36,8 @@
 
 | # | Question | Statut | Réponse | Date | Notes |
 |---|---|---|---|---|---|
-| 4 | Adresse exacte du siège | 🔴 | — | — | Conflit entre deux sources existantes — voir mail |
-| 5 | Numéros de téléphone du siège | 🔴 | — | — | Quel numéro mettre **en avant** ? |
+| 4 | Adresse exacte du siège | ✅ | Infinity Centre, 5ème étage, Avenue du 24 novembre, Gombe, Kinshasa | 2026-05-17 | Locked via GBP registration. Reflected in `src/lib/contact.ts` + `localBusinessSchema()`. |
+| 5 | Numéros de téléphone du siège | ✅ | Primary : **+243 999 880 588** (GBP-registered). 3 alts conservés pour l'instant (à arbitrer plus tard avec Bechir). | 2026-05-17 | WhatsApp aligné sur le primaire — à confirmer si ligne dédiée différente. |
 | 6 | Numéros du centre de formation | 🔴 | — | — | Vérifier si toujours actifs |
 | 7 | Adresse complète du centre de formation | 🔴 | — | — | Compléter avenue + numéro |
 
@@ -61,7 +61,7 @@
 
 | # | Question | Statut | Réponse | Date | Notes |
 |---|---|---|---|---|---|
-| 14 | Comptes Google existants (GBP / GA / GSC) | 🔴 | — | — | Demander invitation collaborateur si oui |
+| 14 | Comptes Google existants (GBP / GA / GSC) | 🟡 | **GBP créé par Bechir le 2026-05-17, vérification postale en cours (~5 jours).** GA4 et Search Console : compte admin email confirmé, propriétés à créer/lier après réception du code postal. | 2026-05-17 | NAP figé pour cohérence (cf. #4 + #5). À l'arrivée du code postal : récupérer URL Google Maps + ajouter à `sameAs` JSON-LD. |
 | 15 | Workshop mots-clés SEO — modalité | 🔴 | — | — | Visio ou échange écrit ? Date à fixer |
 
 ---

@@ -2,24 +2,28 @@
  * GSS Congo — Contact data.
  * Public business information used in Header, Footer, MobileActionBar, Contact page.
  *
- * ⚠️ PLACEHOLDER VALUES until Bechir confirms clarifications #4 to #7
- * (see docs/client-comms/clarifications-tracking.md).
- * Replace before production launch (Phase 7).
+ * Phone + address locked to match the Google Business Profile registered
+ * by Bechir on 2026-05-17 (waiting for postal verification). NAP must stay
+ * consistent across GBP + JSON-LD + visible site content — any divergence
+ * weakens the local-pack ranking signal.
+ *
+ * Remaining placeholders: training centre phone + address (CDC §13 #4-5).
  */
 
 export const contact = {
   phones: {
-    /** Primary number to display in header + bottom of CTAs. */
+    /** Primary number — locked by GBP registration 2026-05-17. */
     primary: {
-      display: '+243 99 666 6699',
-      tel: '+243996666699',
+      display: '+243 999 880 588',
+      tel: '+243999880588',
       label: 'Standard',
     },
-    /** Additional numbers shown in footer. From the legacy site — verify. */
+    /** Additional numbers from the legacy site. Status: see CDC §13 #3 — keep
+       until Bechir confirms which to retire. */
     alt: [
       { display: '+243 972 125 400', tel: '+243972125400' },
       { display: '+243 900 049 360', tel: '+243900049360' },
-      { display: '+243 999 880 588', tel: '+243999880588' },
+      { display: '+243 99 666 6699',  tel: '+243996666699' },
     ],
     /** Centre de formation. */
     training: [
@@ -29,20 +33,23 @@ export const contact = {
   },
 
   whatsapp: {
-    number: '+243996666699',
-    link: 'https://wa.me/243996666699',
+    /** Bound to the same line as `phones.primary` by default. If GSS has a
+       dedicated WhatsApp Business number on a different line, override here. */
+    number: '+243999880588',
+    link: 'https://wa.me/243999880588',
     presetMessage:
       'Bonjour GSS, je vous contacte depuis votre site internet. Je souhaite obtenir un devis pour…',
   },
 
   addresses: {
     hq: {
-      street: 'Avenue du 24 novembre',
+      /** Includes the commune (Gombe) to match GBP-registered address. */
+      street: 'Avenue du 24 novembre, Gombe',
       detail: 'Infinity Centre, 5ème étage',
       city: 'Kinshasa',
       country: 'République Démocratique du Congo',
       countryCode: 'CD',
-      mapsUrl: 'https://maps.google.com/?q=Infinity+Centre+Avenue+du+24+novembre+Kinshasa',
+      mapsUrl: 'https://maps.google.com/?q=Infinity+Centre+Avenue+du+24+novembre+Gombe+Kinshasa',
     },
     training: {
       street: 'Carrefour des Jeunes',
