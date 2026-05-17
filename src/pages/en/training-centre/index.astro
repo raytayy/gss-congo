@@ -9,33 +9,6 @@ import NeonButton from '@components/NeonButton.astro';
 import { educationalOrgSchema } from '@lib/jsonld';
 
 const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
-
-const candidateJourney = [
-  {
-    n: '01',
-    title: 'Application',
-    meta: 'Reply within 7 working days',
-    body: 'Send your CV, cover letter, availability and preferred Kinshasa zone. We acknowledge receipt immediately, and come back with next steps — interview scheduled or addition to the next cohort pool.',
-  },
-  {
-    n: '02',
-    title: 'Interview',
-    meta: 'At HQ, in Gombe',
-    body: "Meet at headquarters for an individual interview. Identity verification, motivation check, baseline physical test. Plan for 90 minutes on site. No pressure — it's also a conversation so we can get to know each other.",
-  },
-  {
-    n: '03',
-    title: 'Training',
-    meta: 'By cohort invitation',
-    body: 'Join the next cohort. Theory, practice, drills, final assessment. No automatic pass: each module is validated, some are retaken at the next session if needed.',
-  },
-  {
-    n: '04',
-    title: 'Assignment',
-    meta: 'First mission, supervised',
-    body: 'Deployment to your first site with a field mentor at your side the first week. 30-day review, contract consolidated. From that point on, the house starts investing in your long-term path.',
-  },
-];
 ---
 
 <BaseLayout
@@ -74,13 +47,13 @@ const candidateJourney = [
     </div>
   </section>
 
-  <!-- ─── PRACTICAL TRAINING (image + paragraph, side by side) ──── -->
+  <!-- ─── PRACTICAL TRAINING — block 1 (image left, text right) ── -->
   <section class="cf-practical" aria-labelledby="cf-practical-heading">
     <div class="cf-practical-frame">
       <figure class="cf-practical-media" data-reveal>
         <img
-          src="/images/formation/practical-training.jpg"
-          alt="GSS agents during a practical drill — coordination and movement in the training centre courtyard"
+          src="/images/formation/formation-1.jpg"
+          alt="GSS agents during a drill — hands-on training delivered by the centre's instructors"
           loading="lazy"
           decoding="async"
           width="900"
@@ -100,42 +73,48 @@ const candidateJourney = [
           you'll need to make quick decisions, manage conflicts and apply
           the right security procedures. This hands-on experience will
           effectively prepare you for the demands of the field and help you
-          build your confidence and your skill.
+          build your confidence and your skill. Our team of experienced
+          professional instructors will provide hands-on training to help
+          you develop your skills and feel confident in your future role as
+          a security agent.
         </p>
       </div>
     </div>
   </section>
 
-  <!-- ─── CANDIDATE SPACE (4-step journey) ────────────────────── -->
-  <section class="cf-candidate" aria-labelledby="cf-candidate-heading">
-    <div class="cf-candidate-frame">
-      <header class="cf-candidate-head">
-        <p class="cf-eyebrow cf-eyebrow-on-dark" data-reveal>Candidate space</p>
-        <h2 id="cf-candidate-heading" class="cf-section-heading cf-section-heading-on-dark" data-reveal data-reveal-delay="100">
-          Your journey, in 4 steps.
+  <!-- ─── CONVICTION — block 2 (image right, text left) ───────── -->
+  <section class="cf-practical cf-practical-flip" aria-labelledby="cf-conviction-heading">
+    <div class="cf-practical-frame">
+      <figure class="cf-practical-media" data-reveal>
+        <img
+          src="/images/formation/formation-2.jpg"
+          alt="GSS training centre — agents trained, ready for the field"
+          loading="lazy"
+          decoding="async"
+          width="900"
+          height="1000"
+        />
+        <div class="cf-practical-tone" aria-hidden="true"></div>
+      </figure>
+      <div class="cf-practical-text">
+        <p class="cf-eyebrow" data-reveal>Commitment</p>
+        <h2 id="cf-conviction-heading" class="cf-section-heading" data-reveal data-reveal-delay="120">
+          Your best shot at success.
         </h2>
-        <p class="cf-candidate-sub" data-reveal data-reveal-delay="200">
-          From submitting your application to your first assignment, here is
-          exactly what to expect. No grey areas.
+        <p class="cf-practical-body" data-reveal data-reveal-delay="240">
+          At GSS, we are convinced that our professional training programme
+          will give you the best chance of succeeding in your career as a
+          security agent. So don't wait any longer.
         </p>
-      </header>
-      <ol class="cf-candidate-steps">
-        {candidateJourney.map((step, i) => (
-          <li
-            class="cf-candidate-step"
-            data-reveal
-            data-reveal-delay={String(180 + i * 100)}
-            style={`--reveal-delay: ${180 + i * 100}ms;`}
-          >
-            <div class="cf-candidate-step-head">
-              <span class="cf-candidate-num">{step.n}</span>
-              <span class="cf-candidate-meta">{step.meta}</span>
-            </div>
-            <h3 class="cf-candidate-step-title">{step.title}</h3>
-            <p class="cf-candidate-step-body">{step.body}</p>
-          </li>
-        ))}
-      </ol>
+        <div class="cf-practical-cta" data-reveal data-reveal-delay="360">
+          <NeonButton variant="solid" size="lg" href="/en/candidate-space/">
+            Enrol
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </NeonButton>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -291,122 +270,27 @@ const candidateJourney = [
     color: var(--color-mute-on-light);
     max-width: 36em;
   }
+  .cf-practical-cta {
+    margin-top: clamp(1.5rem, 2.5vw, 2rem);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  /* Alternating layout: 2nd block puts the image on the right (desktop). */
+  @media (min-width: 1024px) {
+    .cf-practical-flip .cf-practical-frame {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    }
+    .cf-practical-flip .cf-practical-media { order: 2; }
+    .cf-practical-flip .cf-practical-text { order: 1; }
+  }
+  .cf-practical-flip { background: var(--color-cream-2); }
 
   @media (prefers-reduced-motion: reduce) {
     .cf-hero-image img,
     .cf-practical-media img { animation: none; }
-  }
-
-  /* ─── CANDIDATE SPACE ──────────────────────────────────────── */
-  .cf-candidate {
-    background: var(--color-ink);
-    color: var(--color-cream);
-    padding: clamp(5rem, 11vw, 10rem) clamp(1.5rem, 5vw, 4rem);
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-  }
-  .cf-candidate::before {
-    content: '';
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(70% 50% at 100% 0%, oklch(40% 0.06 70 / 0.20), transparent 70%),
-      radial-gradient(60% 50% at 0% 100%, oklch(40% 0.06 70 / 0.16), transparent 70%);
-    pointer-events: none;
-    z-index: -1;
-  }
-  .cf-candidate-frame { max-width: 1280px; margin-inline: auto; }
-  .cf-candidate-head {
-    max-width: 44rem;
-    margin-bottom: clamp(2.5rem, 5vw, 4rem);
-  }
-  .cf-candidate-sub {
-    margin: 1.25rem 0 0;
-    font-size: 1.0625rem;
-    line-height: 1.6;
-    color: var(--color-cream);
-    opacity: 0.78;
-    max-width: 36em;
-  }
-  .cf-candidate-steps {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0;
-    border-top: 1px solid oklch(100% 0 0 / 0.10);
-  }
-  @media (min-width: 1024px) {
-    .cf-candidate-steps { grid-template-columns: repeat(4, 1fr); }
-  }
-  @media (min-width: 640px) and (max-width: 1023px) {
-    .cf-candidate-steps { grid-template-columns: repeat(2, 1fr); }
-  }
-  .cf-candidate-step {
-    padding: clamp(1.75rem, 3vw, 2.5rem) clamp(1.25rem, 2vw, 1.75rem) clamp(1.75rem, 3vw, 2.5rem) 0;
-    border-bottom: 1px solid oklch(100% 0 0 / 0.10);
-    border-right: 1px solid oklch(100% 0 0 / 0.10);
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    transition: background-color var(--duration-normal) var(--ease-out-expo);
-  }
-  .cf-candidate-step:hover { background: oklch(100% 0 0 / 0.02); }
-  @media (min-width: 1024px) {
-    .cf-candidate-step { border-bottom: none; }
-    .cf-candidate-step:last-child { border-right: none; }
-  }
-  @media (min-width: 640px) and (max-width: 1023px) {
-    .cf-candidate-step:nth-child(2n) { border-right: none; }
-    .cf-candidate-step:nth-last-child(-n+2) { border-bottom: none; }
-  }
-  @media (max-width: 639px) {
-    .cf-candidate-step { border-right: none; }
-    .cf-candidate-step:last-child { border-bottom: none; }
-  }
-  .cf-candidate-step-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-  .cf-candidate-num {
-    font-family: var(--font-display);
-    font-variation-settings: 'opsz' 80, 'wght' 460;
-    font-size: clamp(2rem, 3.2vw, 2.75rem);
-    line-height: 1;
-    color: var(--color-bronze-warm);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: -0.02em;
-  }
-  .cf-candidate-meta {
-    font-family: var(--font-body);
-    font-size: 0.6875rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--color-bronze-warm);
-    opacity: 0.78;
-    text-align: right;
-    max-width: 11em;
-    line-height: 1.4;
-  }
-  .cf-candidate-step-title {
-    margin: 0;
-    font-family: var(--font-display);
-    font-variation-settings: 'opsz' 48, 'wght' 460;
-    font-size: clamp(1.375rem, 2vw, 1.75rem);
-    line-height: 1.1;
-    color: var(--color-cream);
-    letter-spacing: -0.015em;
-  }
-  .cf-candidate-step-body {
-    margin: 0;
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    color: var(--color-cream);
-    opacity: 0.82;
-    max-width: 22em;
   }
 
   /* ─── Hero CTA ─────────────────────────────────────────────── */
