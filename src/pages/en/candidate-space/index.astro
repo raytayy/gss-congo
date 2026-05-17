@@ -11,7 +11,7 @@ import CandidatePortal from '@components/CandidatePortal.tsx';
 
 <BaseLayout
   title="Candidate space"
-  description="Track your GSS Congo training centre application — enter your reference + email to see the current status."
+  description="Apply to the GSS Congo training centre or track the progress of your application."
   lang="en"
   altLocaleHref="/fr/espace-candidat/"
 >
@@ -19,11 +19,11 @@ import CandidatePortal from '@components/CandidatePortal.tsx';
     <div class="ec-frame">
       <p class="ec-eyebrow" data-reveal>Candidate space</p>
       <h1 id="ec-heading" class="ec-title" data-reveal data-reveal-delay="120">
-        Your application, in plain sight.
+        Apply, or track your application.
       </h1>
       <p class="ec-sub" data-reveal data-reveal-delay="240">
-        Your reference number was sent to your email after you applied.
-        Enter it with your email to check progress any time.
+        Enrol to join the next training cohort, or check the status of
+        your application with your reference number.
       </p>
 
       <div class="ec-portal" data-reveal data-reveal-delay="360">
@@ -31,8 +31,8 @@ import CandidatePortal from '@components/CandidatePortal.tsx';
       </div>
 
       <p class="ec-help">
-        Haven't applied yet?
-        <a href="/en/training-centre/">See the training centre and apply →</a>
+        Discover the centre first?
+        <a href="/en/training-centre/">See the training centre →</a>
       </p>
     </div>
   </section>
@@ -131,14 +131,35 @@ import CandidatePortal from '@components/CandidatePortal.tsx';
     line-height: 1.55;
   }
 
+  .cp-idle {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+    align-items: start;
+  }
+  @media (min-width: 900px) {
+    .cp-idle { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+  }
+  .cp-apply,
   .cp-lookup {
     background: var(--color-cream-2);
     border: 1px solid var(--color-hairline-on-light);
     border-radius: var(--radius-md);
-    padding: clamp(1.75rem, 3vw, 2.5rem);
+    padding: clamp(1.5rem, 3vw, 2.25rem);
     display: flex; flex-direction: column; gap: 1rem;
   }
-  .cp-lookup-title {
+  .cp-lookup { background: var(--color-cream); }
+  .cp-card-head { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.5rem; }
+  .cp-card-eyebrow {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 460;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    color: var(--color-bronze);
+    font-variant-numeric: tabular-nums;
+  }
+  .cp-card-title {
     margin: 0;
     font-family: var(--font-display);
     font-variation-settings: 'opsz' 80, 'wght' 460;
@@ -147,12 +168,18 @@ import CandidatePortal from '@components/CandidatePortal.tsx';
     color: var(--color-ink);
     letter-spacing: -0.015em;
   }
-  .cp-lookup-sub {
-    margin: 0 0 0.5rem;
+  .cp-card-sub {
+    margin: 0;
     font-size: 0.9375rem;
     line-height: 1.55;
     color: var(--color-mute-on-light);
   }
+  .cp-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 540px) { .cp-row { grid-template-columns: 1fr 1fr; } }
   .cp-field { display: flex; flex-direction: column; gap: 0.4rem; }
   .cp-field-label {
     font-family: var(--font-body);
@@ -174,10 +201,41 @@ import CandidatePortal from '@components/CandidatePortal.tsx';
     transition: border-color var(--duration-normal) var(--ease-out-expo),
       box-shadow var(--duration-normal) var(--ease-out-expo);
   }
-  .cp-field input:focus {
+  .cp-field input:focus,
+  .cp-field select:focus,
+  .cp-field textarea:focus {
     outline: none;
     border-color: var(--color-bronze);
     box-shadow: 0 0 0 3px oklch(70% 0.10 70 / 0.20);
+  }
+  .cp-field select,
+  .cp-field textarea {
+    width: 100%;
+    padding: 0.7rem 0.875rem;
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    color: var(--color-ink);
+    background: var(--color-cream);
+    border: 1px solid var(--color-hairline-on-light);
+    border-radius: var(--radius-sm);
+    transition: border-color var(--duration-normal) var(--ease-out-expo),
+      box-shadow var(--duration-normal) var(--ease-out-expo);
+  }
+  .cp-field textarea { resize: vertical; min-height: 6.5rem; }
+  .cp-fineprint {
+    margin: 0;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-mute-on-light);
+  }
+  .cp-submit-ghost {
+    background: transparent !important;
+    color: var(--color-ink) !important;
+    border-color: var(--color-ink) !important;
+  }
+  .cp-submit-ghost:hover {
+    background: var(--color-ink) !important;
+    color: var(--color-cream) !important;
   }
   .cp-submit {
     appearance: none; cursor: pointer;

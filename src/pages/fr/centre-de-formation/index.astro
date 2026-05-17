@@ -2,26 +2,21 @@
 /*
  * /fr/centre-de-formation/ — Training centre (FR).
  *
- * Lean structure after 2026-05-17 rewrite:
- *   Hero → Practical (image + para) → Espace candidat (4-step journey) → Inscription form.
+ * Lean info-only page. Inscription happens on /fr/espace-candidat/ —
+ * a single CTA in the hero ("Inscrire") routes there. No form on this
+ * page anymore (Web3Forms dropped, Supabase-only inscription flow).
  *
- * The 5 cursus + curriculum + 4-step cycle sections were removed (client
- * call — "irrelevant blabering"). The JSON-LD `educationalOrgSchema` still
- * lists the 5 programmes via OfferCatalog because the entity DOES offer
- * them — the page just no longer editorializes about each one.
+ * Structure:
+ *   Hero (+ "Inscrire" CTA) → Practical (image + para) → Espace candidat (4-step journey).
  *
  * Mirror in src/pages/en/training-centre/index.astro.
  */
 
 import BaseLayout from '@layouts/BaseLayout.astro';
 import NeonButton from '@components/NeonButton.astro';
-import { contact, whatsappLink } from '@lib/contact';
 import { educationalOrgSchema } from '@lib/jsonld';
 
 const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
-
-const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
-const isConfigured = accessKey.length > 10;
 
 const candidateJourney = [
   {
@@ -49,9 +44,6 @@ const candidateJourney = [
     body: "Mise en service sur votre premier site avec un référent terrain à vos côtés la première semaine. Évaluation à 30 jours, contrat consolidé. À partir de ce moment, la maison commence à investir dans votre durée.",
   },
 ];
-
-const phoneTel = `tel:${contact.phones.primary.tel}`;
-const phoneDisplay = contact.phones.primary.display;
 ---
 
 <BaseLayout
@@ -80,6 +72,14 @@ const phoneDisplay = contact.phones.primary.display;
         et les connaissances nécessaires pour devenir un agent de sécurité
         qualifié et plus que compétent.
       </p>
+      <div class="cf-hero-actions" data-reveal data-reveal-delay="360">
+        <NeonButton variant="solid" size="lg" href="/fr/espace-candidat/">
+          Inscrire
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </NeonButton>
+      </div>
     </div>
   </section>
 
@@ -149,183 +149,7 @@ const phoneDisplay = contact.phones.primary.display;
     </div>
   </section>
 
-  <!-- ─── INSCRIPTION (form) ──────────────────────────────────── -->
-  <section class="cf-cta" aria-labelledby="cf-cta-heading">
-    <div class="cf-cta-frame">
-      <div class="cf-cta-text" data-reveal>
-        <p class="cf-eyebrow">Inscription</p>
-        <h2 id="cf-cta-heading" class="cf-cta-heading">
-          Postuler, ou inscrire vos équipes.
-        </h2>
-        <p class="cf-cta-sub">
-          Candidats individuels, RH d'entreprise, postes de sécurité diplomatique.
-          Calendriers de promotions ou formation dédiée sur demande.
-        </p>
-        <p class="cf-cta-phone">
-          Ou appelez-nous,
-          <a href={phoneTel}>{phoneDisplay}</a>
-          <span aria-hidden="true">·</span>
-          <span>{contact.hours.fr}</span>
-        </p>
-        <p class="cf-cta-wa">
-          <a href={whatsappLink()} target="_blank" rel="noopener noreferrer">
-            WhatsApp,
-            <span aria-hidden="true">→</span>
-          </a>
-        </p>
-        <p class="cf-cta-existing">
-          Déjà postulé ?
-          <a href="/fr/espace-candidat/">Suivre votre dossier <span aria-hidden="true">→</span></a>
-        </p>
-      </div>
-
-      <div class="cf-form-wrap" data-reveal data-reveal-delay="180">
-        {!isConfigured && (
-          <p class="cf-notice" role="status">
-            <strong>Formulaire en attente de configuration.</strong>
-            En attendant, WhatsApp et téléphone restent ouverts.
-          </p>
-        )}
-
-        <form
-          class="cf-form"
-          data-candidate-form
-          data-locale="fr"
-          data-merci-path="/fr/merci/"
-          action="https://api.web3forms.com/submit"
-          method="POST"
-        >
-          <input type="hidden" name="access_key" value={accessKey} />
-          <input type="hidden" name="redirect" value={`${Astro.url.origin}/fr/merci/`} />
-          <input type="hidden" name="from_name" value="GSS Congo — inscription formation" />
-          <input type="hidden" name="subject" value="Nouvelle inscription formation depuis gss-congo.com" />
-          <input type="checkbox" name="botcheck" class="cf-honeypot" tabindex="-1" autocomplete="off" />
-
-          <div class="cf-row">
-            <label class="cf-field">
-              <span class="cf-label">Nom complet *</span>
-              <input type="text" name="name" required autocomplete="name" />
-            </label>
-            <label class="cf-field">
-              <span class="cf-label">Téléphone *</span>
-              <input type="tel" name="phone" required autocomplete="tel" placeholder="+243…" />
-            </label>
-          </div>
-
-          <label class="cf-field">
-            <span class="cf-label">Email *</span>
-            <input type="email" name="email" required autocomplete="email" />
-          </label>
-
-          <div class="cf-row">
-            <label class="cf-field">
-              <span class="cf-label">Entreprise (le cas échéant)</span>
-              <input type="text" name="company" autocomplete="organization" />
-            </label>
-            <label class="cf-field">
-              <span class="cf-label">Type d'inscription</span>
-              <select name="type">
-                <option value="individuel">Individuel</option>
-                <option value="equipe">Équipe (RH d'entreprise)</option>
-                <option value="diplomatique">Poste de sécurité diplomatique</option>
-              </select>
-            </label>
-          </div>
-
-          <label class="cf-field">
-            <span class="cf-label">Quelques mots sur votre contexte</span>
-            <textarea name="message" rows="4" placeholder="Disponibilité, effectif à former, contraintes…"></textarea>
-          </label>
-
-          <p class="cf-fineprint">
-            Vos informations restent confidentielles et ne sont utilisées
-            que pour le traitement de votre inscription.
-          </p>
-
-          <div class="cf-actions">
-            <NeonButton type="submit" variant="solid" size="lg">
-              Envoyer mon inscription
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-            </NeonButton>
-          </div>
-        </form>
-      </div>
-    </div>
-  </section>
 </BaseLayout>
-
-<script>
-  // Intercept the inscription form: create a Supabase candidate row,
-  // append the reference + redirect URL, then let Web3Forms continue
-  // its native POST so Bechir still receives the email notification.
-  //
-  // is:inline is NOT used here — we need the `submit` helper from
-  // @lib/candidate, which only works through Astro's bundler. So we
-  // re-attach the listener on every `astro:page-load` to survive
-  // view transitions (the form element is replaced after swap).
-  import { submit, rememberCandidate, isConfigured } from '@lib/candidate';
-
-  function setupCandidateForm(): void {
-    const form = document.querySelector<HTMLFormElement>('[data-candidate-form]');
-    if (!form || form.dataset.candidateBound === '1') return;
-    form.dataset.candidateBound = '1';
-
-    form.addEventListener('submit', async (e) => {
-      if (!isConfigured()) return; // fall through to Web3Forms only
-      e.preventDefault();
-
-      const fd = new FormData(form);
-      const email = String(fd.get('email') ?? '').trim();
-      const locale = (form.dataset.locale === 'en' ? 'en' : 'fr') as 'fr' | 'en';
-      const merciPath = form.dataset.merciPath ?? '/fr/merci/';
-      const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
-      if (submitBtn) submitBtn.disabled = true;
-
-      try {
-        const result = await submit({
-          email,
-          full_name: String(fd.get('name') ?? '').trim(),
-          phone: String(fd.get('phone') ?? '').trim(),
-          type: (String(fd.get('type') ?? 'individuel') as 'individuel' | 'equipe' | 'diplomatique'),
-          company: String(fd.get('company') ?? '').trim() || undefined,
-          message: String(fd.get('message') ?? '').trim() || undefined,
-          locale,
-        });
-
-        if ('reference' in result) {
-          // Append reference to the form so Web3Forms includes it in the email.
-          const refInput = document.createElement('input');
-          refInput.type = 'hidden';
-          refInput.name = 'reference';
-          refInput.value = result.reference;
-          form.appendChild(refInput);
-
-          rememberCandidate(result.reference, email);
-
-          // Update redirect URL with ref so the merci page can display it.
-          const redirectInput = form.querySelector<HTMLInputElement>('input[name="redirect"]');
-          if (redirectInput) {
-            const base = location.origin + merciPath;
-            redirectInput.value = `${base}?ref=${encodeURIComponent(result.reference)}`;
-          }
-        } else {
-          // Supabase insert failed — log but still submit to Web3Forms so
-          // we don't lose the lead. Bechir will see the email.
-          console.warn('[candidate] Supabase insert failed:', result.error);
-        }
-      } catch (err) {
-        console.warn('[candidate] interception error:', err);
-      } finally {
-        if (submitBtn) submitBtn.disabled = false;
-        form.submit();
-      }
-    });
-  }
-
-  document.addEventListener('astro:page-load', setupCandidateForm);
-</script>
 
 <style>
   /* ─── HERO ─────────────────────────────────────────────────── */
@@ -595,159 +419,12 @@ const phoneDisplay = contact.phones.primary.display;
     max-width: 22em;
   }
 
-  /* ─── CTA (inscription form, cream) ────────────────────────── */
-  .cf-cta {
-    background: var(--color-cream);
-    color: var(--color-ink);
-    padding: clamp(5rem, 12vw, 11rem) clamp(1.5rem, 5vw, 4rem);
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-  }
-  .cf-cta-frame {
-    position: relative;
-    max-width: 1280px;
-    margin-inline: auto;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(2rem, 4vw, 3.5rem);
-    align-items: end;
-  }
-  @media (min-width: 1024px) {
-    .cf-cta-frame { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 5rem; }
-  }
-  .cf-cta-heading {
-    margin: 1rem 0 1.25rem;
-    font-family: var(--font-display);
-    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    line-height: 1.05;
-    letter-spacing: -0.02em;
-    color: var(--color-ink);
-    max-width: 14em;
-    text-wrap: balance;
-  }
-  .cf-cta-sub {
-    margin: 0;
-    font-size: 1.0625rem;
-    line-height: 1.6;
-    color: var(--color-mute-on-light);
-    max-width: 36em;
-  }
-  .cf-cta-phone {
-    margin: 1.25rem 0 0;
-    font-size: 0.9375rem;
-    color: var(--color-mute-on-light);
+  /* ─── Hero CTA ─────────────────────────────────────────────── */
+  .cf-hero-actions {
+    margin-top: clamp(1.75rem, 3vw, 2.5rem);
     display: flex;
     flex-wrap: wrap;
+    gap: 1rem;
     align-items: center;
-    gap: 0.625rem;
   }
-  .cf-cta-phone a {
-    color: var(--color-ink);
-    font-variant-numeric: tabular-nums;
-    text-decoration: underline;
-    text-decoration-color: var(--color-bronze);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.25em;
-    transition: color var(--duration-normal) var(--ease-out-expo);
-  }
-  .cf-cta-phone a:hover { color: var(--color-bronze-deep); }
-  .cf-cta-phone span[aria-hidden] { color: var(--color-bronze); }
-  .cf-cta-wa { margin: 0.5rem 0 0; font-size: 0.875rem; }
-  .cf-cta-wa a {
-    color: var(--color-ink);
-    text-decoration: none;
-    border-bottom: 1px solid var(--color-hairline-on-light);
-    padding-bottom: 0.15rem;
-    transition: border-color var(--duration-normal) var(--ease-out-expo), color var(--duration-normal) var(--ease-out-expo);
-  }
-  .cf-cta-wa a:hover { color: var(--color-bronze-deep); border-color: var(--color-bronze); }
-
-  .cf-cta-existing {
-    margin: 1.25rem 0 0;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--color-hairline-on-light);
-    font-size: 0.875rem;
-    color: var(--color-mute-on-light);
-  }
-  .cf-cta-existing a {
-    color: var(--color-bronze-deep);
-    text-decoration: none;
-    margin-left: 0.5rem;
-    border-bottom: 1px solid var(--color-bronze);
-    padding-bottom: 0.1rem;
-    transition: color var(--duration-normal) var(--ease-out-expo),
-      gap var(--duration-normal) var(--ease-out-expo);
-  }
-  .cf-cta-existing a:hover { color: var(--color-bronze); }
-  .cf-cta-existing a span { margin-left: 0.2rem; transition: margin-left var(--duration-normal) var(--ease-out-expo); }
-  .cf-cta-existing a:hover span { margin-left: 0.4rem; }
-
-  /* ─── FORM (inscription) ───────────────────────────────────── */
-  .cf-form-wrap {
-    background: var(--color-cream-2);
-    border: 1px solid var(--color-hairline-on-light);
-    border-radius: var(--radius-md);
-    padding: clamp(1.5rem, 3vw, 2.25rem);
-  }
-  .cf-notice {
-    margin: 0 0 1.25rem;
-    padding: 0.875rem 1rem;
-    border-radius: var(--radius-sm);
-    background: var(--color-cream);
-    border: 1px solid var(--color-bronze);
-    color: var(--color-ink);
-    font-size: 0.875rem;
-    line-height: 1.5;
-  }
-  .cf-notice strong { color: var(--color-bronze-deep); font-weight: 500; }
-  .cf-form { display: flex; flex-direction: column; gap: 1rem; }
-  .cf-row { display: grid; grid-template-columns: 1fr; gap: 1rem; }
-  @media (min-width: 640px) { .cf-row { grid-template-columns: 1fr 1fr; } }
-  .cf-honeypot {
-    position: absolute; left: -9999px; width: 1px; height: 1px;
-    opacity: 0; pointer-events: none;
-  }
-  .cf-field { display: flex; flex-direction: column; gap: 0.4rem; }
-  .cf-label {
-    font-family: var(--font-body);
-    font-size: 0.6875rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--color-bronze-deep);
-    font-weight: 500;
-  }
-  .cf-field input[type="text"],
-  .cf-field input[type="email"],
-  .cf-field input[type="tel"],
-  .cf-field select,
-  .cf-field textarea {
-    width: 100%;
-    padding: 0.7rem 0.875rem;
-    font-family: var(--font-body);
-    font-size: 0.9375rem;
-    color: var(--color-ink);
-    background: var(--color-cream);
-    border: 1px solid var(--color-hairline-on-light);
-    border-radius: var(--radius-sm);
-    transition:
-      border-color var(--duration-normal) var(--ease-out-expo),
-      box-shadow var(--duration-normal) var(--ease-out-expo);
-  }
-  .cf-field input:focus,
-  .cf-field select:focus,
-  .cf-field textarea:focus {
-    outline: none;
-    border-color: var(--color-bronze);
-    box-shadow: 0 0 0 3px oklch(70% 0.10 70 / 0.20);
-  }
-  .cf-field textarea { resize: vertical; min-height: 6.5rem; }
-  .cf-fineprint {
-    margin: 0.25rem 0 0;
-    font-size: 0.8125rem;
-    line-height: 1.5;
-    color: var(--color-mute-on-light);
-  }
-  .cf-actions { margin-top: 0.5rem; }
 </style>

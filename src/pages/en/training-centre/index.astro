@@ -1,17 +1,14 @@
 ---
 /*
  * /en/training-centre/ — Training centre (EN). Mirror of /fr/centre-de-formation/.
+ * Info-only page. Inscription happens on /en/candidate-space/.
  */
 
 import BaseLayout from '@layouts/BaseLayout.astro';
 import NeonButton from '@components/NeonButton.astro';
-import { contact, whatsappLink } from '@lib/contact';
 import { educationalOrgSchema } from '@lib/jsonld';
 
 const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
-
-const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
-const isConfigured = accessKey.length > 10;
 
 const candidateJourney = [
   {
@@ -39,10 +36,6 @@ const candidateJourney = [
     body: 'Deployment to your first site with a field mentor at your side the first week. 30-day review, contract consolidated. From that point on, the house starts investing in your long-term path.',
   },
 ];
-
-const phoneTel = `tel:${contact.phones.primary.tel}`;
-const phoneDisplay = contact.phones.primary.display;
-const waMessage = 'Hello GSS, I am reaching out from your website. I would like to know more about the training centre…';
 ---
 
 <BaseLayout
@@ -70,6 +63,14 @@ const waMessage = 'Hello GSS, I am reaching out from your website. I would like 
         you the skills and knowledge needed to become a qualified, more than
         competent security agent.
       </p>
+      <div class="cf-hero-actions" data-reveal data-reveal-delay="360">
+        <NeonButton variant="solid" size="lg" href="/en/candidate-space/">
+          Enrol
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </NeonButton>
+      </div>
     </div>
   </section>
 
@@ -138,175 +139,7 @@ const waMessage = 'Hello GSS, I am reaching out from your website. I would like 
     </div>
   </section>
 
-  <!-- ─── ENROLMENT (form) ────────────────────────────────────── -->
-  <section class="cf-cta" aria-labelledby="cf-cta-heading">
-    <div class="cf-cta-frame">
-      <div class="cf-cta-text" data-reveal>
-        <p class="cf-eyebrow">Enrolment</p>
-        <h2 id="cf-cta-heading" class="cf-cta-heading">
-          Apply, or enrol your teams.
-        </h2>
-        <p class="cf-cta-sub">
-          Individual candidates, corporate HR, diplomatic security desks.
-          Cohort calendars or dedicated training on request.
-        </p>
-        <p class="cf-cta-phone">
-          Or call us,
-          <a href={phoneTel}>{phoneDisplay}</a>
-          <span aria-hidden="true">·</span>
-          <span>{contact.hours.en}</span>
-        </p>
-        <p class="cf-cta-wa">
-          <a href={whatsappLink(waMessage)} target="_blank" rel="noopener noreferrer">
-            WhatsApp,
-            <span aria-hidden="true">→</span>
-          </a>
-        </p>
-        <p class="cf-cta-existing">
-          Already applied?
-          <a href="/en/candidate-space/">Track your application <span aria-hidden="true">→</span></a>
-        </p>
-      </div>
-
-      <div class="cf-form-wrap" data-reveal data-reveal-delay="180">
-        {!isConfigured && (
-          <p class="cf-notice" role="status">
-            <strong>Form awaiting configuration.</strong>
-            In the meantime, WhatsApp and phone are open.
-          </p>
-        )}
-
-        <form
-          class="cf-form"
-          data-candidate-form
-          data-locale="en"
-          data-merci-path="/en/thank-you/"
-          action="https://api.web3forms.com/submit"
-          method="POST"
-        >
-          <input type="hidden" name="access_key" value={accessKey} />
-          <input type="hidden" name="redirect" value={`${Astro.url.origin}/en/thank-you/`} />
-          <input type="hidden" name="from_name" value="GSS Congo — training enrolment" />
-          <input type="hidden" name="subject" value="New training enrolment from gss-congo.com" />
-          <input type="checkbox" name="botcheck" class="cf-honeypot" tabindex="-1" autocomplete="off" />
-
-          <div class="cf-row">
-            <label class="cf-field">
-              <span class="cf-label">Full name *</span>
-              <input type="text" name="name" required autocomplete="name" />
-            </label>
-            <label class="cf-field">
-              <span class="cf-label">Phone *</span>
-              <input type="tel" name="phone" required autocomplete="tel" placeholder="+243…" />
-            </label>
-          </div>
-
-          <label class="cf-field">
-            <span class="cf-label">Email *</span>
-            <input type="email" name="email" required autocomplete="email" />
-          </label>
-
-          <div class="cf-row">
-            <label class="cf-field">
-              <span class="cf-label">Company (if applicable)</span>
-              <input type="text" name="company" autocomplete="organization" />
-            </label>
-            <label class="cf-field">
-              <span class="cf-label">Enrolment type</span>
-              <select name="type">
-                <option value="individual">Individual</option>
-                <option value="team">Team (corporate HR)</option>
-                <option value="diplomatic">Diplomatic security desk</option>
-              </select>
-            </label>
-          </div>
-
-          <label class="cf-field">
-            <span class="cf-label">A few words on your context</span>
-            <textarea name="message" rows="4" placeholder="Availability, headcount to train, constraints…"></textarea>
-          </label>
-
-          <p class="cf-fineprint">
-            Your information stays confidential and is only used to process
-            your enrolment.
-          </p>
-
-          <div class="cf-actions">
-            <NeonButton type="submit" variant="solid" size="lg">
-              Send my enrolment
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-            </NeonButton>
-          </div>
-        </form>
-      </div>
-    </div>
-  </section>
 </BaseLayout>
-
-<script>
-  // Mirror of the FR centre-de-formation interception. See that file for
-  // the full rationale. Same handler bound by data-candidate-form attr.
-  import { submit, rememberCandidate, isConfigured } from '@lib/candidate';
-
-  function setupCandidateForm(): void {
-    const form = document.querySelector<HTMLFormElement>('[data-candidate-form]');
-    if (!form || form.dataset.candidateBound === '1') return;
-    form.dataset.candidateBound = '1';
-
-    form.addEventListener('submit', async (e) => {
-      if (!isConfigured()) return;
-      e.preventDefault();
-
-      const fd = new FormData(form);
-      const email = String(fd.get('email') ?? '').trim();
-      const locale = (form.dataset.locale === 'en' ? 'en' : 'fr') as 'fr' | 'en';
-      const merciPath = form.dataset.merciPath ?? '/en/thank-you/';
-      const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
-      if (submitBtn) submitBtn.disabled = true;
-
-      try {
-        const result = await submit({
-          email,
-          full_name: String(fd.get('name') ?? '').trim(),
-          phone: String(fd.get('phone') ?? '').trim(),
-          type: (String(fd.get('type') ?? 'individual') === 'team' ? 'equipe'
-                 : String(fd.get('type') ?? 'individual') === 'diplomatic' ? 'diplomatique'
-                 : 'individuel') as 'individuel' | 'equipe' | 'diplomatique',
-          company: String(fd.get('company') ?? '').trim() || undefined,
-          message: String(fd.get('message') ?? '').trim() || undefined,
-          locale,
-        });
-
-        if ('reference' in result) {
-          const refInput = document.createElement('input');
-          refInput.type = 'hidden';
-          refInput.name = 'reference';
-          refInput.value = result.reference;
-          form.appendChild(refInput);
-
-          rememberCandidate(result.reference, email);
-
-          const redirectInput = form.querySelector<HTMLInputElement>('input[name="redirect"]');
-          if (redirectInput) {
-            const base = location.origin + merciPath;
-            redirectInput.value = `${base}?ref=${encodeURIComponent(result.reference)}`;
-          }
-        } else {
-          console.warn('[candidate] Supabase insert failed:', result.error);
-        }
-      } catch (err) {
-        console.warn('[candidate] interception error:', err);
-      } finally {
-        if (submitBtn) submitBtn.disabled = false;
-        form.submit();
-      }
-    });
-  }
-
-  document.addEventListener('astro:page-load', setupCandidateForm);
-</script>
 
 <style>
   /* ─── HERO ─────────────────────────────────────────────────── */
@@ -576,159 +409,12 @@ const waMessage = 'Hello GSS, I am reaching out from your website. I would like 
     max-width: 22em;
   }
 
-  /* ─── CTA (enrolment form, cream) ──────────────────────────── */
-  .cf-cta {
-    background: var(--color-cream);
-    color: var(--color-ink);
-    padding: clamp(5rem, 12vw, 11rem) clamp(1.5rem, 5vw, 4rem);
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-  }
-  .cf-cta-frame {
-    position: relative;
-    max-width: 1280px;
-    margin-inline: auto;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(2rem, 4vw, 3.5rem);
-    align-items: end;
-  }
-  @media (min-width: 1024px) {
-    .cf-cta-frame { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 5rem; }
-  }
-  .cf-cta-heading {
-    margin: 1rem 0 1.25rem;
-    font-family: var(--font-display);
-    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    line-height: 1.05;
-    letter-spacing: -0.02em;
-    color: var(--color-ink);
-    max-width: 14em;
-    text-wrap: balance;
-  }
-  .cf-cta-sub {
-    margin: 0;
-    font-size: 1.0625rem;
-    line-height: 1.6;
-    color: var(--color-mute-on-light);
-    max-width: 36em;
-  }
-  .cf-cta-phone {
-    margin: 1.25rem 0 0;
-    font-size: 0.9375rem;
-    color: var(--color-mute-on-light);
+  /* ─── Hero CTA ─────────────────────────────────────────────── */
+  .cf-hero-actions {
+    margin-top: clamp(1.75rem, 3vw, 2.5rem);
     display: flex;
     flex-wrap: wrap;
+    gap: 1rem;
     align-items: center;
-    gap: 0.625rem;
   }
-  .cf-cta-phone a {
-    color: var(--color-ink);
-    font-variant-numeric: tabular-nums;
-    text-decoration: underline;
-    text-decoration-color: var(--color-bronze);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.25em;
-    transition: color var(--duration-normal) var(--ease-out-expo);
-  }
-  .cf-cta-phone a:hover { color: var(--color-bronze-deep); }
-  .cf-cta-phone span[aria-hidden] { color: var(--color-bronze); }
-  .cf-cta-wa { margin: 0.5rem 0 0; font-size: 0.875rem; }
-  .cf-cta-wa a {
-    color: var(--color-ink);
-    text-decoration: none;
-    border-bottom: 1px solid var(--color-hairline-on-light);
-    padding-bottom: 0.15rem;
-    transition: border-color var(--duration-normal) var(--ease-out-expo), color var(--duration-normal) var(--ease-out-expo);
-  }
-  .cf-cta-wa a:hover { color: var(--color-bronze-deep); border-color: var(--color-bronze); }
-
-  .cf-cta-existing {
-    margin: 1.25rem 0 0;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--color-hairline-on-light);
-    font-size: 0.875rem;
-    color: var(--color-mute-on-light);
-  }
-  .cf-cta-existing a {
-    color: var(--color-bronze-deep);
-    text-decoration: none;
-    margin-left: 0.5rem;
-    border-bottom: 1px solid var(--color-bronze);
-    padding-bottom: 0.1rem;
-    transition: color var(--duration-normal) var(--ease-out-expo),
-      gap var(--duration-normal) var(--ease-out-expo);
-  }
-  .cf-cta-existing a:hover { color: var(--color-bronze); }
-  .cf-cta-existing a span { margin-left: 0.2rem; transition: margin-left var(--duration-normal) var(--ease-out-expo); }
-  .cf-cta-existing a:hover span { margin-left: 0.4rem; }
-
-  /* ─── FORM (enrolment) ─────────────────────────────────────── */
-  .cf-form-wrap {
-    background: var(--color-cream-2);
-    border: 1px solid var(--color-hairline-on-light);
-    border-radius: var(--radius-md);
-    padding: clamp(1.5rem, 3vw, 2.25rem);
-  }
-  .cf-notice {
-    margin: 0 0 1.25rem;
-    padding: 0.875rem 1rem;
-    border-radius: var(--radius-sm);
-    background: var(--color-cream);
-    border: 1px solid var(--color-bronze);
-    color: var(--color-ink);
-    font-size: 0.875rem;
-    line-height: 1.5;
-  }
-  .cf-notice strong { color: var(--color-bronze-deep); font-weight: 500; }
-  .cf-form { display: flex; flex-direction: column; gap: 1rem; }
-  .cf-row { display: grid; grid-template-columns: 1fr; gap: 1rem; }
-  @media (min-width: 640px) { .cf-row { grid-template-columns: 1fr 1fr; } }
-  .cf-honeypot {
-    position: absolute; left: -9999px; width: 1px; height: 1px;
-    opacity: 0; pointer-events: none;
-  }
-  .cf-field { display: flex; flex-direction: column; gap: 0.4rem; }
-  .cf-label {
-    font-family: var(--font-body);
-    font-size: 0.6875rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--color-bronze-deep);
-    font-weight: 500;
-  }
-  .cf-field input[type="text"],
-  .cf-field input[type="email"],
-  .cf-field input[type="tel"],
-  .cf-field select,
-  .cf-field textarea {
-    width: 100%;
-    padding: 0.7rem 0.875rem;
-    font-family: var(--font-body);
-    font-size: 0.9375rem;
-    color: var(--color-ink);
-    background: var(--color-cream);
-    border: 1px solid var(--color-hairline-on-light);
-    border-radius: var(--radius-sm);
-    transition:
-      border-color var(--duration-normal) var(--ease-out-expo),
-      box-shadow var(--duration-normal) var(--ease-out-expo);
-  }
-  .cf-field input:focus,
-  .cf-field select:focus,
-  .cf-field textarea:focus {
-    outline: none;
-    border-color: var(--color-bronze);
-    box-shadow: 0 0 0 3px oklch(70% 0.10 70 / 0.20);
-  }
-  .cf-field textarea { resize: vertical; min-height: 6.5rem; }
-  .cf-fineprint {
-    margin: 0.25rem 0 0;
-    font-size: 0.8125rem;
-    line-height: 1.5;
-    color: var(--color-mute-on-light);
-  }
-  .cf-actions { margin-top: 0.5rem; }
 </style>
