@@ -16,8 +16,14 @@ import Header from '@components/Header.astro';
 import Footer from '@components/Footer.astro';
 import MobileActionBar from '@components/MobileActionBar.astro';
 import MotionRoot from '@components/MotionRoot.astro';
+import CookieBanner from '@components/CookieBanner.astro';
 import { ui, t } from '@lib/i18n';
 import { localBusinessSchema } from '@lib/jsonld';
+
+// GA4 + Consent Mode v2. Loaded build-time; if PUBLIC_GA4_ID is absent
+// (test environment, no client property yet) no analytics markup ships.
+const ga4Id = import.meta.env.PUBLIC_GA4_ID ?? '';
+const hasGa4 = ga4Id.startsWith('G-');
 
 interface Props {
   title: string;
@@ -62,20 +68,32 @@ const extraSchemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
     <link rel="canonical" href={canonicalURL} />
 
+    {/* Self-reference first — Google's hreflang clustering requires that
+        every page lists its own version. Then the alternate locale, then
+        x-default which points at the FR canonical. */}
+    <link rel="alternate" hreflang={lang} href={canonicalURL} />
     {altLocaleHref && (
-      <link rel="alternate" hreflang={altLocale} href={altLocaleHref} />
+      <link rel="alternate" hreflang={altLocale} href={new URL(altLocaleHref, Astro.site).toString()} />
     )}
     <link rel="alternate" hreflang="x-default" href={canonicalURL.replace(`/${lang}/`, '/fr/')} />
 
-    {/* Open Graph */}
+    {/* Open Graph + Twitter — single source of truth for share previews. */}
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="GSS Congo" />
     <meta property="og:title" content={`${title} · GSS Congo`} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={new URL(ogImage, Astro.site).toString()} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:locale" content={lang === 'fr' ? 'fr_CD' : 'en_CD'} />
+    {lang === 'fr' && <meta property="og:locale:alternate" content="en_CD" />}
+    {lang === 'en' && <meta property="og:locale:alternate" content="fr_CD" />}
 
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${title} · GSS Congo`} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(ogImage, Astro.site).toString()} />
 
     {/* Favicon — official brand mark */}
     <link rel="icon" type="image/png" href="/images/logo.png" />
@@ -92,6 +110,51 @@ const extraSchemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     {extraSchemas.map((schema) => (
       <script type="application/ld+json" set:html={JSON.stringify(schema)} />
     ))}
+
+    {/* GA4 with Consent Mode v2 — analytics_storage defaults to DENIED.
+        The CookieBanner emits `gss:consent-change` to update the state
+        only after explicit opt-in. Loaded only if PUBLIC_GA4_ID is set. */}
+    {hasGa4 && (
+      <Fragment>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`}></script>
+        <script is:inline define:vars={{ ga4Id }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){ window.dataLayer.push(arguments); }
+          window.gtag = gtag;
+
+          gtag('consent', 'default', {
+            ad_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+            analytics_storage: 'denied',
+            wait_for_update: 500,
+          });
+
+          gtag('js', new Date());
+          gtag('config', ga4Id, { anonymize_ip: true, send_page_view: false });
+
+          // Honour any existing decision so return visitors aren't re-prompted.
+          try {
+            if (localStorage.getItem('gss-consent') === 'granted') {
+              gtag('consent', 'update', { analytics_storage: 'granted' });
+            }
+          } catch (e) {}
+
+          // React to fresh decisions from the CookieBanner.
+          document.addEventListener('gss:consent-change', function (e) {
+            gtag('consent', 'update', { analytics_storage: e.detail.analytics });
+          });
+
+          // Track Astro View Transition page-changes as page_view events.
+          document.addEventListener('astro:page-load', function () {
+            gtag('event', 'page_view', {
+              page_path: location.pathname + location.search,
+              page_title: document.title,
+            });
+          });
+        </script>
+      </Fragment>
+    )}
   </head>
 
   <body>
@@ -110,5 +173,7 @@ const extraSchemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     <Footer locale={lang} />
 
     <MobileActionBar locale={lang} />
+
+    <CookieBanner locale={lang} />
   </body>
 </html>

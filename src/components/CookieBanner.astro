@@ -1,0 +1,217 @@
+---
+/*
+ * CookieBanner — GDPR-compatible default-deny consent for GA4.
+ *
+ * Why default-deny: embassy traffic (P2 persona) often comes from EU
+ * jurisdictions where ePrivacy / GDPR require explicit opt-in before
+ * any non-essential cookie/analytics fires.
+ *
+ * State: localStorage['gss-consent'] = 'granted' | 'denied' | (absent).
+ * On click, dispatches `gss:consent-change` so BaseLayout's GA4 island
+ * can update Google Consent Mode v2 without a page reload.
+ *
+ * Style: discreet bottom-right card on desktop, bottom-full on mobile.
+ * Cream surface, ink text, bronze accent — matches the brand system.
+ */
+
+import type { Locale } from '@lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const copy = locale === 'fr'
+  ? {
+      title: 'Mesure d’audience',
+      body: 'Avec votre accord, nous activons une analyse de trafic anonyme (Google Analytics, IP anonymisée). Aucun cookie publicitaire, aucun partage de données. Vous pouvez refuser sans incidence sur l’utilisation du site.',
+      accept: 'Accepter',
+      decline: 'Refuser',
+      learnMore: 'En savoir plus',
+      learnMoreHref: '/fr/politique-cookies/',
+    }
+  : {
+      title: 'Audience measurement',
+      body: 'With your consent, we enable anonymous traffic analytics (Google Analytics, IP anonymised). No advertising cookies, no data sharing. You can decline without any effect on your use of the site.',
+      accept: 'Accept',
+      decline: 'Decline',
+      learnMore: 'Learn more',
+      learnMoreHref: '/en/cookies-policy/',
+    };
+---
+
+<aside
+  class="cookie-banner"
+  data-cookie-banner
+  hidden
+  role="region"
+  aria-labelledby="cookie-banner-title"
+>
+  <div class="cookie-banner-inner">
+    <div class="cookie-banner-text">
+      <p id="cookie-banner-title" class="cookie-banner-eyebrow">{copy.title}</p>
+      <p class="cookie-banner-body">
+        {copy.body}
+        {' '}
+        <a class="cookie-banner-link" href={copy.learnMoreHref}>{copy.learnMore}</a>
+      </p>
+    </div>
+    <div class="cookie-banner-actions">
+      <button
+        class="cookie-banner-btn cookie-banner-decline"
+        type="button"
+        data-cookie-decline
+      >
+        {copy.decline}
+      </button>
+      <button
+        class="cookie-banner-btn cookie-banner-accept"
+        type="button"
+        data-cookie-accept
+      >
+        {copy.accept}
+      </button>
+    </div>
+  </div>
+</aside>
+
+<script is:inline>
+  // is:inline + astro:page-load: rebinds after view transitions and
+  // ensures the banner state survives navigation. Decision persists
+  // in localStorage so a one-time accept covers the whole session.
+  function setupCookieBanner() {
+    const banner = document.querySelector('[data-cookie-banner]');
+    if (!banner) return;
+
+    const stored = localStorage.getItem('gss-consent');
+    if (stored === null) {
+      // Slight delay so the banner doesn't compete with the hero entrance.
+      setTimeout(() => banner.removeAttribute('hidden'), 800);
+    } else {
+      banner.setAttribute('hidden', '');
+    }
+
+    const decide = (value) => {
+      localStorage.setItem('gss-consent', value);
+      banner.setAttribute('hidden', '');
+      document.dispatchEvent(
+        new CustomEvent('gss:consent-change', { detail: { analytics: value } })
+      );
+    };
+
+    const acceptBtn = banner.querySelector('[data-cookie-accept]');
+    const declineBtn = banner.querySelector('[data-cookie-decline]');
+    if (acceptBtn) acceptBtn.addEventListener('click', () => decide('granted'));
+    if (declineBtn) declineBtn.addEventListener('click', () => decide('denied'));
+  }
+  document.addEventListener('astro:page-load', setupCookieBanner);
+</script>
+
+<style>
+  .cookie-banner {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+    z-index: 120;
+    max-width: 28rem;
+    margin-left: auto;
+    background: var(--color-cream);
+    color: var(--color-ink);
+    border: 1px solid var(--color-hairline-on-light);
+    border-radius: var(--radius-md);
+    box-shadow:
+      0 1px 2px oklch(0% 0 0 / 0.04),
+      0 18px 40px -12px oklch(20% 0.04 250 / 0.22);
+    overflow: hidden;
+    /* Subtle entrance — slide up + fade in when [hidden] removed. */
+    animation: cookie-banner-in 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes cookie-banner-in {
+    from { transform: translateY(8px); opacity: 0; }
+    to   { transform: translateY(0);   opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cookie-banner { animation: none; }
+  }
+
+  .cookie-banner-inner {
+    padding: clamp(1rem, 1.5vw, 1.5rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .cookie-banner-eyebrow {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    font-weight: 500;
+  }
+  .cookie-banner-body {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--color-mute-on-light);
+  }
+  .cookie-banner-link {
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--color-bronze);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    transition: color var(--duration-normal) var(--ease-out-expo);
+  }
+  .cookie-banner-link:hover { color: var(--color-bronze-deep); }
+
+  .cookie-banner-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+    justify-content: flex-end;
+  }
+  .cookie-banner-btn {
+    appearance: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.625rem 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    transition:
+      background-color var(--duration-normal) var(--ease-out-expo),
+      border-color var(--duration-normal) var(--ease-out-expo),
+      color var(--duration-normal) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .cookie-banner-btn:active { transform: scale(0.98); }
+  .cookie-banner-decline {
+    background: transparent;
+    color: var(--color-mute-on-light);
+    border-color: var(--color-hairline-on-light);
+  }
+  .cookie-banner-decline:hover {
+    color: var(--color-ink);
+    border-color: var(--color-ink);
+  }
+  .cookie-banner-accept {
+    background: var(--color-bronze-deep);
+    color: var(--color-cream);
+  }
+  .cookie-banner-accept:hover {
+    background: var(--color-bronze);
+  }
+
+  @media (max-width: 480px) {
+    .cookie-banner {
+      bottom: 0.75rem;
+      right: 0.75rem;
+      left: 0.75rem;
+      max-width: none;
+    }
+  }
+</style>

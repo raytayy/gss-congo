@@ -15,7 +15,9 @@ import CareersBand from '@components/CareersBand.astro';
 import Faq from '@components/Faq.astro';
 import NeonButton from '@components/NeonButton.astro';
 import { contact, whatsappLink } from '@lib/contact';
-import { faqPageSchema } from '@lib/jsonld';
+import { faqPageSchema, webSiteSchema } from '@lib/jsonld';
+
+const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
 
 const stats = [
   { value: 11, suffix: ' yrs', label: 'on the ground', sub: 'in Kinshasa, without interruption' },
@@ -30,7 +32,7 @@ const stats = [
   description="Guarde Security Services. Private security in Kinshasa since 2014. Guarding, residential and industrial security, training."
   lang="en"
   altLocaleHref="/fr/"
-  jsonLd={faqPageSchema('en')}
+  jsonLd={[webSiteSchema('en', siteUrl), faqPageSchema('en')]}
 >
   <Hero locale="en" />
 
@@ -38,7 +40,7 @@ const stats = [
 
   <StatsBand
     items={stats}
-    eyebrow="Eleven years, in numbers"
+    eyebrow="11 years, in numbers"
     heading="Rigour, measured."
     backgroundSrc="/images/banner1.jpg"
   />

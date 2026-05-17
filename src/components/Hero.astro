@@ -29,7 +29,7 @@ const copy = locale === 'fr'
       headline: 'La sécurité,',
       headlineAccent: 'exercée comme un métier.',
       sub:
-        'Onze ans de présence à Kinshasa. Trois cents agents formés. Une vigilance permanente.',
+        '11 ans de présence à Kinshasa. 300 agents formés. Une vigilance permanente.',
       ctaPrimaryLabel: 'Demander un devis',
       ctaPrimaryHref: '/fr/contact/',
       ctaSecondaryLabel: 'Nos services',
@@ -45,7 +45,7 @@ const copy = locale === 'fr'
       headline: 'Security,',
       headlineAccent: 'practised as a craft.',
       sub:
-        'Eleven years on the ground in Kinshasa. Three hundred trained agents. Permanent vigilance.',
+        '11 years on the ground in Kinshasa. 300 trained agents. Permanent vigilance.',
       ctaPrimaryLabel: 'Request a quote',
       ctaPrimaryHref: '/en/contact/',
       ctaSecondaryLabel: 'Our services',
@@ -58,23 +58,28 @@ const copy = locale === 'fr'
     };
 ---
 
-<script>
-  // Fade the hero video in once the first frame is decoded.
-  // Listens to the canplay event (frames decoded, ready to play) rather than
-  // loadeddata so we never reveal an unrendered black canvas.
-  const heroVideo = document.querySelector<HTMLVideoElement>('.hero-plate');
-  if (heroVideo) {
-    const reveal = () => heroVideo.classList.add('is-ready');
-    if (heroVideo.readyState >= 3) {
-      // HAVE_FUTURE_DATA already — bfcache or fast network.
+<script is:inline>
+  // Setup the hero video so it works on first load AND after Astro View
+  // Transitions (navigating away and back). is:inline + astro:page-load
+  // is required: a bundled module-script would not re-run on view swaps,
+  // and the post-swap <video> would never start playing.
+  function setupHeroVideo() {
+    const v = document.querySelector('.hero-plate');
+    if (!v) return;
+    v.classList.remove('is-ready');
+    // After a view transition, autoplay can be skipped — kick it manually.
+    const p = v.play && v.play();
+    if (p && p.catch) p.catch(() => {});
+    const reveal = () => v.classList.add('is-ready');
+    if (v.readyState >= 3) {
       reveal();
     } else {
-      heroVideo.addEventListener('canplay', reveal, { once: true });
-      // Hard fallback: if for any reason canplay never fires, reveal after 1.2s
-      // so the hero is never permanently invisible.
-      setTimeout(reveal, 1200);
+      v.addEventListener('canplay', reveal, { once: true });
+      // Hard fallback so the hero is never permanently blue.
+      setTimeout(reveal, 800);
     }
   }
+  document.addEventListener('astro:page-load', setupHeroVideo);
 </script>
 
 <section class="hero" aria-label={locale === 'fr' ? 'Présentation' : 'Introduction'}>

@@ -8,6 +8,9 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import NeonButton from '@components/NeonButton.astro';
 import { contact, whatsappLink } from '@lib/contact';
+import { educationalOrgSchema } from '@lib/jsonld';
+
+const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
 
 const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
 const isConfigured = accessKey.length > 10;
@@ -85,6 +88,7 @@ const waMessage = 'Hello GSS, I am reaching out from your website. I would like 
   description="The GSS training centre trains our agents and, on request, those of other houses. Legal framework, fire safety, K9, defensive driving, protocol."
   lang="en"
   altLocaleHref="/fr/centre-de-formation/"
+  jsonLd={educationalOrgSchema('en', siteUrl)}
 >
   <!-- ─── HERO ────────────────────────────────────────────────── -->
   <section class="cf-hero" aria-labelledby="cf-heading">
@@ -122,7 +126,7 @@ const waMessage = 'Hello GSS, I am reaching out from your website. I would like 
       <div class="cf-programmes-head">
         <p class="cf-eyebrow" data-reveal>Programmes</p>
         <h2 id="cf-programmes-heading" class="cf-section-heading" data-reveal data-reveal-delay="100">
-          Five tracks, one standard.
+          5 tracks, one standard.
         </h2>
         <p class="cf-programmes-sub" data-reveal data-reveal-delay="200">
           Every track combines a common core, a craft module, and a final
@@ -179,7 +183,7 @@ const waMessage = 'Hello GSS, I am reaching out from your website. I would like 
       <div class="cf-cycle-head">
         <p class="cf-eyebrow cf-eyebrow-on-dark" data-reveal>Training cycle</p>
         <h2 id="cf-cycle-heading" class="cf-section-heading cf-section-heading-on-dark" data-reveal data-reveal-delay="100">
-          Four steps, no shortcuts.
+          4 steps, no shortcuts.
         </h2>
         <p class="cf-cycle-sub" data-reveal data-reveal-delay="200">
           From the first interview to assignment, the path is legible and

@@ -16,8 +16,8 @@ export const faqItems: FaqItem[] = [
       en: 'What is your response time?',
     },
     a: {
-      fr: 'Moins de vingt minutes en moyenne sur Kinshasa, inscrit au contrat. Le délai est mesuré, audité, et figure au reporting hebdomadaire, pas seulement dans une plaquette.',
-      en: 'Under twenty minutes on average in Kinshasa, written into the contract. The delay is measured, audited, and appears in our weekly reporting, not only in a brochure.',
+      fr: 'Moins de 20 minutes en moyenne sur Kinshasa, inscrit au contrat. Le délai est mesuré, audité, et figure au reporting hebdomadaire, pas seulement dans une plaquette.',
+      en: 'Under 20 minutes on average in Kinshasa, written into the contract. The delay is measured, audited, and appears in our weekly reporting, not only in a brochure.',
     },
   },
   {

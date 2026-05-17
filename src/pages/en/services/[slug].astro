@@ -71,7 +71,7 @@ const jsonLd = [
 
 <BaseLayout
   title={service.name.en}
-  description={service.blurb.en}
+  description={service.metaDescription?.en ?? service.blurb.en}
   lang="en"
   altLocaleHref={altLocaleHref}
   ogImage={service.image}
@@ -130,7 +130,7 @@ const jsonLd = [
       <div class="svc-method-head">
         <p class="svc-eyebrow svc-eyebrow-on-dark" data-reveal>Method</p>
         <h2 id="svc-method-heading" class="svc-section-heading svc-method-heading" data-reveal data-reveal-delay="100">
-          Four steps, on every site.
+          4 steps, on every site.
         </h2>
         <p class="svc-method-sub" data-reveal data-reveal-delay="200">
           No posture is copy-pasted. The same protocol is applied to every

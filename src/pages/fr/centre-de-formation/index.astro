@@ -9,6 +9,9 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import NeonButton from '@components/NeonButton.astro';
 import { contact, whatsappLink } from '@lib/contact';
+import { educationalOrgSchema } from '@lib/jsonld';
+
+const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
 
 const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
 const isConfigured = accessKey.length > 10;
@@ -85,6 +88,7 @@ const trainingAddress = contact.addresses.training;
   description="Le centre de formation GSS forme nos agents et, sur demande, ceux d’autres maisons. Cadre légal, sécurité incendie, cynologie, conduite défensive, protocole."
   lang="fr"
   altLocaleHref="/en/training-centre/"
+  jsonLd={educationalOrgSchema('fr', siteUrl)}
 >
   <!-- ─── HERO ────────────────────────────────────────────────── -->
   <section class="cf-hero" aria-labelledby="cf-heading">
@@ -123,7 +127,7 @@ const trainingAddress = contact.addresses.training;
       <div class="cf-programmes-head">
         <p class="cf-eyebrow" data-reveal>Programmes</p>
         <h2 id="cf-programmes-heading" class="cf-section-heading" data-reveal data-reveal-delay="100">
-          Cinq cursus, un même standard.
+          5 cursus, un même standard.
         </h2>
         <p class="cf-programmes-sub" data-reveal data-reveal-delay="200">
           Chaque cursus comporte un tronc commun, un volet métier et une
@@ -181,7 +185,7 @@ const trainingAddress = contact.addresses.training;
       <div class="cf-cycle-head">
         <p class="cf-eyebrow cf-eyebrow-on-dark" data-reveal>Cycle de formation</p>
         <h2 id="cf-cycle-heading" class="cf-section-heading cf-section-heading-on-dark" data-reveal data-reveal-delay="100">
-          Quatre étapes, sans raccourci.
+          4 étapes, sans raccourci.
         </h2>
         <p class="cf-cycle-sub" data-reveal data-reveal-delay="200">
           Du premier entretien à l’affectation, le cheminement est lisible et

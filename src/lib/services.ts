@@ -20,8 +20,10 @@ export interface Service {
   slug: LocalisedString;
   /** Display name. Short — fits in 1-2 words on a tile. */
   name: LocalisedString;
-  /** One-line description for tile + meta description. ≤ 90 chars. */
+  /** One-line description for tiles. ≤ 90 chars. */
   blurb: LocalisedString;
+  /** SEO meta description (130-160 chars). Falls back to blurb if absent. */
+  metaDescription?: LocalisedString;
   /** Long-form description for the detail page hero. */
   intro?: LocalisedString;
   /** What this service includes (3-6 bullets). */
@@ -45,6 +47,10 @@ export const services: Service[] = [
     blurb: {
       fr: 'Présence statique et mobile, équipes en intervention sous 20 minutes.',
       en: 'Static and mobile presence, response teams within 20 minutes.',
+    },
+    metaDescription: {
+      fr: "Gardiennage statique et mobile à Kinshasa. Équipes d'intervention sous 20 minutes, 24h/24, sur sites industriels, tertiaires et résidentiels.",
+      en: 'Static and mobile guarding in Kinshasa. Response teams within 20 minutes, 24/7, across industrial, commercial and residential sites.',
     },
     intro: {
       fr: 'GSS analyse et étudie les risques et menaces de votre environnement, puis engage les moyens humains et techniques nécessaires pour un gardiennage efficace, sur mesure et selon vos besoins. Nous mettons en œuvre des moyens dédiés à la sécurisation de vos locaux pour prévenir tout risque d’intrusion, de dégradation et de vol.',
@@ -82,6 +88,10 @@ export const services: Service[] = [
       fr: 'Discrétion et constance pour résidences privées et VIP.',
       en: 'Discretion and consistency for private residences and VIPs.',
     },
+    metaDescription: {
+      fr: "Protection de résidences privées et VIP à Kinshasa. Gardiens dédiés, contrôle d'accès, levée de doute, discrétion et constance dans la durée.",
+      en: 'Protection of private and VIP residences in Kinshasa. Dedicated guards, access control, doubt verification, discretion and long-term consistency.',
+    },
     intro: {
       fr: 'Protéger un foyer ne se fait pas avec les mêmes gestes que protéger une usine. Profil bas, présence rassurante, agents formés à la confidentialité.',
       en: 'Protecting a home does not require the same posture as protecting a factory. Low profile, reassuring presence, agents trained in discretion.',
@@ -117,6 +127,10 @@ export const services: Service[] = [
     blurb: {
       fr: 'Sites industriels, chantiers, entrepôts. Posture proportionnée au risque.',
       en: 'Industrial sites, construction, warehouses. Posture sized to risk.',
+    },
+    metaDescription: {
+      fr: "Sécurité industrielle pour sites, entrepôts et chantiers BTP à Kinshasa. Gardiennage, contrôle d'accès véhicules, supervision périmétrique 24/7.",
+      en: 'Industrial security for sites, warehouses and construction in Kinshasa. Guarding, vehicle access control, 24/7 perimeter supervision.',
     },
     intro: {
       fr: 'Chaque site industriel a sa propre carte des risques. Nous l\'établissons avec vous, puis nous déployons un dispositif calibré : ni surdimensionné, ni insuffisant.',
@@ -154,6 +168,10 @@ export const services: Service[] = [
       fr: 'Costume-cravate, profil bas, présence sans intimidation.',
       en: 'Suited, low-profile, presence without intimidation.',
     },
+    metaDescription: {
+      fr: 'Sécurité haut de gamme à Kinshasa pour VIP, ambassades et institutions. Agents en costume-cravate, profil bas, présence sans intimidation.',
+      en: 'Premium security in Kinshasa for VIPs, embassies and institutions. Suited agents, low profile, presence without intimidation.',
+    },
     intro: {
       fr: 'Pour les contextes où l\'uniforme n\'est pas adapté : événements privés, accueils diplomatiques, déplacements sensibles. Agents en costume, formation au protocole, discrétion absolue.',
       en: 'For contexts where the uniform is wrong: private events, diplomatic receptions, sensitive movements. Suited agents, protocol training, absolute discretion.',
@@ -187,6 +205,10 @@ export const services: Service[] = [
     blurb: {
       fr: 'Trajets, accueils protocolaires, déplacements sensibles.',
       en: 'Transfers, protocol receptions, sensitive movements.',
+    },
+    metaDescription: {
+      fr: 'Escorte sécurisée et facilitation à Kinshasa. Trajets, accueils protocolaires, déplacements sensibles pour dirigeants, ambassades et ONG.',
+      en: 'Secure escort and facilitation in Kinshasa. Transfers, protocol receptions, sensitive movements for executives, embassies and NGOs.',
     },
     intro: {
       fr: 'Le bon trajet n\'est pas toujours le plus court. Étude d\'itinéraire, véhicule blindé ou banalisé selon le contexte, agents formés à la conduite défensive.',
@@ -222,6 +244,10 @@ export const services: Service[] = [
       fr: 'Gestion d\'accès, surveillance et fluidité des parkings privés.',
       en: 'Access control, surveillance and flow for private car parks.',
     },
+    metaDescription: {
+      fr: "Gestion d'accès, surveillance et fluidité des parkings privés à Kinshasa. Agents formés au contrôle des entrées-sorties et à la levée d'incident.",
+      en: 'Access control, surveillance and flow for private car parks in Kinshasa. Agents trained in entry/exit control and incident response.',
+    },
     intro: {
       fr: 'Un parking est le premier et le dernier point de contact avec votre site. Il doit être sûr, rapide, et impeccable. Nous combinons agents et systèmes.',
       en: 'A car park is the first and last contact point with your site. It must be safe, fast, and impeccable. We combine agents and systems.',
@@ -255,6 +281,10 @@ export const services: Service[] = [
     blurb: {
       fr: 'Traitement professionnel des locaux, conformité hygiène.',
       en: 'Professional facility treatment, hygiene compliance.',
+    },
+    metaDescription: {
+      fr: 'Désinsectisation et fumigation professionnelles à Kinshasa pour bureaux, entrepôts et résidences. Conformité hygiène, intervention planifiée.',
+      en: 'Professional pest control and fumigation in Kinshasa for offices, warehouses and residences. Hygiene compliance, scheduled intervention.',
     },
     intro: {
       fr: 'L\'hygiène est une dimension de la sécurité. Traitement professionnel des locaux selon les protocoles internationaux, sans interruption d\'activité.',
@@ -290,6 +320,10 @@ export const services: Service[] = [
       fr: 'Supervision continue, archivage sécurisé, levée de doute 24/7.',
       en: 'Continuous supervision, secure archiving, 24/7 verification.',
     },
+    metaDescription: {
+      fr: 'Supervision vidéo 24/7 à Kinshasa. Archivage sécurisé, levée de doute en temps réel, alerte intervention. Adapté entreprises et résidences.',
+      en: '24/7 video supervision in Kinshasa. Secure archiving, real-time doubt verification, response dispatch. Adapted for businesses and residences.',
+    },
     intro: {
       fr: 'Les caméras ne suffisent pas. Ce qu\'il faut, c\'est une équipe qui les regarde — et qui sait quoi faire quand quelque chose change. Notre centre de supervision tourne 24h/24.',
       en: 'Cameras alone are not enough. What you need is a team watching them — and knowing what to do when something changes. Our supervision centre runs 24/7.',
@@ -323,6 +357,10 @@ export const services: Service[] = [
     blurb: {
       fr: 'Étude, déploiement et maintenance de systèmes caméra IP.',
       en: 'Survey, deployment and maintenance of IP camera systems.',
+    },
+    metaDescription: {
+      fr: 'Étude, installation et maintenance de systèmes de caméras IP à Kinshasa. Solutions pour entreprises, résidences et sites sensibles, garantie incluse.',
+      en: 'Survey, installation and maintenance of IP camera systems in Kinshasa. Solutions for businesses, residences and sensitive sites, warranty included.',
     },
     intro: {
       fr: 'Concevoir un système caméra commence par marcher le site. Choix d\'angles, gestion de la lumière, câblage discret. Puis matériel professionnel, mise en service, formation des opérateurs.',

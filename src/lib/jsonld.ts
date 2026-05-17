@@ -177,6 +177,122 @@ export function faqPageSchema(locale: Locale) {
   };
 }
 
+// ─── WEBSITE ───────────────────────────────────────────────────
+
+/**
+ * Emit a Schema.org WebSite for the homepage. No `potentialAction`
+ * because the site has no internal search feature — declaring one
+ * would lie about a capability that doesn't exist.
+ */
+export function webSiteSchema(locale: Locale, siteUrl: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': abs(siteUrl, '/#website'),
+    url: abs(siteUrl, '/'),
+    name: 'GSS Congo',
+    alternateName: 'Guarde Security Services',
+    publisher: { '@id': ORG_ID },
+    inLanguage: bcp47(locale),
+    description:
+      locale === 'fr'
+        ? 'Site institutionnel de Guarde Security Services à Kinshasa — sécurité privée, gardiennage, formation.'
+        : 'Institutional site of Guarde Security Services in Kinshasa — private security, guarding, training.',
+  };
+}
+
+// ─── EDUCATIONAL ORGANIZATION (Centre de formation) ────────────
+
+/**
+ * Emit an EducationalOrganization for /centre-de-formation/ that
+ * lists the 5 in-house programmes via an OfferCatalog of Course
+ * entries. No `hasCourseInstance` because we don't yet have firm
+ * upcoming session dates — adding fake dates would invalidate Rich
+ * Results and lie about the schedule. Add real instances when client
+ * confirms cohort calendar.
+ *
+ * Address mirrors `contact.addresses.training` (Carrefour des Jeunes,
+ * Victoire, Kinshasa).
+ */
+export function educationalOrgSchema(locale: Locale, siteUrl: string) {
+  const trainingPath = locale === 'fr' ? '/fr/centre-de-formation/' : '/en/training-centre/';
+
+  const programmes = [
+    {
+      name: { fr: 'Agent de prévention et de sécurité', en: 'Prevention and security agent' },
+      description: {
+        fr: 'Tronc commun. Cadre légal, gestion d’accès, posture, communication radio, gestion de conflit.',
+        en: 'Common core. Legal framework, access control, posture, radio communication, conflict management.',
+      },
+    },
+    {
+      name: { fr: 'Sécurité incendie & premiers secours', en: 'Fire safety & first aid' },
+      description: {
+        fr: 'Modules type SSIAP : prévention incendie, évacuation, manipulation des extincteurs, gestes qui sauvent.',
+        en: 'SSIAP-style modules: fire prevention, evacuation, extinguisher handling, life-saving gestures.',
+      },
+    },
+    {
+      name: { fr: 'Cynophile & maître-chien', en: 'Canine handler & K9' },
+      description: {
+        fr: 'Travail en binôme avec chien d’intervention : dressage, commandement, lecture comportementale, dissuasion encadrée.',
+        en: 'Paired work with a response dog: training, commands, behavioural reading, supervised deterrence.',
+      },
+    },
+    {
+      name: { fr: 'Conduite défensive & escorte', en: 'Defensive driving & escort' },
+      description: {
+        fr: 'Étude d’itinéraire, anticipation, conduite sous pression, coordination en convoi, posture en cas d’incident.',
+        en: 'Route study, anticipation, driving under pressure, convoy coordination, posture in incidents.',
+      },
+    },
+    {
+      name: { fr: 'Protocole & sécurité d’élite', en: 'Protocol & elite security' },
+      description: {
+        fr: 'Tenue civile, étiquette diplomatique, oreillette discrète, lecture de salle, déplacements VIP.',
+        en: 'Civilian dress, diplomatic etiquette, discreet earpiece, room reading, VIP movements.',
+      },
+    },
+  ];
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'EducationalOrganization',
+    '@id': abs(siteUrl, '/#training-centre'),
+    name: locale === 'fr' ? 'Centre de formation GSS Congo' : 'GSS Congo Training Centre',
+    url: abs(siteUrl, trainingPath),
+    parentOrganization: { '@id': ORG_ID },
+    description:
+      locale === 'fr'
+        ? "École interne de Guarde Security Services à Kinshasa. Cinq cursus, un même standard : agent de prévention/sécurité, sécurité incendie et premiers secours, cynologie, conduite défensive, protocole VIP."
+        : 'In-house school of Guarde Security Services in Kinshasa. Five programmes, one standard: prevention/security agent, fire safety and first aid, canine, defensive driving, VIP protocol.',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: contact.addresses.training.street,
+      addressLocality: contact.addresses.training.city,
+      addressRegion: 'Kinshasa',
+      addressCountry: 'CD',
+    },
+    telephone: contact.phones.training[0]?.display,
+    areaServed: { '@type': 'Country', name: 'République Démocratique du Congo' },
+    inLanguage: bcp47(locale),
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: locale === 'fr' ? 'Cursus de formation' : 'Training programmes',
+      itemListElement: programmes.map((p) => ({
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Course',
+          name: p.name[locale],
+          description: p.description[locale],
+          provider: { '@id': abs(siteUrl, '/#training-centre') },
+          inLanguage: bcp47(locale),
+        },
+      })),
+    },
+  };
+}
+
 // ─── BREADCRUMBS ───────────────────────────────────────────────
 
 export interface BreadcrumbItem {

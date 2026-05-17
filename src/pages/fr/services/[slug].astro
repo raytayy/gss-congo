@@ -73,7 +73,7 @@ const jsonLd = [
 
 <BaseLayout
   title={service.name.fr}
-  description={service.blurb.fr}
+  description={service.metaDescription?.fr ?? service.blurb.fr}
   lang="fr"
   altLocaleHref={altLocaleHref}
   ogImage={service.image}
@@ -132,7 +132,7 @@ const jsonLd = [
       <div class="svc-method-head">
         <p class="svc-eyebrow svc-eyebrow-on-dark" data-reveal>Méthode</p>
         <h2 id="svc-method-heading" class="svc-section-heading svc-method-heading" data-reveal data-reveal-delay="100">
-          Quatre étapes, sur chaque site.
+          4 étapes, sur chaque site.
         </h2>
         <p class="svc-method-sub" data-reveal data-reveal-delay="200">
           Aucun dispositif n’est copié-collé. Le même protocole est appliqué à

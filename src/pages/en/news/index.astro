@@ -1,94 +1,361 @@
 ---
 /*
- * /en/news/ — News hub (EN). Mirror of /fr/actualites/index.astro.
+ * /en/news/ — Live social media feed (EN). Mirror of /fr/actualites/.
+ *
+ * Article slug routes (/en/news/[slug]/) remain reachable by direct URL —
+ * no longer surfaced from this hub. Build-time IG + FB fetch via
+ * lib/social-feed.ts; graceful empty array when env vars are absent.
  */
 
 import BaseLayout from '@layouts/BaseLayout.astro';
-import { articles, getArticleUrl, newsLabels } from '@lib/news';
+import NeonButton from '@components/NeonButton.astro';
+import SocialFeedLive from '@components/SocialFeedLive.tsx';
+import { fetchInstagramPosts, fetchFacebookPosts } from '@lib/social-feed';
+import { contact } from '@lib/contact';
+
+const [igPosts, fbPosts] = await Promise.all([
+  fetchInstagramPosts(6),
+  fetchFacebookPosts(4),
+]);
+const posts = [...igPosts, ...fbPosts]
+  .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+  .slice(0, 8);
+
+const igUrl = contact.social.instagram;
+const fbUrl = contact.social.facebook;
 ---
 
 <BaseLayout
   title="News"
-  description="Editorial notes from GSS Congo — private security in Kinshasa, training, diplomatic posture."
+  description="Follow GSS Congo's daily activity in real time — patrols, training, deployments. Instagram and Facebook feed, live."
   lang="en"
   altLocaleHref="/fr/actualites/"
 >
   <!-- ─── HERO ────────────────────────────────────────────────── -->
-  <section class="nh-hero" aria-labelledby="nh-heading">
-    <div class="nh-hero-frame">
-      <p class="nh-eyebrow" data-reveal>{newsLabels.hubEyebrow.en}</p>
-      <h1 id="nh-heading" class="nh-hero-title" data-reveal data-reveal-delay="120">
-        {newsLabels.hubHeading.en}
+  <section class="ac-hero" aria-labelledby="ac-heading">
+    <div class="ac-hero-frame">
+      <p class="ac-eyebrow" data-reveal>Activity</p>
+      <h1 id="ac-heading" class="ac-hero-title" data-reveal data-reveal-delay="120">
+        The activity, live from Kinshasa.
       </h1>
-      <p class="nh-hero-sub" data-reveal data-reveal-delay="240">
-        {newsLabels.hubSub.en}
+      <p class="ac-hero-sub" data-reveal data-reveal-delay="240">
+        Patrols, training, field deployments, events. The daily life of GSS,
+        shared in real time on Instagram and Facebook.
       </p>
     </div>
   </section>
 
-  <!-- ─── ARTICLE GRID ────────────────────────────────────────── -->
-  <section class="nh-grid-section" aria-label="Article list">
-    <ul class="nh-grid">
-      {articles.map((a, i) => (
-        <li
-          class="nh-card"
-          data-reveal
-          data-reveal-delay={String(150 + i * 120)}
-          style={`--reveal-delay: ${150 + i * 120}ms;`}
-        >
-          <a class="nh-card-link" href={getArticleUrl(a, 'en')}>
-            <div class="nh-card-media">
-              <img src={a.image} alt="" loading="lazy" decoding="async" />
-              <div class="nh-card-tone" aria-hidden="true"></div>
-            </div>
-            <div class="nh-card-body">
-              <p class="nh-card-meta">
-                <time datetime={a.publishedAt}>{a.publishedAt}</time>
-                <span aria-hidden="true">·</span>
-                <span>{a.readingTime.en}</span>
-              </p>
-              <h2 class="nh-card-title">{a.title.en}</h2>
-              <p class="nh-card-excerpt">{a.excerpt.en}</p>
-              <span class="nh-card-cue">
-                {newsLabels.readMore.en}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                  <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- ─── PRESENCE CARDS ──────────────────────────────────────── -->
+  <section class="ac-presence" aria-labelledby="ac-presence-heading">
+    <div class="ac-presence-frame">
+      <header class="ac-presence-head" data-reveal>
+        <p class="ac-eyebrow">Our channels</p>
+        <h2 id="ac-presence-heading" class="ac-section-heading">
+          Where we post, every week.
+        </h2>
+      </header>
+      <ul class="ac-presence-grid">
+        <li class="ac-presence-card ac-presence-ig" data-reveal data-reveal-delay="120" style="--brand: #ee2a7b;">
+          <a class="ac-presence-link" href={igUrl} target="_blank" rel="noopener noreferrer" aria-label="Follow GSS Kinshasa on Instagram (opens in new tab)">
+            <div class="ac-presence-head-row">
+              <span class="ac-presence-mark ac-presence-mark-ig" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5"/>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
                 </svg>
               </span>
+              <div class="ac-presence-id">
+                <span class="ac-presence-platform">Instagram</span>
+                <span class="ac-presence-handle">@gsskinshasa</span>
+              </div>
             </div>
+            <p class="ac-presence-blurb">Photos, short videos, behind the scenes of training and deployments.</p>
+            <span class="ac-presence-cta">
+              Follow on Instagram
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M7 17 17 7M9 7h8v8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
           </a>
         </li>
-      ))}
-    </ul>
+        <li class="ac-presence-card ac-presence-fb" data-reveal data-reveal-delay="220" style="--brand: #1877F2;">
+          <a class="ac-presence-link" href={fbUrl} target="_blank" rel="noopener noreferrer" aria-label="Follow GSS Kinshasa on Facebook (opens in new tab)">
+            <div class="ac-presence-head-row">
+              <span class="ac-presence-mark ac-presence-mark-fb" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/>
+                </svg>
+              </span>
+              <div class="ac-presence-id">
+                <span class="ac-presence-platform">Facebook</span>
+                <span class="ac-presence-handle">GSS Kinshasa</span>
+              </div>
+            </div>
+            <p class="ac-presence-blurb">Announcements, cohort recruitment, partnerships and events.</p>
+            <span class="ac-presence-cta">
+              Follow on Facebook
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M7 17 17 7M9 7h8v8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ─── LIVE FEED (React island) ────────────────────────────── -->
+  <section class="ac-feed" aria-labelledby="ac-feed-heading">
+    <div class="ac-feed-frame">
+      <header class="ac-feed-head" data-reveal>
+        <p class="ac-eyebrow">The feed</p>
+        <h2 id="ac-feed-heading" class="ac-section-heading">
+          The feed, in real time.
+        </h2>
+        <p class="ac-feed-sub">
+          A unified view of the latest Instagram and Facebook posts, sorted
+          by date.
+        </p>
+      </header>
+      <SocialFeedLive client:visible posts={posts} locale="en" igUrl={igUrl} fbUrl={fbUrl} />
+    </div>
+  </section>
+
+  <!-- ─── CLOSING CTA ─────────────────────────────────────────── -->
+  <section class="ac-cta" aria-labelledby="ac-cta-heading">
+    <div class="ac-cta-frame">
+      <div class="ac-cta-text" data-reveal>
+        <p class="ac-eyebrow ac-eyebrow-on-dark">Follow us</p>
+        <h2 id="ac-cta-heading" class="ac-cta-heading">
+          Be the first to know.
+        </h2>
+        <p class="ac-cta-sub">
+          Turn on notifications on Instagram or Facebook so you don't miss
+          operations, training cohorts, and announcements.
+        </p>
+      </div>
+      <div class="ac-cta-actions" data-reveal data-reveal-delay="180">
+        <NeonButton variant="solid" size="lg" href={igUrl} target="_blank" rel="noopener noreferrer">
+          Instagram
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M7 17 17 7M9 7h8v8" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </NeonButton>
+        <NeonButton variant="default" size="lg" href={fbUrl} target="_blank" rel="noopener noreferrer">
+          Facebook
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M7 17 17 7M9 7h8v8" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </NeonButton>
+      </div>
+    </div>
   </section>
 </BaseLayout>
 
-<style>
-  .nh-hero {
-    background: var(--color-cream);
-    color: var(--color-ink);
-    padding: clamp(7rem, 14vw, 12rem) clamp(1.5rem, 5vw, 4rem) clamp(2.5rem, 5vw, 4rem);
+<!-- React island styles must be is:global since React doesn't see Astro scoped CSS. -->
+<style is:global>
+  .sfl {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.75rem, 3vw, 2.5rem);
   }
-  .nh-hero-frame { max-width: 1280px; margin-inline: auto; }
-  .nh-eyebrow {
-    margin: 0 0 1.25rem;
+  .sfl-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.5rem 0.875rem 0.5rem 0.75rem;
+    background: var(--color-cream-2);
+    border: 1px solid var(--color-hairline-on-light);
+    border-radius: 9999px;
+    align-self: flex-start;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--color-mute-on-light);
+  }
+  .sfl-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    flex-shrink: 0;
+  }
+  .sfl-dot-pending { background: var(--color-bronze); box-shadow: 0 0 0 3px oklch(70% 0.10 70 / 0.18); }
+  .sfl-dot-live { background: #29c46f; box-shadow: 0 0 0 3px oklch(70% 0.18 145 / 0.20); }
+  .sfl-status-text { color: var(--color-ink); font-weight: 500; }
+
+  .sfl-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(0.75rem, 1.4vw, 1.25rem);
+  }
+  @media (min-width: 640px) { .sfl-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 1024px) { .sfl-grid { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 1fr; } }
+
+  .sfl-card { display: flex; }
+  .sfl-card-link {
+    flex: 1;
+    position: relative;
+    display: block;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-hairline-on-light);
+    background: var(--color-cream-2);
+    text-decoration: none;
+    color: var(--color-cream);
+    isolation: isolate;
+    transition: border-color var(--duration-normal) var(--ease-out-expo), box-shadow var(--duration-normal) var(--ease-out-expo);
+  }
+  .sfl-card-link:hover {
+    border-color: var(--color-bronze);
+    box-shadow: 0 1px 2px oklch(0% 0 0 / 0.04), 0 18px 40px -16px oklch(20% 0.04 250 / 0.30);
+  }
+  .sfl-card-media { position: absolute; inset: 0; }
+  .sfl-card-media img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    filter: saturate(0.95);
+    transition: transform var(--duration-slow) var(--ease-out-expo);
+  }
+  .sfl-card-link:hover .sfl-card-media img { transform: scale(1.06); }
+  .sfl-card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 45%, oklch(0% 0 0 / 0.78) 100%);
+    display: flex; align-items: flex-end; padding: 1rem;
+    opacity: 0;
+    transition: opacity var(--duration-normal) var(--ease-out-expo);
+  }
+  .sfl-card-link:hover .sfl-card-overlay { opacity: 1; }
+  .sfl-card-caption {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: var(--color-cream);
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .sfl-grid-skeleton { grid-auto-flow: dense; }
+  .sfl-skel {
+    position: relative; overflow: hidden;
+    border-radius: var(--radius-md);
+    background: var(--color-cream-2);
+    border: 1px solid var(--color-hairline-on-light);
+    aspect-ratio: 1 / 1;
+  }
+  @media (min-width: 1024px) {
+    .sfl-skel-lead { grid-column: span 2; grid-row: span 2; aspect-ratio: auto; }
+    .sfl-skel-portrait { grid-row: span 2; aspect-ratio: 1 / 2; }
+  }
+  .sfl-skel-shimmer {
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, var(--color-cream-2) 0%, var(--color-cream-2) 35%, oklch(95% 0.005 70 / 1) 50%, var(--color-cream-2) 65%, var(--color-cream-2) 100%);
+    background-size: 200% 100%;
+    background-position: 200% 0;
+  }
+  .sfl-skel-badge {
+    position: absolute; top: 0.875rem; right: 0.875rem;
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.35rem 0.6rem 0.35rem 0.5rem;
+    font-family: var(--font-body); font-size: 0.6875rem; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    background: oklch(98% 0.005 70 / 0.92);
+    border: 1px solid var(--color-hairline-on-light);
+    border-radius: 9999px;
+    backdrop-filter: blur(4px);
+  }
+  .sfl-skel-badge-dot {
+    display: inline-block; width: 5px; height: 5px;
+    border-radius: 9999px;
+    background: var(--color-bronze);
+    box-shadow: 0 0 0 2px oklch(70% 0.10 70 / 0.22);
+  }
+
+  .sfl-pending-note {
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+    padding-top: clamp(1.5rem, 3vw, 2.5rem);
+    border-top: 1px solid var(--color-hairline-on-light);
+    display: flex; flex-direction: column; gap: 1.25rem;
+    align-items: flex-start;
+  }
+  .sfl-pending-text {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--color-mute-on-light);
+    max-width: 36em;
+  }
+  .sfl-pending-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .sfl-follow {
+    display: inline-flex; align-items: center; gap: 0.625rem;
+    padding: 0.625rem 1rem 0.625rem 0.75rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-size: 0.875rem; font-weight: 500;
+    transition: transform var(--duration-fast) var(--ease-out-expo), box-shadow var(--duration-normal) var(--ease-out-expo);
+  }
+  .sfl-follow:active { transform: scale(0.98); }
+  .sfl-follow-ig {
+    color: #fff;
+    background: linear-gradient(135deg, #fdcb52 0%, #ee2a7b 50%, #6228d7 100%);
+    box-shadow: 0 8px 24px -10px oklch(50% 0.20 350 / 0.55);
+  }
+  .sfl-follow-fb {
+    color: #fff;
+    background: #1877F2;
+    box-shadow: 0 8px 24px -10px oklch(50% 0.20 260 / 0.55);
+  }
+  .sfl-follow-mark { display: inline-grid; place-items: center; width: 1.25rem; height: 1.25rem; }
+  .sfl-follow-mark svg { width: 100%; height: 100%; }
+</style>
+
+<style>
+  .ac-eyebrow {
+    margin: 0 0 1rem;
     font-family: var(--font-body);
     font-size: 0.75rem;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--color-bronze-deep);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
+    display: inline-flex; align-items: center; gap: 0.75rem;
   }
-  .nh-eyebrow::before {
+  .ac-eyebrow::before {
     content: '';
     display: inline-block;
-    width: 2.5rem;
-    height: 1px;
+    width: 2.5rem; height: 1px;
     background: var(--color-bronze-deep);
   }
-  .nh-hero-title {
+  .ac-eyebrow-on-dark { color: var(--color-bronze-warm); }
+  .ac-eyebrow-on-dark::before { background: var(--color-bronze-warm); }
+  .ac-section-heading {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
+    font-size: clamp(1.875rem, 3.4vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    text-wrap: balance;
+    max-width: 18em;
+  }
+
+  .ac-hero {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    padding: clamp(7rem, 14vw, 12rem) clamp(1.5rem, 5vw, 4rem) clamp(2.5rem, 5vw, 4rem);
+  }
+  .ac-hero-frame { max-width: 1280px; margin-inline: auto; }
+  .ac-hero-title {
     margin: 0 0 1.5rem;
     font-family: var(--font-display);
     font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
@@ -99,7 +366,7 @@ import { articles, getArticleUrl, newsLabels } from '@lib/news';
     max-width: 18em;
     text-wrap: balance;
   }
-  .nh-hero-sub {
+  .ac-hero-sub {
     margin: 0;
     font-size: clamp(1.0625rem, 1.5vw, 1.3125rem);
     line-height: 1.6;
@@ -107,110 +374,168 @@ import { articles, getArticleUrl, newsLabels } from '@lib/news';
     max-width: 38em;
   }
 
-  .nh-grid-section {
-    background: var(--color-cream);
-    padding: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 5vw, 4rem) clamp(6rem, 12vw, 11rem);
+  .ac-presence {
+    background: var(--color-cream-2);
+    color: var(--color-ink);
+    padding: clamp(3.5rem, 9vw, 8rem) clamp(1.5rem, 5vw, 4rem);
+    border-top: 1px solid var(--color-hairline-on-light);
   }
-  .nh-grid {
-    list-style: none;
-    margin: 0 auto;
-    padding: 0;
-    max-width: 1280px;
+  .ac-presence-frame { max-width: 1280px; margin-inline: auto; }
+  .ac-presence-head { margin-bottom: clamp(2rem, 4vw, 3.5rem); max-width: 36em; }
+  .ac-presence-grid {
+    list-style: none; margin: 0; padding: 0;
     display: grid;
     grid-template-columns: 1fr;
-    gap: clamp(1.5rem, 3vw, 2.5rem);
+    gap: clamp(1rem, 2vw, 1.5rem);
   }
-  @media (min-width: 768px) { .nh-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 720px) { .ac-presence-grid { grid-template-columns: repeat(2, 1fr); } }
 
-  .nh-card { list-style: none; }
-  .nh-card-link {
-    display: grid;
-    grid-template-rows: auto 1fr;
+  .ac-presence-card { display: flex; }
+  .ac-presence-link {
+    flex: 1;
+    position: relative;
+    display: flex; flex-direction: column; gap: 1.25rem;
+    padding: clamp(1.75rem, 3vw, 2.5rem);
+    color: var(--color-ink);
     text-decoration: none;
-    color: inherit;
-    background: var(--color-cream-2);
+    background: var(--color-cream);
+    border: 1px solid var(--color-hairline-on-light);
     border-radius: var(--radius-md);
     overflow: hidden;
-    transition:
-      transform var(--duration-normal) var(--ease-out-expo),
-      box-shadow var(--duration-normal) var(--ease-out-expo);
-    height: 100%;
+    isolation: isolate;
+    transition: border-color var(--duration-normal) var(--ease-out-expo), transform var(--duration-normal) var(--ease-out-expo), box-shadow var(--duration-normal) var(--ease-out-expo);
   }
-  .nh-card-link:hover {
-    transform: translateY(-4px);
-    box-shadow:
-      0 1px 2px oklch(0% 0 0 / 0.04),
-      0 18px 40px -16px oklch(20% 0.04 250 / 0.20);
-  }
-  .nh-card-media {
-    position: relative;
-    aspect-ratio: 4 / 3;
-    overflow: hidden;
-  }
-  .nh-card-media img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    filter: saturate(0.92);
-    transition: transform var(--duration-slow) var(--ease-out-expo);
-  }
-  .nh-card-link:hover .nh-card-media img { transform: scale(1.05); }
-  .nh-card-tone {
-    position: absolute; inset: 0;
-    background: linear-gradient(180deg, transparent 55%, oklch(8% 0.03 250 / 0.40) 100%);
+  .ac-presence-link::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: radial-gradient(60% 80% at 100% 0%, var(--brand) 0%, transparent 55%);
+    opacity: 0.10;
     pointer-events: none;
+    z-index: -1;
+    transition: opacity var(--duration-normal) var(--ease-out-expo);
   }
-  .nh-card-body {
-    padding: 1.5rem 1.5rem 1.75rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+  .ac-presence-link:hover {
+    border-color: var(--brand);
+    transform: translateY(-3px);
+    box-shadow: 0 1px 2px oklch(0% 0 0 / 0.06), 0 18px 36px -14px oklch(20% 0.04 250 / 0.18);
   }
-  .nh-card-meta {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: 0.6875rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--color-bronze-deep);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-variant-numeric: tabular-nums;
+  .ac-presence-link:hover::before { opacity: 0.22; }
+
+  .ac-presence-head-row { display: flex; align-items: center; gap: 0.875rem; }
+  .ac-presence-mark {
+    display: inline-grid; place-items: center;
+    width: 2.75rem; height: 2.75rem;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    flex-shrink: 0;
   }
-  .nh-card-meta time { color: var(--color-bronze-deep); }
-  .nh-card-meta span[aria-hidden] { color: var(--color-bronze); opacity: 0.7; }
-  .nh-card-title {
-    margin: 0;
+  .ac-presence-mark-ig {
+    background: linear-gradient(135deg, #fdcb52 0%, #ee2a7b 50%, #6228d7 100%);
+  }
+  .ac-presence-mark-fb { background: #1877F2; }
+  .ac-presence-mark svg { width: 1.375rem; height: 1.375rem; }
+  .ac-presence-id { display: flex; flex-direction: column; gap: 0.15rem; }
+  .ac-presence-platform {
     font-family: var(--font-display);
     font-variation-settings: 'opsz' 48, 'wght' 460;
-    font-size: clamp(1.25rem, 1.8vw, 1.5rem);
-    line-height: 1.15;
+    font-size: 1.25rem;
+    line-height: 1.1;
     letter-spacing: -0.015em;
     color: var(--color-ink);
-    text-wrap: balance;
   }
-  .nh-card-excerpt {
+  .ac-presence-handle {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    color: var(--color-mute-on-light);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+  }
+  .ac-presence-blurb {
     margin: 0;
     font-size: 0.9375rem;
     line-height: 1.55;
     color: var(--color-mute-on-light);
   }
-  .nh-card-cue {
-    margin-top: 0.5rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
+  .ac-presence-cta {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-hairline-on-light);
+    display: inline-flex; align-items: center; gap: 0.5rem;
     font-family: var(--font-body);
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     font-weight: 500;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
     color: var(--color-bronze-deep);
+    transition: gap var(--duration-normal) var(--ease-out-expo);
   }
-  .nh-card-cue svg {
+  .ac-presence-cta svg {
     width: 0.875rem;
     height: 0.875rem;
     transition: transform var(--duration-normal) var(--ease-out-expo);
   }
-  .nh-card-link:hover .nh-card-cue svg { transform: translateX(0.25rem); }
+  .ac-presence-link:hover .ac-presence-cta { gap: 0.65rem; }
+  .ac-presence-link:hover .ac-presence-cta svg { transform: translate(0.15rem, -0.15rem); }
+
+  .ac-feed {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    padding: clamp(3.5rem, 9vw, 8rem) clamp(1.5rem, 5vw, 4rem);
+  }
+  .ac-feed-frame { max-width: 1280px; margin-inline: auto; }
+  .ac-feed-head { margin-bottom: clamp(2rem, 4vw, 3rem); max-width: 36em; }
+  .ac-feed-sub {
+    margin: 1rem 0 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-mute-on-light);
+    max-width: 36em;
+  }
+
+  .ac-cta {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    padding: clamp(5rem, 12vw, 11rem) clamp(1.5rem, 5vw, 4rem);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .ac-cta::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(70% 50% at 100% 0%, oklch(40% 0.06 70 / 0.18), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .ac-cta-frame {
+    max-width: 1280px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    align-items: end;
+  }
+  @media (min-width: 1024px) {
+    .ac-cta-frame { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 5rem; }
+  }
+  .ac-cta-heading {
+    margin: 1rem 0 1.25rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-cream);
+    max-width: 14em;
+    text-wrap: balance;
+  }
+  .ac-cta-sub {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-cream);
+    opacity: 0.80;
+    max-width: 36em;
+  }
+  .ac-cta-actions { display: flex; flex-wrap: wrap; gap: 0.875rem; }
 </style>

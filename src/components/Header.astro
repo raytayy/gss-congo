@@ -87,8 +87,26 @@ const contactHref = `/${locale}/contact/`;
 
   {/* Mobile panel — full-screen when toggled */}
   <div class="mobile-panel" id="mobile-panel" data-mobile-panel hidden>
+    <div class="mobile-panel-bar">
+      <Logo size="md" variant="on-light" href={`/${locale}/`} />
+      <button
+        class="mobile-close"
+        type="button"
+        aria-label={locale === 'fr' ? 'Fermer le menu' : 'Close menu'}
+        data-mobile-close
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M6 6 18 18M18 6 6 18" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
     <nav aria-label={locale === 'fr' ? 'Navigation mobile' : 'Mobile navigation'}>
       <ul class="mobile-nav-list">
+        <li>
+          <a class="mobile-nav-link" href={`/${locale}/`}>
+            {locale === 'fr' ? 'Accueil' : 'Home'}
+          </a>
+        </li>
         {navItems.map((item) => (
           <li><a class="mobile-nav-link" href={item.href}>{item.label}</a></li>
         ))}
@@ -106,46 +124,68 @@ const contactHref = `/${locale}/contact/`;
   </div>
 </header>
 
-<script>
-  const toggle = document.querySelector<HTMLButtonElement>('[data-mobile-toggle]');
-  const panel = document.querySelector<HTMLElement>('[data-mobile-panel]');
-  if (toggle && panel) {
-    toggle.addEventListener('click', () => {
-      const expanded = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', String(!expanded));
-      if (expanded) {
-        panel.setAttribute('hidden', '');
-        document.body.style.overflow = '';
-      } else {
+<script is:inline>
+  // is:inline + astro:page-load: rebinds after every view transition.
+  // Without it, the toggle button stops working once you navigate away
+  // and come back (the new DOM has no listeners attached).
+  function setupHeader() {
+    const toggle = document.querySelector('[data-mobile-toggle]');
+    const panel = document.querySelector('[data-mobile-panel]');
+    const closeBtn = document.querySelector('[data-mobile-close]');
+    const header = document.querySelector('.site-header');
+
+    if (toggle && panel) {
+      const open = () => {
+        toggle.setAttribute('aria-expanded', 'true');
         panel.removeAttribute('hidden');
         document.body.style.overflow = 'hidden';
-      }
-    });
-  }
+      };
+      const close = () => {
+        toggle.setAttribute('aria-expanded', 'false');
+        panel.setAttribute('hidden', '');
+        document.body.style.overflow = '';
+      };
+      toggle.addEventListener('click', () => {
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        if (expanded) close(); else open();
+      });
+      if (closeBtn) closeBtn.addEventListener('click', close);
+      // Tapping a nav link should also close the panel.
+      panel.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+      // ESC closes the panel.
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') close();
+      });
+    }
 
-  const header = document.querySelector<HTMLElement>('.site-header');
-  if (header) {
-    const update = () => {
-      header.dataset.scrollState = window.scrollY > 80 ? 'scrolled' : 'top';
-    };
-    update();
-    window.addEventListener('scroll', update, { passive: true });
+    if (header) {
+      const update = () => {
+        header.dataset.scrollState = window.scrollY > 24 ? 'scrolled' : 'top';
+      };
+      update();
+      window.addEventListener('scroll', update, { passive: true });
+    }
   }
+  document.addEventListener('astro:page-load', setupHeader);
 </script>
 
 <style>
   .site-header {
     position: sticky;
     top: 0;
-    z-index: 50;
+    z-index: 100;
+    /* Always carry a faint cream scrim so the ink-coloured nav stays
+       readable over dark hero plates (home, careers, training centre).
+       The scrim intensifies once the user scrolls past the hero. */
+    background-color: rgba(245, 240, 230, 0.78);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
     transition: background-color var(--duration-normal) var(--ease-out-expo),
-      backdrop-filter var(--duration-normal) var(--ease-out-expo),
       border-color var(--duration-normal) var(--ease-out-expo);
     border-bottom: 1px solid transparent;
   }
   .site-header[data-scroll-state='scrolled'] {
-    background-color: rgba(247, 240, 230, 0.85);
-    backdrop-filter: blur(12px) saturate(140%);
+    background-color: rgba(245, 240, 230, 0.94);
     border-bottom-color: var(--color-hairline-on-light);
   }
 
@@ -264,13 +304,45 @@ const contactHref = `/${locale}/contact/`;
     position: fixed;
     inset: 0;
     background: var(--color-cream);
-    padding: 6rem 1.5rem 2rem;
+    padding: 0 1.5rem 2rem;
     overflow-y: auto;
-    z-index: 49;
+    z-index: 110;
+    display: flex;
+    flex-direction: column;
   }
   @media (min-width: 1024px) {
     .mobile-panel { display: none !important; }
   }
+
+  /* Panel header — logo (left) + close button (right) */
+  .mobile-panel-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 0;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-hairline-on-light);
+  }
+  .mobile-close {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    background: transparent;
+    border: 1px solid var(--color-hairline-on-light);
+    border-radius: var(--radius-xs);
+    color: var(--color-ink);
+    cursor: pointer;
+    transition: border-color var(--duration-normal) var(--ease-out-expo),
+      color var(--duration-normal) var(--ease-out-expo);
+  }
+  .mobile-close:hover,
+  .mobile-close:focus-visible {
+    border-color: var(--color-bronze);
+    color: var(--color-bronze-deep);
+  }
+  .mobile-close svg { width: 1.4rem; height: 1.4rem; }
 
   .mobile-nav-list {
     list-style: none;

@@ -36,8 +36,8 @@ export const articles: Article[] = [
       en: 'eleven-years-private-security-kinshasa',
     },
     title: {
-      fr: 'Pourquoi onze ans changent tout en sécurité privée à Kinshasa',
-      en: 'Why eleven years change everything in private security in Kinshasa',
+      fr: 'Pourquoi 11 ans changent tout en sécurité privée à Kinshasa',
+      en: 'Why 11 years change everything in private security in Kinshasa',
     },
     excerpt: {
       fr: 'L’expérience ne se résume pas à un compteur d’années. Elle se voit dans la lecture du terrain, la calibration des effectifs, la chaîne de commandement.',
@@ -48,14 +48,14 @@ export const articles: Article[] = [
     readingTime: { fr: '6 min de lecture', en: '6 min read' },
     body: {
       fr: `
-<p>Onze ans de présence à Kinshasa, sans interruption. Le chiffre se cite vite, mais ce qu’il recouvre est moins évident à expliquer. Nous proposons ici une lecture honnête de ce que l’expérience produit dans notre métier.</p>
+<p>11 ans de présence à Kinshasa, sans interruption. Le chiffre se cite vite, mais ce qu’il recouvre est moins évident à expliquer. Nous proposons ici une lecture honnête de ce que l’expérience produit dans notre métier.</p>
 
 <h2>Lire le terrain avant de le sécuriser</h2>
 <p>Une concession industrielle à Limete ne se sécurise pas comme une résidence à Gombe. Le rythme des camions, la densité des riverains, la nature des accès, la qualité de l’éclairage public, la pluviométrie — tout cela module le dispositif. Il faut avoir vu plusieurs centaines de sites pour distinguer rapidement ce qui est essentiel et ce qui ne l’est pas.</p>
 <p>L’expérience n’est pas un argument commercial. C’est ce qui permet de calibrer un effectif sans gaspiller, et de placer les agents là où ils sont vraiment utiles.</p>
 
 <h2>La chaîne de commandement, à l’épreuve</h2>
-<p>Onze ans d’opérations, c’est aussi onze ans d’incidents. Aucun incident grave ne se résout par l’improvisation : il se gère par une chaîne de commandement éprouvée. Qui appelle qui, dans quel ordre, avec quels relais, sous quel délai — ces réflexes se construisent dans la durée.</p>
+<p>11 ans d’opérations, c’est aussi 11 ans d’incidents. Aucun incident grave ne se résout par l’improvisation : il se gère par une chaîne de commandement éprouvée. Qui appelle qui, dans quel ordre, avec quels relais, sous quel délai — ces réflexes se construisent dans la durée.</p>
 <p>Notre coordination centrale fonctionne 24/7 et a vu beaucoup de scénarios. Le client n’a pas besoin de savoir ce qui se passe en interne. Il a besoin de savoir que ça se passe.</p>
 
 <h2>La formation, comme exigence permanente</h2>
@@ -63,10 +63,10 @@ export const articles: Article[] = [
 <p>La formation n’est pas un coût qu’on optimise. C’est ce qui distingue, sur la durée, une ressource d’un risque.</p>
 
 <h2>La confiance institutionnelle, qui se gagne lentement</h2>
-<p>Nos clients industriels, ambassades, hôtels, résidences VIP ne nous ont pas choisis sur la promesse. Ils nous ont choisis sur la durée. Onze ans, c’est suffisamment long pour qu’un cadre dirigeant ait pu nous voir à l’œuvre, demander des références, et croiser nos rapports d’activité.</p>
+<p>Nos clients industriels, ambassades, hôtels, résidences VIP ne nous ont pas choisis sur la promesse. Ils nous ont choisis sur la durée. 11 ans, c’est suffisamment long pour qu’un cadre dirigeant ait pu nous voir à l’œuvre, demander des références, et croiser nos rapports d’activité.</p>
 <p>Cette confiance ne se transfère pas. Elle se reconstruit avec chaque nouveau client, mais elle s’appuie sur un socle réel : l’opérationnel régulier, la rigueur administrative, la lisibilité des comptes-rendus.</p>
 
-<h2>Ce que onze ans n’expliquent pas seuls</h2>
+<h2>Ce que 11 ans n’expliquent pas seuls</h2>
 <p>Beaucoup d’entreprises affichent un nombre d’années. Très peu peuvent dire ce qu’elles en ont fait. La différence, à notre échelle, se lit dans :</p>
 <ul>
   <li>Le ratio d’agents formés en interne (proche de 100% chez nous).</li>
@@ -84,17 +84,17 @@ export const articles: Article[] = [
   <li>Une chaîne de commandement qui répond, jour et nuit.</li>
   <li>Des comptes rendus qui se lisent.</li>
 </ul>
-<p>Onze ans, ce ne sont pas onze diplômes. C’est une discipline qui s’est laissée corriger longtemps. C’est ce qui change tout.</p>
+<p>11 ans, ce ne sont pas 11 diplômes. C’est une discipline qui s’est laissée corriger longtemps. C’est ce qui change tout.</p>
 `.trim(),
       en: `
-<p>Eleven years on the ground in Kinshasa, without interruption. The number is easy to quote, but what it actually covers is less obvious. Here is an honest read of what experience produces in our craft.</p>
+<p>11 years on the ground in Kinshasa, without interruption. The number is easy to quote, but what it actually covers is less obvious. Here is an honest read of what experience produces in our craft.</p>
 
 <h2>Read the ground before you secure it</h2>
 <p>An industrial site in Limete is not secured the way a residence in Gombe is. Truck rhythm, neighbour density, access type, street-light quality, rainfall — all of it modulates the posture. You have to have walked several hundred sites to quickly tell what matters from what does not.</p>
 <p>Experience is not a sales argument. It is what lets us size headcount without waste, and place agents where they are actually useful.</p>
 
 <h2>Chain of command, under stress</h2>
-<p>Eleven years of operations is also eleven years of incidents. No serious incident is resolved by improvisation: it is handled by a tested chain of command. Who calls whom, in what order, with what relays, within what deadline — those reflexes are built over time.</p>
+<p>11 years of operations is also 11 years of incidents. No serious incident is resolved by improvisation: it is handled by a tested chain of command. Who calls whom, in what order, with what relays, within what deadline — those reflexes are built over time.</p>
 <p>Our central coordination runs 24/7 and has seen many scenarios. The client does not need to know what is happening internally. The client needs to know that it is happening.</p>
 
 <h2>Training as a permanent requirement</h2>
@@ -102,10 +102,10 @@ export const articles: Article[] = [
 <p>Training is not a cost to optimise. Over time, it is the line between a resource and a risk.</p>
 
 <h2>Institutional trust, slowly earned</h2>
-<p>Our industrial clients, embassies, hotels, and VIP residences did not choose us on a promise. They chose us on a track record. Eleven years is long enough for a senior executive to have seen us work, asked for references, and read our activity reports.</p>
+<p>Our industrial clients, embassies, hotels, and VIP residences did not choose us on a promise. They chose us on a track record. 11 years is long enough for a senior executive to have seen us work, asked for references, and read our activity reports.</p>
 <p>That trust does not transfer. It rebuilds with every new client, but it stands on a real foundation: steady operations, administrative rigour, legible reporting.</p>
 
-<h2>What eleven years alone do not explain</h2>
+<h2>What 11 years alone do not explain</h2>
 <p>Many firms quote a number of years. Very few can say what they did with them. At our scale, the difference shows in:</p>
 <ul>
   <li>The ratio of internally trained agents (close to 100% with us).</li>
@@ -123,7 +123,7 @@ export const articles: Article[] = [
   <li>A chain of command that answers, day and night.</li>
   <li>Reports that are actually read.</li>
 </ul>
-<p>Eleven years are not eleven diplomas. They are a discipline that allowed itself to be corrected for a long time. That is what changes everything.</p>
+<p>11 years are not 11 diplomas. They are a discipline that allowed itself to be corrected for a long time. That is what changes everything.</p>
 `.trim(),
     },
   },
