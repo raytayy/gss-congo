@@ -55,7 +55,7 @@
 | # | Question | Statut | Réponse | Date | Notes |
 |---|---|---|---|---|---|
 | 12 | Logos clients à afficher (avec accord) | 🔴 | — | — | Si pas d'accord : bande sectorielle de fallback |
-| 13 | URL exactes IG + FB + activité | 🔴 | — | — | + statut compte Instagram Business (API Basic Display dépréciée) |
+| 13 | URL exactes IG + FB + activité | 🟡 | URLs confirmées : `https://www.facebook.com/gsskinshasa/` + `https://www.instagram.com/gsskinshasa/` (déjà câblées dans `contact.ts`). | 2026-05-17 | Manque : statut compte IG (Business/Creator ?) et tokens Graph API pour le live feed — cf. checklist Meta. |
 
 ### Bloc — SEO / Accès Google
 

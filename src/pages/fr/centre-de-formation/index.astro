@@ -1,8 +1,15 @@
 ---
 /*
  * /fr/centre-de-formation/ — Training centre (FR).
- * Personas: P2 (embassy rigour signal) + P5 (recruit funnel).
- * Beats: Hero → Manifeste → Programmes → Domaines → Cycle → Localisation → CTA.
+ *
+ * Lean structure after 2026-05-17 rewrite:
+ *   Hero → Practical (image + para) → Espace candidat (4-step journey) → Inscription form.
+ *
+ * The 5 cursus + curriculum + 4-step cycle sections were removed (client
+ * call — "irrelevant blabering"). The JSON-LD `educationalOrgSchema` still
+ * lists the 5 programmes via OfferCatalog because the entity DOES offer
+ * them — the page just no longer editorializes about each one.
+ *
  * Mirror in src/pages/en/training-centre/index.astro.
  */
 
@@ -16,71 +23,35 @@ const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
 const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
 const isConfigured = accessKey.length > 10;
 
-const programmes = [
-  {
-    name: 'Agent de prévention et de sécurité',
-    body: 'Le tronc commun. Cadre légal, gestion d’accès, posture, prise de notes, communication radio, gestion de conflit.',
-  },
-  {
-    name: 'Sécurité incendie & premiers secours',
-    body: 'Modules type SSIAP : prévention incendie, évacuation, manipulation des extincteurs, gestes qui sauvent.',
-  },
-  {
-    name: 'Cynophile & maître-chien',
-    body: 'Travail en binôme avec chien d’intervention : dressage, commandement, lecture comportementale, dissuasion encadrée.',
-  },
-  {
-    name: 'Conduite défensive & escorte',
-    body: 'Étude d’itinéraire, anticipation, conduite sous pression, coordination en convoi, posture en cas d’incident.',
-  },
-  {
-    name: 'Protocole & sécurité d’élite',
-    body: 'Tenue civile, étiquette diplomatique, oreillette discrète, lecture de salle, déplacements VIP.',
-  },
-];
-
-const domains = [
-  'Cadre juridique RDC',
-  'Premiers secours',
-  'Lutte incendie',
-  'Contrôle d’accès',
-  'Patrouille périmétrique',
-  'Communication radio',
-  'Gestion de conflit',
-  'Déontologie',
-  'Procédures d’intervention',
-  'Conduite défensive',
-  'Cynologie',
-  'Protocole VIP',
-];
-
-const cycle = [
+const candidateJourney = [
   {
     n: '01',
-    title: 'Recrutement',
-    body: 'Sélection en plusieurs entretiens. Vérification d’antécédents, contrôle médical, test physique. Aucun raccourci.',
+    title: 'Dossier',
+    meta: 'Réponse sous 7 jours ouvrés',
+    body: "Envoyez votre CV, lettre de motivation, disponibilité et zone de Kinshasa souhaitée. Nous accusons réception immédiatement, et revenons vers vous avec une suite — entretien planifié ou intégration au vivier de la prochaine cohorte.",
   },
   {
     n: '02',
-    title: 'Théorie',
-    body: 'Cadre légal, déontologie, secourisme, prévention incendie. Évaluation écrite à chaque module — pas de passage automatique.',
+    title: 'Entretien',
+    meta: 'Au siège, à Gombe',
+    body: "Rendez-vous au siège pour un entretien individuel. Vérification d'identité, validation de motivation, test physique de base. Comptez 1h30 sur place. Pas de stress — c'est aussi une conversation pour qu'on apprenne à se connaître.",
   },
   {
     n: '03',
-    title: 'Pratique',
-    body: 'Mises en situation, contrôle d’accès, fouille, gestion de conflit, communication radio. Encadrés par des instructeurs opérationnels.',
+    title: 'Formation',
+    meta: 'Sur invitation de cohorte',
+    body: "Intégration à la prochaine promotion. Théorie, pratique, mises en situation, évaluation finale. Aucun passage automatique : chaque module se valide, certains se reprennent à la session suivante si nécessaire.",
   },
   {
     n: '04',
     title: 'Affectation',
-    body: 'Évaluation finale, attestation, intégration sur site. Première semaine accompagnée d’un référent terrain.',
+    meta: 'Première mission accompagnée',
+    body: "Mise en service sur votre premier site avec un référent terrain à vos côtés la première semaine. Évaluation à 30 jours, contrat consolidé. À partir de ce moment, la maison commence à investir dans votre durée.",
   },
 ];
 
 const phoneTel = `tel:${contact.phones.primary.tel}`;
 const phoneDisplay = contact.phones.primary.display;
-const trainingPhones = contact.phones.training;
-const trainingAddress = contact.addresses.training;
 ---
 
 <BaseLayout
@@ -102,160 +73,79 @@ const trainingAddress = contact.addresses.training;
         Nos agents ne sont pas recrutés. Ils sont formés.
       </h1>
       <p class="cf-hero-intro" data-reveal data-reveal-delay="240">
-        L’école interne tourne en continu — théorie, pratique, mises en situation,
-        évaluation. C’est notre première exigence, pas un argument commercial.
-        Les promotions y entrent sélectivement, et n’en sortent qu’avec attestation.
+        Si vous êtes passionné d'avoir une carrière à long terme, rejoignez le
+        centre formation de GSS. Notre nouveau centre de formation vous prépare
+        pour une carrière respectueuse mais surtout sûre. Notre programme de
+        formation professionnelle est conçu pour vous fournir les compétences
+        et les connaissances nécessaires pour devenir un agent de sécurité
+        qualifié et plus que compétent.
       </p>
     </div>
   </section>
 
-  <!-- ─── MANIFESTE ───────────────────────────────────────────── -->
-  <section class="cf-section cf-manifest" aria-labelledby="cf-manifest-heading">
-    <div class="cf-manifest-frame">
-      <p class="cf-eyebrow" data-reveal>Manifeste</p>
-      <p id="cf-manifest-heading" class="cf-manifest-text" data-reveal data-reveal-delay="120">
-        Un agent qui n’est pas formé n’est pas un agent — c’est un costume sur
-        un site. La formation n’est pas une option : c’est ce qui distingue une
-        ressource d’un risque.
-      </p>
-    </div>
-  </section>
-
-  <!-- ─── PROGRAMMES ──────────────────────────────────────────── -->
-  <section class="cf-section cf-programmes" aria-labelledby="cf-programmes-heading">
-    <div class="cf-programmes-frame">
-      <div class="cf-programmes-head">
-        <p class="cf-eyebrow" data-reveal>Programmes</p>
-        <h2 id="cf-programmes-heading" class="cf-section-heading" data-reveal data-reveal-delay="100">
-          5 cursus, un même standard.
-        </h2>
-        <p class="cf-programmes-sub" data-reveal data-reveal-delay="200">
-          Chaque cursus comporte un tronc commun, un volet métier et une
-          évaluation finale. Modules complémentaires sur demande pour les
-          besoins B2B spécifiques.
-        </p>
-      </div>
-      <ol class="cf-programmes-list">
-        {programmes.map((p, i) => (
-          <li
-            class="cf-programme"
-            data-reveal
-            data-reveal-delay={String(150 + i * 90)}
-            style={`--reveal-delay: ${150 + i * 90}ms;`}
-          >
-            <span class="cf-programme-num" aria-hidden="true">/ {String(i + 1).padStart(2, '0')}</span>
-            <div class="cf-programme-text">
-              <h3 class="cf-programme-name">{p.name}</h3>
-              <p class="cf-programme-body">{p.body}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  <!-- ─── DOMAINES (curriculum chips) ─────────────────────────── -->
-  <section class="cf-section cf-domains" aria-labelledby="cf-domains-heading">
-    <div class="cf-domains-frame">
-      <div class="cf-domains-head">
-        <p class="cf-eyebrow" data-reveal>Domaines couverts</p>
-        <h2 id="cf-domains-heading" class="cf-section-heading" data-reveal data-reveal-delay="100">
-          Le détail du curriculum.
-        </h2>
-      </div>
-      <ul class="cf-domains-grid" aria-label="Liste des domaines couverts par la formation">
-        {domains.map((d, i) => (
-          <li
-            class="cf-domain-chip"
-            data-reveal
-            data-reveal-delay={String(120 + i * 50)}
-            style={`--reveal-delay: ${120 + i * 50}ms;`}
-          >
-            <span class="cf-domain-bullet" aria-hidden="true"></span>
-            <span class="cf-domain-text">{d}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
-
-  <!-- ─── CYCLE (dark band) ───────────────────────────────────── -->
-  <section class="cf-section cf-cycle" aria-labelledby="cf-cycle-heading">
-    <div class="cf-cycle-frame">
-      <div class="cf-cycle-head">
-        <p class="cf-eyebrow cf-eyebrow-on-dark" data-reveal>Cycle de formation</p>
-        <h2 id="cf-cycle-heading" class="cf-section-heading cf-section-heading-on-dark" data-reveal data-reveal-delay="100">
-          4 étapes, sans raccourci.
-        </h2>
-        <p class="cf-cycle-sub" data-reveal data-reveal-delay="200">
-          Du premier entretien à l’affectation, le cheminement est lisible et
-          contrôlé. Chaque étape se valide — ou se reprend.
-        </p>
-      </div>
-      <ol class="cf-cycle-grid">
-        {cycle.map((c, i) => (
-          <li
-            class="cf-cycle-step"
-            data-reveal
-            data-reveal-delay={String(150 + i * 100)}
-            style={`--reveal-delay: ${150 + i * 100}ms;`}
-          >
-            <span class="cf-cycle-num">{c.n}</span>
-            <h3 class="cf-cycle-title">{c.title}</h3>
-            <p class="cf-cycle-body">{c.body}</p>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  <!-- ─── LOCALISATION ────────────────────────────────────────── -->
-  <section class="cf-section cf-locate" aria-labelledby="cf-locate-heading">
-    <div class="cf-locate-frame">
-      <div class="cf-locate-text">
-        <p class="cf-eyebrow" data-reveal>Localisation</p>
-        <h2 id="cf-locate-heading" class="cf-section-heading" data-reveal data-reveal-delay="100">
-          Le centre se visite, sur rendez-vous.
-        </h2>
-        <p class="cf-locate-sub" data-reveal data-reveal-delay="180">
-          Les responsables RH des entreprises et les chefs de poste de sécurité
-          diplomatique sont reçus sur place — pour visiter les salles, rencontrer
-          les instructeurs, et lire le programme dans le détail.
-        </p>
-        <dl class="cf-locate-info" data-reveal data-reveal-delay="260">
-          <div class="cf-locate-row">
-            <dt class="cf-locate-label">Adresse</dt>
-            <dd class="cf-locate-value">
-              {trainingAddress.detail}<br />
-              {trainingAddress.street}<br />
-              {trainingAddress.city}, RDC
-            </dd>
-          </div>
-          <div class="cf-locate-row">
-            <dt class="cf-locate-label">Lignes formation</dt>
-            <dd class="cf-locate-value cf-locate-phones">
-              {trainingPhones.map((p) => (
-                <a href={`tel:${p.tel}`}>{p.display}</a>
-              ))}
-            </dd>
-          </div>
-        </dl>
-      </div>
-      <div class="cf-locate-map" data-reveal data-reveal-delay="200">
-        <iframe
-          src="https://www.google.com/maps?q=Carrefour%20des%20Jeunes%20Victoire%20Kinshasa&z=15&output=embed"
-          title="Centre de formation GSS : Carrefour des Jeunes, Victoire, Kinshasa"
+  <!-- ─── PRACTICAL TRAINING (image + paragraph, side by side) ──── -->
+  <section class="cf-practical" aria-labelledby="cf-practical-heading">
+    <div class="cf-practical-frame">
+      <figure class="cf-practical-media" data-reveal>
+        <img
+          src="/images/formation/practical-training.jpg"
+          alt="Agents GSS en mise en situation pratique — coordination et mouvement dans la cour du centre de formation"
           loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          allowfullscreen
-        ></iframe>
-        <a class="cf-locate-map-link" href={trainingAddress.mapsUrl} target="_blank" rel="noopener noreferrer">
-          Ouvrir dans Google Maps
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M7 17 17 7M9 7h8v8" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </a>
+          decoding="async"
+          width="900"
+          height="1000"
+        />
+        <div class="cf-practical-tone" aria-hidden="true"></div>
+      </figure>
+      <div class="cf-practical-text">
+        <p class="cf-eyebrow" data-reveal>Pratique</p>
+        <h2 id="cf-practical-heading" class="cf-section-heading" data-reveal data-reveal-delay="120">
+          Pas seulement de la théorie.
+        </h2>
+        <p class="cf-practical-body" data-reveal data-reveal-delay="240">
+          La formation en tant qu'agent de sécurité de GSS ne se limite pas
+          qu'à la théorie. Un centre de formation de qualité vous offrira des
+          opportunités d'acquérir une expérience pratique grâce à des mises
+          en situation réelles. Vous serez confronté à des scénarios simulés
+          où vous devrez prendre des décisions rapides, gérer des conflits
+          et appliquer les procédures de sécurité appropriées. Cette expérience
+          pratique vous préparera efficacement aux défis du terrain et vous
+          permettra de développer votre confiance et vos compétences.
+        </p>
       </div>
+    </div>
+  </section>
+
+  <!-- ─── ESPACE CANDIDAT (4-step journey) ────────────────────── -->
+  <section class="cf-candidate" aria-labelledby="cf-candidate-heading">
+    <div class="cf-candidate-frame">
+      <header class="cf-candidate-head">
+        <p class="cf-eyebrow cf-eyebrow-on-dark" data-reveal>Espace candidat</p>
+        <h2 id="cf-candidate-heading" class="cf-section-heading cf-section-heading-on-dark" data-reveal data-reveal-delay="100">
+          Votre parcours, en 4 étapes.
+        </h2>
+        <p class="cf-candidate-sub" data-reveal data-reveal-delay="200">
+          De l'envoi de votre dossier à votre première affectation,
+          voici exactement ce qui vous attend. Aucune zone grise.
+        </p>
+      </header>
+      <ol class="cf-candidate-steps">
+        {candidateJourney.map((step, i) => (
+          <li
+            class="cf-candidate-step"
+            data-reveal
+            data-reveal-delay={String(180 + i * 100)}
+            style={`--reveal-delay: ${180 + i * 100}ms;`}
+          >
+            <div class="cf-candidate-step-head">
+              <span class="cf-candidate-num">{step.n}</span>
+              <span class="cf-candidate-meta">{step.meta}</span>
+            </div>
+            <h3 class="cf-candidate-step-title">{step.title}</h3>
+            <p class="cf-candidate-step-body">{step.body}</p>
+          </li>
+        ))}
+      </ol>
     </div>
   </section>
 
@@ -263,12 +153,12 @@ const trainingAddress = contact.addresses.training;
   <section class="cf-cta" aria-labelledby="cf-cta-heading">
     <div class="cf-cta-frame">
       <div class="cf-cta-text" data-reveal>
-        <p class="cf-eyebrow cf-eyebrow-on-dark">Inscription</p>
+        <p class="cf-eyebrow">Inscription</p>
         <h2 id="cf-cta-heading" class="cf-cta-heading">
           Postuler, ou inscrire vos équipes.
         </h2>
         <p class="cf-cta-sub">
-          Candidats individuels, RH d’entreprise, postes de sécurité diplomatique.
+          Candidats individuels, RH d'entreprise, postes de sécurité diplomatique.
           Calendriers de promotions ou formation dédiée sur demande.
         </p>
         <p class="cf-cta-phone">
@@ -326,27 +216,14 @@ const trainingAddress = contact.addresses.training;
               <input type="text" name="company" autocomplete="organization" />
             </label>
             <label class="cf-field">
-              <span class="cf-label">Type d’inscription</span>
+              <span class="cf-label">Type d'inscription</span>
               <select name="type">
                 <option value="individuel">Individuel</option>
-                <option value="equipe">Équipe (RH d’entreprise)</option>
+                <option value="equipe">Équipe (RH d'entreprise)</option>
                 <option value="diplomatique">Poste de sécurité diplomatique</option>
               </select>
             </label>
           </div>
-
-          <label class="cf-field">
-            <span class="cf-label">Programme souhaité</span>
-            <select name="programme">
-              <option value="">— Choisir un programme —</option>
-              <option value="Agent de prévention et de sécurité">Agent de prévention et de sécurité</option>
-              <option value="Sécurité incendie & premiers secours">Sécurité incendie &amp; premiers secours</option>
-              <option value="Cynophile & maître-chien">Cynophile &amp; maître-chien</option>
-              <option value="Conduite défensive & escorte">Conduite défensive &amp; escorte</option>
-              <option value="Protocole & sécurité d’élite">Protocole &amp; sécurité d’élite</option>
-              <option value="autre">Autre / à discuter</option>
-            </select>
-          </label>
 
           <label class="cf-field">
             <span class="cf-label">Quelques mots sur votre contexte</span>
@@ -424,14 +301,11 @@ const trainingAddress = contact.addresses.training;
     font-size: clamp(1.0625rem, 1.5vw, 1.3125rem);
     line-height: 1.6;
     color: var(--color-cream);
-    max-width: 40em;
+    max-width: 44em;
     opacity: 0.92;
   }
 
   /* ─── SHARED CHROME ────────────────────────────────────────── */
-  .cf-section {
-    padding: clamp(5rem, 11vw, 10rem) clamp(1.5rem, 5vw, 4rem);
-  }
   .cf-eyebrow {
     margin: 0 0 1rem;
     font-family: var(--font-body);
@@ -456,7 +330,7 @@ const trainingAddress = contact.addresses.training;
     margin: 0;
     font-family: var(--font-display);
     font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
-    font-size: clamp(1.75rem, 3.4vw, 3.25rem);
+    font-size: clamp(1.875rem, 3.4vw, 3.25rem);
     line-height: 1.08;
     letter-spacing: -0.02em;
     color: var(--color-ink);
@@ -465,138 +339,96 @@ const trainingAddress = contact.addresses.training;
   }
   .cf-section-heading-on-dark { color: var(--color-cream); }
 
-  /* ─── MANIFESTE ────────────────────────────────────────────── */
-  .cf-manifest {
+  /* ─── PRACTICAL (image + paragraph) ────────────────────────── */
+  .cf-practical {
     background: var(--color-cream);
-    padding-block: clamp(4rem, 9vw, 8rem);
-  }
-  .cf-manifest-frame { max-width: 920px; margin-inline: auto; }
-  .cf-manifest-text {
-    margin: 0.75rem 0 0;
-    font-family: var(--font-display);
-    font-variation-settings: 'opsz' 80, 'wght' 420, 'SOFT' 40;
-    font-size: clamp(1.5rem, 2.8vw, 2.5rem);
-    line-height: 1.25;
-    letter-spacing: -0.015em;
     color: var(--color-ink);
-    text-wrap: balance;
+    padding: clamp(5rem, 11vw, 10rem) clamp(1.5rem, 5vw, 4rem);
   }
-
-  /* ─── PROGRAMMES ───────────────────────────────────────────── */
-  .cf-programmes { background: var(--color-cream-2); }
-  .cf-programmes-frame {
+  .cf-practical-frame {
     max-width: 1280px;
     margin-inline: auto;
     display: grid;
     grid-template-columns: 1fr;
     gap: clamp(2.5rem, 5vw, 4.5rem);
+    align-items: center;
   }
   @media (min-width: 1024px) {
-    .cf-programmes-frame {
-      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    .cf-practical-frame {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
       gap: 5rem;
-      align-items: start;
     }
   }
-  .cf-programmes-head { max-width: 30rem; }
-  .cf-programmes-sub {
-    margin: 1rem 0 0;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--color-mute-on-light);
-  }
-  .cf-programmes-list { list-style: none; margin: 0; padding: 0; display: grid; }
-  .cf-programme {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1.75rem;
-    padding: 1.75rem 0;
-    border-top: 1px solid var(--color-hairline-on-light);
-    align-items: baseline;
-  }
-  .cf-programme:last-child { border-bottom: 1px solid var(--color-hairline-on-light); }
-  .cf-programme-num {
-    font-family: var(--font-display);
-    font-variation-settings: 'opsz' 32, 'wght' 460;
-    font-size: 0.9375rem;
-    color: var(--color-bronze);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.02em;
-    padding-top: 0.25rem;
-  }
-  .cf-programme-text { display: flex; flex-direction: column; gap: 0.5rem; }
-  .cf-programme-name {
+  .cf-practical-media {
+    position: relative;
     margin: 0;
-    font-family: var(--font-display);
-    font-variation-settings: 'opsz' 48, 'wght' 460;
-    font-size: clamp(1.25rem, 2vw, 1.625rem);
-    line-height: 1.15;
-    letter-spacing: -0.015em;
-    color: var(--color-ink);
-  }
-  .cf-programme-body {
-    margin: 0;
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    color: var(--color-mute-on-light);
-    max-width: 38em;
-  }
-
-  /* ─── DOMAINES (chips) ─────────────────────────────────────── */
-  .cf-domains { background: var(--color-cream); }
-  .cf-domains-frame { max-width: 1280px; margin-inline: auto; }
-  .cf-domains-head { max-width: 36rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
-  .cf-domains-grid {
-    list-style: none; margin: 0; padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.625rem 0.75rem;
-  }
-  .cf-domain-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.625rem;
-    padding: 0.625rem 1rem 0.625rem 0.875rem;
-    border: 1px solid var(--color-hairline-on-light);
-    border-radius: 9999px;
-    font-family: var(--font-body);
-    font-size: 0.875rem;
-    color: var(--color-ink);
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    isolation: isolate;
     background: var(--color-cream-2);
-    transition:
-      border-color var(--duration-normal) var(--ease-out-expo),
-      background-color var(--duration-normal) var(--ease-out-expo);
+    box-shadow:
+      0 1px 2px oklch(0% 0 0 / 0.04),
+      0 22px 48px -18px oklch(20% 0.04 250 / 0.22);
   }
-  .cf-domain-chip:hover {
-    border-color: var(--color-bronze);
-    background: var(--color-cream);
+  .cf-practical-media img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    filter: saturate(0.94);
+    animation: cf-practical-zoom 26s ease-out 0.6s forwards;
+    will-change: transform;
   }
-  .cf-domain-bullet {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--color-bronze);
-    flex-shrink: 0;
+  @keyframes cf-practical-zoom {
+    from { transform: scale(1.02); }
+    to   { transform: scale(1.08); }
+  }
+  .cf-practical-tone {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, transparent 60%, oklch(15% 0.04 250 / 0.25) 100%),
+      radial-gradient(60% 50% at 10% 100%, oklch(22% 0.06 70 / 0.18), transparent 65%);
+    pointer-events: none;
+  }
+  .cf-practical-text { display: flex; flex-direction: column; }
+  .cf-practical-body {
+    margin: clamp(1rem, 2vw, 1.5rem) 0 0;
+    font-size: clamp(1rem, 1.2vw, 1.125rem);
+    line-height: 1.7;
+    color: var(--color-mute-on-light);
+    max-width: 36em;
   }
 
-  /* ─── CYCLE (dark band) ────────────────────────────────────── */
-  .cf-cycle {
+  @media (prefers-reduced-motion: reduce) {
+    .cf-hero-image img,
+    .cf-practical-media img { animation: none; }
+  }
+
+  /* ─── ESPACE CANDIDAT ──────────────────────────────────────── */
+  .cf-candidate {
     background: var(--color-ink);
     color: var(--color-cream);
+    padding: clamp(5rem, 11vw, 10rem) clamp(1.5rem, 5vw, 4rem);
     position: relative;
     overflow: hidden;
     isolation: isolate;
   }
-  .cf-cycle::before {
+  .cf-candidate::before {
     content: '';
     position: absolute; inset: 0;
-    background: radial-gradient(60% 60% at 90% 10%, oklch(40% 0.06 70 / 0.22), transparent 70%);
+    background:
+      radial-gradient(70% 50% at 100% 0%, oklch(40% 0.06 70 / 0.20), transparent 70%),
+      radial-gradient(60% 50% at 0% 100%, oklch(40% 0.06 70 / 0.16), transparent 70%);
     pointer-events: none;
     z-index: -1;
   }
-  .cf-cycle-frame { max-width: 1280px; margin-inline: auto; }
-  .cf-cycle-head { max-width: 44rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
-  .cf-cycle-sub {
+  .cf-candidate-frame { max-width: 1280px; margin-inline: auto; }
+  .cf-candidate-head {
+    max-width: 44rem;
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+  .cf-candidate-sub {
     margin: 1.25rem 0 0;
     font-size: 1.0625rem;
     line-height: 1.6;
@@ -604,37 +436,71 @@ const trainingAddress = contact.addresses.training;
     opacity: 0.78;
     max-width: 36em;
   }
-  .cf-cycle-grid {
-    list-style: none; margin: 0; padding: 0;
+  .cf-candidate-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 0;
     border-top: 1px solid oklch(100% 0 0 / 0.10);
   }
-  @media (min-width: 1024px) { .cf-cycle-grid { grid-template-columns: repeat(4, 1fr); } }
-  .cf-cycle-step {
+  @media (min-width: 1024px) {
+    .cf-candidate-steps { grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (min-width: 640px) and (max-width: 1023px) {
+    .cf-candidate-steps { grid-template-columns: repeat(2, 1fr); }
+  }
+  .cf-candidate-step {
     padding: clamp(1.75rem, 3vw, 2.5rem) clamp(1.25rem, 2vw, 1.75rem) clamp(1.75rem, 3vw, 2.5rem) 0;
     border-bottom: 1px solid oklch(100% 0 0 / 0.10);
     border-right: 1px solid oklch(100% 0 0 / 0.10);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: background-color var(--duration-normal) var(--ease-out-expo);
   }
+  .cf-candidate-step:hover { background: oklch(100% 0 0 / 0.02); }
   @media (min-width: 1024px) {
-    .cf-cycle-step { border-bottom: none; }
-    .cf-cycle-step:last-child { border-right: none; }
+    .cf-candidate-step { border-bottom: none; }
+    .cf-candidate-step:last-child { border-right: none; }
   }
-  @media (max-width: 1023px) {
-    .cf-cycle-step:nth-child(2n) { border-right: none; }
-    .cf-cycle-step:nth-last-child(-n+2) { border-bottom: none; }
+  @media (min-width: 640px) and (max-width: 1023px) {
+    .cf-candidate-step:nth-child(2n) { border-right: none; }
+    .cf-candidate-step:nth-last-child(-n+2) { border-bottom: none; }
   }
-  .cf-cycle-num {
+  @media (max-width: 639px) {
+    .cf-candidate-step { border-right: none; }
+    .cf-candidate-step:last-child { border-bottom: none; }
+  }
+  .cf-candidate-step-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .cf-candidate-num {
     font-family: var(--font-display);
-    font-variation-settings: 'opsz' 32, 'wght' 460;
-    font-size: 0.875rem;
+    font-variation-settings: 'opsz' 80, 'wght' 460;
+    font-size: clamp(2rem, 3.2vw, 2.75rem);
+    line-height: 1;
     color: var(--color-bronze-warm);
     font-variant-numeric: tabular-nums;
-    letter-spacing: 0.05em;
+    letter-spacing: -0.02em;
   }
-  .cf-cycle-title {
-    margin: 1rem 0 0.75rem;
+  .cf-candidate-meta {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-bronze-warm);
+    opacity: 0.78;
+    text-align: right;
+    max-width: 11em;
+    line-height: 1.4;
+  }
+  .cf-candidate-step-title {
+    margin: 0;
     font-family: var(--font-display);
     font-variation-settings: 'opsz' 48, 'wght' 460;
     font-size: clamp(1.375rem, 2vw, 1.75rem);
@@ -642,148 +508,23 @@ const trainingAddress = contact.addresses.training;
     color: var(--color-cream);
     letter-spacing: -0.015em;
   }
-  .cf-cycle-body {
+  .cf-candidate-step-body {
     margin: 0;
     font-size: 0.9375rem;
     line-height: 1.6;
     color: var(--color-cream);
-    opacity: 0.78;
+    opacity: 0.82;
+    max-width: 22em;
   }
 
-  /* ─── LOCALISATION ─────────────────────────────────────────── */
-  .cf-locate { background: var(--color-cream); }
-  .cf-locate-frame {
-    max-width: 1280px;
-    margin-inline: auto;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(2.5rem, 5vw, 4.5rem);
-    align-items: center;
-  }
-  @media (min-width: 1024px) {
-    .cf-locate-frame { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 5rem; }
-  }
-  .cf-locate-text { display: flex; flex-direction: column; }
-  .cf-locate-sub {
-    margin: 1rem 0 0;
-    font-size: 1.0625rem;
-    line-height: 1.6;
-    color: var(--color-mute-on-light);
-    max-width: 36em;
-  }
-  .cf-locate-info {
-    margin: 2rem 0 0;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
-  }
-  @media (min-width: 640px) {
-    .cf-locate-info { grid-template-columns: 1fr 1fr; gap: 2rem; }
-  }
-  .cf-locate-row {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--color-hairline-on-light);
-  }
-  .cf-locate-label {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: 0.6875rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--color-bronze-deep);
-  }
-  .cf-locate-value {
-    margin: 0;
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    color: var(--color-ink);
-  }
-  .cf-locate-phones { display: flex; flex-direction: column; gap: 0.25rem; }
-  .cf-locate-phones a {
-    color: var(--color-ink);
-    font-variant-numeric: tabular-nums;
-    text-decoration: underline;
-    text-decoration-color: var(--color-bronze);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.25em;
-    transition: color var(--duration-normal) var(--ease-out-expo);
-  }
-  .cf-locate-phones a:hover { color: var(--color-bronze-deep); }
-
-  .cf-locate-map {
-    position: relative;
-    aspect-ratio: 5 / 4;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    background: var(--color-cream-2);
-    border: 1px solid var(--color-hairline-on-light);
-    box-shadow:
-      0 1px 2px oklch(0% 0 0 / 0.04),
-      0 18px 42px -18px oklch(20% 0.04 250 / 0.18);
-    display: block;
-    isolation: isolate;
-  }
-  .cf-locate-map iframe {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-    filter: grayscale(0.4) saturate(0.85);
-    transition: filter var(--duration-slow) var(--ease-out-expo);
-  }
-  .cf-locate-map:hover iframe { filter: grayscale(0) saturate(1); }
-  .cf-locate-map-link {
-    position: absolute;
-    z-index: 2;
-    left: 0.875rem;
-    bottom: 0.875rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0.875rem;
-    border-radius: 9999px;
-    background: oklch(98% 0.005 70 / 0.94);
-    color: var(--color-ink);
-    font-family: var(--font-body);
-    font-size: 0.8125rem;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-    text-decoration: none;
-    border: 1px solid var(--color-hairline-on-light);
-    box-shadow: 0 6px 18px -10px oklch(20% 0.04 250 / 0.35);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    transition:
-      color var(--duration-normal) var(--ease-out-expo),
-      background-color var(--duration-normal) var(--ease-out-expo),
-      transform var(--duration-fast) var(--ease-out-expo);
-  }
-  .cf-locate-map-link svg { width: 0.9375rem; height: 0.9375rem; }
-  .cf-locate-map-link:hover {
-    color: var(--color-bronze-deep);
-    background: var(--color-cream);
-    transform: translateY(-1px);
-  }
-
-  /* ─── CTA (dark) ───────────────────────────────────────────── */
+  /* ─── CTA (inscription form, cream) ────────────────────────── */
   .cf-cta {
-    background: var(--color-ink);
-    color: var(--color-cream);
+    background: var(--color-cream);
+    color: var(--color-ink);
     padding: clamp(5rem, 12vw, 11rem) clamp(1.5rem, 5vw, 4rem);
     position: relative;
     overflow: hidden;
     isolation: isolate;
-  }
-  .cf-cta::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(60% 50% at 50% 100%, oklch(40% 0.06 70 / 0.22), transparent 70%);
-    pointer-events: none;
-    z-index: -1;
   }
   .cf-cta-frame {
     position: relative;
@@ -804,7 +545,7 @@ const trainingAddress = contact.addresses.training;
     font-size: clamp(2rem, 4vw, 3.5rem);
     line-height: 1.05;
     letter-spacing: -0.02em;
-    color: var(--color-cream);
+    color: var(--color-ink);
     max-width: 14em;
     text-wrap: balance;
   }
@@ -812,46 +553,43 @@ const trainingAddress = contact.addresses.training;
     margin: 0;
     font-size: 1.0625rem;
     line-height: 1.6;
-    color: var(--color-cream);
-    opacity: 0.80;
+    color: var(--color-mute-on-light);
     max-width: 36em;
   }
-  .cf-cta-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
   .cf-cta-phone {
     margin: 1.25rem 0 0;
     font-size: 0.9375rem;
-    color: var(--color-cream);
-    opacity: 0.75;
+    color: var(--color-mute-on-light);
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.625rem;
   }
   .cf-cta-phone a {
-    color: var(--color-cream);
+    color: var(--color-ink);
     font-variant-numeric: tabular-nums;
     text-decoration: underline;
-    text-decoration-color: var(--color-bronze-warm);
+    text-decoration-color: var(--color-bronze);
     text-decoration-thickness: 1px;
     text-underline-offset: 0.25em;
     transition: color var(--duration-normal) var(--ease-out-expo);
   }
-  .cf-cta-phone a:hover { color: var(--color-bronze-warm); }
-  .cf-cta-phone span[aria-hidden] { color: var(--color-bronze-warm); }
-  .cf-cta-wa { margin: 0.5rem 0 0; font-size: 0.875rem; opacity: 0.78; }
+  .cf-cta-phone a:hover { color: var(--color-bronze-deep); }
+  .cf-cta-phone span[aria-hidden] { color: var(--color-bronze); }
+  .cf-cta-wa { margin: 0.5rem 0 0; font-size: 0.875rem; }
   .cf-cta-wa a {
-    color: var(--color-cream);
+    color: var(--color-ink);
     text-decoration: none;
-    border-bottom: 1px solid oklch(100% 0 0 / 0.28);
+    border-bottom: 1px solid var(--color-hairline-on-light);
     padding-bottom: 0.15rem;
     transition: border-color var(--duration-normal) var(--ease-out-expo), color var(--duration-normal) var(--ease-out-expo);
   }
-  .cf-cta-wa a:hover { color: var(--color-bronze-warm); border-color: var(--color-bronze-warm); }
+  .cf-cta-wa a:hover { color: var(--color-bronze-deep); border-color: var(--color-bronze); }
 
   /* ─── FORM (inscription) ───────────────────────────────────── */
   .cf-form-wrap {
-    background: oklch(100% 0 0 / 0.04);
-    border: 1px solid oklch(100% 0 0 / 0.10);
+    background: var(--color-cream-2);
+    border: 1px solid var(--color-hairline-on-light);
     border-radius: var(--radius-md);
     padding: clamp(1.5rem, 3vw, 2.25rem);
   }
@@ -859,12 +597,13 @@ const trainingAddress = contact.addresses.training;
     margin: 0 0 1.25rem;
     padding: 0.875rem 1rem;
     border-radius: var(--radius-sm);
-    background: oklch(100% 0 0 / 0.06);
-    border: 1px solid oklch(100% 0 0 / 0.15);
-    color: var(--color-cream);
+    background: var(--color-cream);
+    border: 1px solid var(--color-bronze);
+    color: var(--color-ink);
     font-size: 0.875rem;
     line-height: 1.5;
   }
+  .cf-notice strong { color: var(--color-bronze-deep); font-weight: 500; }
   .cf-form { display: flex; flex-direction: column; gap: 1rem; }
   .cf-row { display: grid; grid-template-columns: 1fr; gap: 1rem; }
   @media (min-width: 640px) { .cf-row { grid-template-columns: 1fr 1fr; } }
@@ -878,7 +617,7 @@ const trainingAddress = contact.addresses.training;
     font-size: 0.6875rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--color-bronze-warm);
+    color: var(--color-bronze-deep);
     font-weight: 500;
   }
   .cf-field input[type="text"],
@@ -890,20 +629,19 @@ const trainingAddress = contact.addresses.training;
     padding: 0.7rem 0.875rem;
     font-family: var(--font-body);
     font-size: 0.9375rem;
-    color: var(--color-cream);
-    background: oklch(100% 0 0 / 0.04);
-    border: 1px solid oklch(100% 0 0 / 0.18);
+    color: var(--color-ink);
+    background: var(--color-cream);
+    border: 1px solid var(--color-hairline-on-light);
     border-radius: var(--radius-sm);
     transition:
       border-color var(--duration-normal) var(--ease-out-expo),
-      background-color var(--duration-normal) var(--ease-out-expo);
+      box-shadow var(--duration-normal) var(--ease-out-expo);
   }
-  .cf-field input::placeholder,
-  .cf-field textarea::placeholder { color: var(--color-cream); opacity: 0.42; }
-  .cf-field input:focus, .cf-field select:focus, .cf-field textarea:focus {
+  .cf-field input:focus,
+  .cf-field select:focus,
+  .cf-field textarea:focus {
     outline: none;
-    border-color: var(--color-bronze-warm);
-    background: oklch(100% 0 0 / 0.06);
+    border-color: var(--color-bronze);
     box-shadow: 0 0 0 3px oklch(70% 0.10 70 / 0.20);
   }
   .cf-field textarea { resize: vertical; min-height: 6.5rem; }
@@ -911,13 +649,7 @@ const trainingAddress = contact.addresses.training;
     margin: 0.25rem 0 0;
     font-size: 0.8125rem;
     line-height: 1.5;
-    color: var(--color-cream);
-    opacity: 0.7;
+    color: var(--color-mute-on-light);
   }
   .cf-actions { margin-top: 0.5rem; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .cf-hero-image img { animation: none; }
-    .cf-locate-map iframe { transition: none; }
-  }
 </style>
