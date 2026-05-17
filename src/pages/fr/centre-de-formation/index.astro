@@ -185,6 +185,9 @@ const phoneDisplay = contact.phones.primary.display;
 
         <form
           class="cf-form"
+          data-candidate-form
+          data-locale="fr"
+          data-merci-path="/fr/merci/"
           action="https://api.web3forms.com/submit"
           method="POST"
         >
@@ -248,6 +251,77 @@ const phoneDisplay = contact.phones.primary.display;
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  // Intercept the inscription form: create a Supabase candidate row,
+  // append the reference + redirect URL, then let Web3Forms continue
+  // its native POST so Bechir still receives the email notification.
+  //
+  // is:inline is NOT used here — we need the `submit` helper from
+  // @lib/candidate, which only works through Astro's bundler. So we
+  // re-attach the listener on every `astro:page-load` to survive
+  // view transitions (the form element is replaced after swap).
+  import { submit, rememberCandidate, isConfigured } from '@lib/candidate';
+
+  function setupCandidateForm(): void {
+    const form = document.querySelector<HTMLFormElement>('[data-candidate-form]');
+    if (!form || form.dataset.candidateBound === '1') return;
+    form.dataset.candidateBound = '1';
+
+    form.addEventListener('submit', async (e) => {
+      if (!isConfigured()) return; // fall through to Web3Forms only
+      e.preventDefault();
+
+      const fd = new FormData(form);
+      const email = String(fd.get('email') ?? '').trim();
+      const locale = (form.dataset.locale === 'en' ? 'en' : 'fr') as 'fr' | 'en';
+      const merciPath = form.dataset.merciPath ?? '/fr/merci/';
+      const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
+
+      try {
+        const result = await submit({
+          email,
+          full_name: String(fd.get('name') ?? '').trim(),
+          phone: String(fd.get('phone') ?? '').trim(),
+          type: (String(fd.get('type') ?? 'individuel') as 'individuel' | 'equipe' | 'diplomatique'),
+          company: String(fd.get('company') ?? '').trim() || undefined,
+          message: String(fd.get('message') ?? '').trim() || undefined,
+          locale,
+        });
+
+        if ('reference' in result) {
+          // Append reference to the form so Web3Forms includes it in the email.
+          const refInput = document.createElement('input');
+          refInput.type = 'hidden';
+          refInput.name = 'reference';
+          refInput.value = result.reference;
+          form.appendChild(refInput);
+
+          rememberCandidate(result.reference, email);
+
+          // Update redirect URL with ref so the merci page can display it.
+          const redirectInput = form.querySelector<HTMLInputElement>('input[name="redirect"]');
+          if (redirectInput) {
+            const base = location.origin + merciPath;
+            redirectInput.value = `${base}?ref=${encodeURIComponent(result.reference)}`;
+          }
+        } else {
+          // Supabase insert failed — log but still submit to Web3Forms so
+          // we don't lose the lead. Bechir will see the email.
+          console.warn('[candidate] Supabase insert failed:', result.error);
+        }
+      } catch (err) {
+        console.warn('[candidate] interception error:', err);
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+        form.submit();
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupCandidateForm);
+</script>
 
 <style>
   /* ─── HERO ─────────────────────────────────────────────────── */

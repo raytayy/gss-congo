@@ -86,6 +86,8 @@ const pathSegments: Record<string, LocalisedString> = {
   careers: { fr: 'carrieres', en: 'careers' },
   postuler: { fr: 'postuler', en: 'apply' },
   apply: { fr: 'postuler', en: 'apply' },
+  'espace-candidat': { fr: 'espace-candidat', en: 'candidate-space' },
+  'candidate-space': { fr: 'espace-candidat', en: 'candidate-space' },
   actualites: { fr: 'actualites', en: 'news' },
   news: { fr: 'actualites', en: 'news' },
   contact: { fr: 'contact', en: 'contact' },

@@ -28,6 +28,18 @@ import { contact, whatsappLink } from '@lib/contact';
         urgents, joignez-nous directement.
       </p>
 
+      {/* Reference block — hidden by default, revealed by JS when ?ref=XYZ in URL.
+         Set after a successful inscription via the candidate-form interceptor. */}
+      <div class="mc-ref" hidden data-merci-ref data-reveal data-reveal-delay="280">
+        <p class="mc-ref-label">Votre référence de candidature</p>
+        <p class="mc-ref-value" data-merci-ref-value>—</p>
+        <p class="mc-ref-help">
+          Conservez-la précieusement. Vous pouvez consulter l'avancement de
+          votre dossier à tout moment via
+          <a href="/fr/espace-candidat/" data-merci-ref-link>l'espace candidat →</a>
+        </p>
+      </div>
+
       <div class="mc-actions" data-reveal data-reveal-delay="360">
         <NeonButton variant="solid" size="lg" href={whatsappLink()}>
           WhatsApp
@@ -46,6 +58,22 @@ import { contact, whatsappLink } from '@lib/contact';
     </div>
   </section>
 </BaseLayout>
+
+<script is:inline>
+  // Reveal the candidate-reference block when ?ref=XYZ is in the URL.
+  // Fires on initial load AND after every astro:page-load (view transitions).
+  document.addEventListener('astro:page-load', () => {
+    const params = new URLSearchParams(location.search);
+    const ref = params.get('ref');
+    const block = document.querySelector('[data-merci-ref]');
+    if (!ref || !block) return;
+    const valueEl = block.querySelector('[data-merci-ref-value]');
+    if (valueEl) valueEl.textContent = ref;
+    const linkEl = block.querySelector('[data-merci-ref-link]');
+    if (linkEl) linkEl.setAttribute('href', '/fr/espace-candidat/?ref=' + encodeURIComponent(ref));
+    block.removeAttribute('hidden');
+  });
+</script>
 
 <style>
   .mc {
@@ -94,6 +122,62 @@ import { contact, whatsappLink } from '@lib/contact';
     color: var(--color-mute-on-light);
     max-width: 36em;
   }
+  /* Candidate reference block — shown when ?ref=XYZ in URL */
+  .mc-ref {
+    margin: 0 0 2.5rem;
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    background: var(--color-ink);
+    color: var(--color-cream);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-bronze-deep);
+    max-width: 40rem;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .mc-ref::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(60% 80% at 100% 0%, oklch(40% 0.06 70 / 0.22), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .mc-ref-label {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-warm);
+    font-weight: 500;
+  }
+  .mc-ref-value {
+    margin: 0 0 0.875rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 460;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    color: var(--color-cream);
+    font-variant-numeric: tabular-nums;
+  }
+  .mc-ref-help {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--color-cream);
+    opacity: 0.82;
+  }
+  .mc-ref-help a {
+    color: var(--color-bronze-warm);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-bronze-deep);
+    padding-bottom: 0.1rem;
+    transition: border-color var(--duration-normal) var(--ease-out-expo);
+  }
+  .mc-ref-help a:hover { border-bottom-color: var(--color-bronze-warm); }
+
   .mc-actions {
     display: flex;
     flex-wrap: wrap;

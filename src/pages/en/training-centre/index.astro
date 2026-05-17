@@ -174,6 +174,9 @@ const waMessage = 'Hello GSS, I am reaching out from your website. I would like 
 
         <form
           class="cf-form"
+          data-candidate-form
+          data-locale="en"
+          data-merci-path="/en/thank-you/"
           action="https://api.web3forms.com/submit"
           method="POST"
         >
@@ -237,6 +240,69 @@ const waMessage = 'Hello GSS, I am reaching out from your website. I would like 
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  // Mirror of the FR centre-de-formation interception. See that file for
+  // the full rationale. Same handler bound by data-candidate-form attr.
+  import { submit, rememberCandidate, isConfigured } from '@lib/candidate';
+
+  function setupCandidateForm(): void {
+    const form = document.querySelector<HTMLFormElement>('[data-candidate-form]');
+    if (!form || form.dataset.candidateBound === '1') return;
+    form.dataset.candidateBound = '1';
+
+    form.addEventListener('submit', async (e) => {
+      if (!isConfigured()) return;
+      e.preventDefault();
+
+      const fd = new FormData(form);
+      const email = String(fd.get('email') ?? '').trim();
+      const locale = (form.dataset.locale === 'en' ? 'en' : 'fr') as 'fr' | 'en';
+      const merciPath = form.dataset.merciPath ?? '/en/thank-you/';
+      const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
+
+      try {
+        const result = await submit({
+          email,
+          full_name: String(fd.get('name') ?? '').trim(),
+          phone: String(fd.get('phone') ?? '').trim(),
+          type: (String(fd.get('type') ?? 'individual') === 'team' ? 'equipe'
+                 : String(fd.get('type') ?? 'individual') === 'diplomatic' ? 'diplomatique'
+                 : 'individuel') as 'individuel' | 'equipe' | 'diplomatique',
+          company: String(fd.get('company') ?? '').trim() || undefined,
+          message: String(fd.get('message') ?? '').trim() || undefined,
+          locale,
+        });
+
+        if ('reference' in result) {
+          const refInput = document.createElement('input');
+          refInput.type = 'hidden';
+          refInput.name = 'reference';
+          refInput.value = result.reference;
+          form.appendChild(refInput);
+
+          rememberCandidate(result.reference, email);
+
+          const redirectInput = form.querySelector<HTMLInputElement>('input[name="redirect"]');
+          if (redirectInput) {
+            const base = location.origin + merciPath;
+            redirectInput.value = `${base}?ref=${encodeURIComponent(result.reference)}`;
+          }
+        } else {
+          console.warn('[candidate] Supabase insert failed:', result.error);
+        }
+      } catch (err) {
+        console.warn('[candidate] interception error:', err);
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+        form.submit();
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupCandidateForm);
+</script>
 
 <style>
   /* ─── HERO ─────────────────────────────────────────────────── */
