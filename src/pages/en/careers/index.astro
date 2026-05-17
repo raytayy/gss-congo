@@ -1,7 +1,7 @@
 ---
 /*
- * /en/careers/ — Careers (EN). Mirror of /fr/carrieres/index.astro.
- * Beats: Hero → Manifesto → Why → Roles → Profile → How to apply → CTA.
+ * /en/careers/ — Open positions (EN). Mirror of /fr/carrieres/index.astro.
+ * Structure: Hero → Open positions → FAQ → Profile compact → Apply (form).
  */
 
 import BaseLayout from '@layouts/BaseLayout.astro';
@@ -11,79 +11,83 @@ import { contact, whatsappLink } from '@lib/contact';
 const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
 const isConfigured = accessKey.length > 10;
 
-const principles = [
-  {
-    n: '01',
-    title: 'Trained before deployed.',
-    body: 'No agent enters a mission without completing our training cycle. No improvisation in the field.',
-  },
-  {
-    n: '02',
-    title: 'Operational supervision.',
-    body: 'Every agent has a mentor, a clear chain of command, and regular field feedback. We correct what should be corrected.',
-  },
-  {
-    n: '03',
-    title: 'A path, not just a post.',
-    body: 'Progression to post chief, instructor, supervision operator. The strongest profiles move into VIP and escort missions.',
-  },
-];
+type RoleStatus = 'open' | 'next' | 'waitlist';
 
-const roles = [
+interface Role {
+  code: string;
+  name: string;
+  summary: string;
+  status: RoleStatus;
+  type: string;
+}
+
+const roles: Role[] = [
   {
+    code: 'AGT-01',
     name: 'Prevention & security agent',
-    body: 'The common core. Static presence, access control, perimeter patrol, radio communication.',
+    summary: 'The common core. Static presence, access control, perimeter patrol, radio communication.',
+    status: 'open',
+    type: 'Permanent · cohort',
   },
   {
+    code: 'CHP-01',
     name: 'Post chief',
-    body: 'Coordinating a site team, managing rotations, client interface, incident reporting.',
+    summary: 'Site team coordination, rotation supervision, client interface, incident reporting.',
+    status: 'next',
+    type: 'Permanent · cohort',
   },
   {
+    code: 'K9-01',
     name: 'Canine handler & K9',
-    body: 'Two-handler work with response dogs. Continuous training, animal care and conditioning.',
+    summary: 'Two-handler work with response dogs. Continuous training, animal care and conditioning.',
+    status: 'waitlist',
+    type: 'Permanent · cohort',
   },
   {
+    code: 'DRV-01',
     name: 'Escort driver',
-    body: 'Certified defensive driving, route study, convoy coordination, posture under incident.',
+    summary: 'Certified defensive driving, route study, convoy coordination, posture under incident.',
+    status: 'next',
+    type: 'Permanent · cohort',
   },
   {
+    code: 'VIP-01',
     name: 'Elite security agent',
-    body: 'Civilian dress, protocol, VIP escort. Profiles selected after several years in standard guarding.',
+    summary: 'Civilian dress, protocol, VIP escort. Selected after several years in standard guarding.',
+    status: 'waitlist',
+    type: 'Permanent · selection',
   },
   {
+    code: 'SUP-01',
     name: 'Supervision centre operator',
-    body: '24/7 camera watch, doubt verification, response dispatch, daily activity reports.',
+    summary: '24/7 camera watch, doubt verification, response dispatch, daily activity reports.',
+    status: 'open',
+    type: 'Permanent · 3×8 shift',
   },
 ];
 
-const profile = [
-  'Integrity. Background check on every candidate.',
-  'Rigour. Punctuality, presentation, procedure-aligned.',
-  'Physical fitness. Entry test, ongoing maintenance.',
-  'Composure. Conflict de-escalation training, drills.',
-  'Discretion. What you see on site stays on site.',
-];
+const statusLabel: Record<RoleStatus, string> = {
+  open: 'Open',
+  next: 'Next cohort',
+  waitlist: 'Waitlist',
+};
 
-const steps = [
+const faqs = [
   {
-    n: '01',
-    title: 'Application',
-    body: 'Send CV + cover letter. State availability and preferred Kinshasa zone.',
+    q: 'When does the next cohort open?',
+    a: 'Our cohorts open in cycles, in lock-step with the training centre. Send your application — we get back to you within 7 working days with the next window.',
   },
   {
-    n: '02',
-    title: 'Interview',
-    body: 'Meet at headquarters. Identity verification, motivation, prior experience.',
+    q: 'Do I need prior experience?',
+    a: 'No. Our training centre prepares candidates with no prior experience. Integrity and rigour matter more than résumé length.',
   },
   {
-    n: '03',
-    title: 'Training',
-    body: 'Join a centre cohort — theory, practice, assessment.',
+    q: 'Is the training paid?',
+    a: 'In-house training, delivered before deployment, is covered by GSS for candidates selected into a cohort.',
   },
   {
-    n: '04',
-    title: 'Assignment',
-    body: 'First mission with a field mentor. 30-day review, contract confirmed.',
+    q: 'What is the starting salary?',
+    a: 'Salary depends on the role, zone and rotation. It is shared at interview — above the DRC guarding sector minimum.',
   },
 ];
 
@@ -93,8 +97,8 @@ const careersWaMessage = 'Hello GSS, I am reaching out from your website. I woul
 ---
 
 <BaseLayout
-  title="Careers"
-  description="Join GSS Congo: prevention agents, post chiefs, K9 handlers, escort drivers, elite security, supervision. Cohort-based recruitment."
+  title="Open positions"
+  description="Open positions at GSS Congo: prevention agents, post chiefs, K9 handlers, escort drivers, elite security, supervision."
   lang="en"
   altLocaleHref="/fr/carrieres/"
 >
@@ -107,150 +111,112 @@ const careersWaMessage = 'Hello GSS, I am reaching out from your website. I woul
     <div class="cr-hero-content">
       <p class="cr-eyebrow cr-eyebrow-on-dark" data-reveal>Careers</p>
       <h1 id="cr-heading" class="cr-hero-title" data-reveal data-reveal-delay="120">
-        The discipline. And a future.
+        Open positions.
       </h1>
       <p class="cr-hero-intro" data-reveal data-reveal-delay="240">
-        We recruit by cohorts, in lockstep with our training centre. No
-        permanent vacancies on display — a received application joins the
-        pool and finds its cohort. The house trains, deploys, supports,
-        and helps people grow.
+        We recruit by cohort, in lock-step with our training centre. 6 roles,
+        3 statuses — apply to the one that speaks to you.
       </p>
+      <div class="cr-hero-actions" data-reveal data-reveal-delay="360">
+        <NeonButton variant="solid" size="lg" href="#cr-jobs">
+          See positions
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M12 5v14M6 13l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </NeonButton>
+      </div>
     </div>
   </section>
 
-  <!-- ─── MANIFESTO ──────────────────────────────────────────── -->
-  <section class="cr-section cr-manifest" aria-labelledby="cr-manifest-heading">
-    <div class="cr-manifest-frame">
-      <p class="cr-eyebrow" data-reveal>Manifesto</p>
-      <p id="cr-manifest-heading" class="cr-manifest-text" data-reveal data-reveal-delay="120">
-        Serving as an agent is not improvised. It is learned, verified, and
-        renewed. We are looking for people ready to enter that discipline —
-        and stay there.
-      </p>
-    </div>
-  </section>
-
-  <!-- ─── WHY (dark band) ─────────────────────────────────────── -->
-  <section class="cr-section cr-why" aria-labelledby="cr-why-heading">
-    <div class="cr-why-frame">
-      <div class="cr-why-head">
-        <p class="cr-eyebrow cr-eyebrow-on-dark" data-reveal>Why join</p>
-        <h2 id="cr-why-heading" class="cr-section-heading cr-section-heading-on-dark" data-reveal data-reveal-delay="100">
-          3 commitments, to every agent.
+  <!-- ─── OPEN POSITIONS — catalog ────────────────────────────── -->
+  <section id="cr-jobs" class="cr-section cr-jobs" aria-labelledby="cr-jobs-heading">
+    <div class="cr-jobs-frame">
+      <div class="cr-jobs-head">
+        <p class="cr-eyebrow" data-reveal>Positions</p>
+        <h2 id="cr-jobs-heading" class="cr-section-heading" data-reveal data-reveal-delay="100">
+          6 roles, recruiting by cohort.
         </h2>
       </div>
-      <ol class="cr-why-grid">
-        {principles.map((p, i) => (
-          <li
-            class="cr-why-item"
-            data-reveal
-            data-reveal-delay={String(150 + i * 120)}
-            style={`--reveal-delay: ${150 + i * 120}ms;`}
-          >
-            <span class="cr-why-num">{p.n}</span>
-            <h3 class="cr-why-title">{p.title}</h3>
-            <p class="cr-why-body">{p.body}</p>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  <!-- ─── ROLES ──────────────────────────────────────────────── -->
-  <section class="cr-section cr-roles" aria-labelledby="cr-roles-heading">
-    <div class="cr-roles-frame">
-      <div class="cr-roles-head">
-        <p class="cr-eyebrow" data-reveal>Roles</p>
-        <h2 id="cr-roles-heading" class="cr-section-heading" data-reveal data-reveal-delay="100">
-          6 crafts of the house.
-        </h2>
-        <p class="cr-roles-sub" data-reveal data-reveal-delay="200">
-          The roles open continuously, by cohort. The bridge between each
-          role runs through internal training.
-        </p>
-      </div>
-      <ol class="cr-roles-list">
+      <ol class="cr-jobs-grid">
         {roles.map((r, i) => (
           <li
-            class="cr-role"
+            class="cr-job"
             data-reveal
-            data-reveal-delay={String(150 + i * 90)}
-            style={`--reveal-delay: ${150 + i * 90}ms;`}
+            data-reveal-delay={String(120 + i * 80)}
+            style={`--reveal-delay: ${120 + i * 80}ms;`}
           >
-            <span class="cr-role-num" aria-hidden="true">/ {String(i + 1).padStart(2, '0')}</span>
-            <div class="cr-role-text">
-              <h3 class="cr-role-name">{r.name}</h3>
-              <p class="cr-role-body">{r.body}</p>
-            </div>
+            <header class="cr-job-head">
+              <span class="cr-job-code">{r.code}</span>
+              <span class={`cr-job-status cr-job-status-${r.status}`}>
+                <span class="cr-job-dot" aria-hidden="true"></span>
+                {statusLabel[r.status]}
+              </span>
+            </header>
+            <h3 class="cr-job-name">{r.name}</h3>
+            <p class="cr-job-body">{r.summary}</p>
+            <ul class="cr-job-pills" aria-label="Role characteristics">
+              <li>Kinshasa</li>
+              <li>{r.type}</li>
+              <li>Training included</li>
+            </ul>
+            <a class="cr-job-apply" href={`#cr-apply?role=${r.code}`} data-role={r.code}>
+              Apply for this role
+              <span aria-hidden="true">→</span>
+            </a>
           </li>
         ))}
       </ol>
     </div>
   </section>
 
-  <!-- ─── PROFILE ────────────────────────────────────────────── -->
+  <!-- ─── FAQ ─────────────────────────────────────────────────── -->
+  <section class="cr-section cr-faq" aria-labelledby="cr-faq-heading">
+    <div class="cr-faq-frame">
+      <div class="cr-faq-head">
+        <p class="cr-eyebrow" data-reveal>FAQ</p>
+        <h2 id="cr-faq-heading" class="cr-section-heading" data-reveal data-reveal-delay="100">
+          What candidates ask.
+        </h2>
+      </div>
+      <div class="cr-faq-list">
+        {faqs.map((f, i) => (
+          <details class="cr-faq-item" data-reveal data-reveal-delay={String(120 + i * 80)}>
+            <summary class="cr-faq-q">
+              <span>{f.q}</span>
+              <span class="cr-faq-icon" aria-hidden="true">+</span>
+            </summary>
+            <p class="cr-faq-a">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PROFILE — compact inline row ────────────────────────── -->
   <section class="cr-section cr-profile" aria-labelledby="cr-profile-heading">
     <div class="cr-profile-frame">
-      <div class="cr-profile-head">
-        <p class="cr-eyebrow" data-reveal>Who we look for</p>
-        <h2 id="cr-profile-heading" class="cr-section-heading" data-reveal data-reveal-delay="100">
-          5 qualities. Non-negotiable.
-        </h2>
-      </div>
-      <ul class="cr-profile-list" aria-label="5 expected qualities">
-        {profile.map((p, i) => (
-          <li
-            class="cr-profile-item"
-            data-reveal
-            data-reveal-delay={String(150 + i * 80)}
-            style={`--reveal-delay: ${150 + i * 80}ms;`}
-          >
-            <span class="cr-profile-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-            <span class="cr-profile-text">{p}</span>
-          </li>
-        ))}
-      </ul>
+      <p class="cr-eyebrow" data-reveal>Who we look for</p>
+      <h2 id="cr-profile-heading" class="cr-profile-heading" data-reveal data-reveal-delay="100">
+        Integrity, rigour, fitness, composure, discretion.
+      </h2>
+      <p class="cr-profile-sub" data-reveal data-reveal-delay="200">
+        Non-negotiable. Background check on every candidate at entry.
+      </p>
     </div>
   </section>
 
-  <!-- ─── HOW TO APPLY (dark band) ────────────────────────────── -->
-  <section class="cr-section cr-apply" aria-labelledby="cr-apply-heading">
-    <div class="cr-apply-frame">
-      <div class="cr-apply-head">
-        <p class="cr-eyebrow cr-eyebrow-on-dark" data-reveal>How to apply</p>
-        <h2 id="cr-apply-heading" class="cr-section-heading cr-section-heading-on-dark" data-reveal data-reveal-delay="100">
-          4 steps, no fog.
-        </h2>
-      </div>
-      <ol class="cr-apply-grid">
-        {steps.map((s, i) => (
-          <li
-            class="cr-apply-step"
-            data-reveal
-            data-reveal-delay={String(150 + i * 100)}
-            style={`--reveal-delay: ${150 + i * 100}ms;`}
-          >
-            <span class="cr-apply-num">{s.n}</span>
-            <h3 class="cr-apply-title">{s.title}</h3>
-            <p class="cr-apply-body">{s.body}</p>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  <!-- ─── APPLICATION (form with CV upload) ───────────────────── -->
-  <section class="cr-cta" aria-labelledby="cr-cta-heading">
+  <!-- ─── APPLY (form with CV upload) ─────────────────────────── -->
+  <section id="cr-apply" class="cr-cta" aria-labelledby="cr-cta-heading">
     <div class="cr-cta-frame">
       <div class="cr-cta-text" data-reveal>
         <p class="cr-eyebrow cr-eyebrow-on-dark">Apply</p>
         <h2 id="cr-cta-heading" class="cr-cta-heading">
-          Send your application.
+          Send us your dossier.
         </h2>
         <p class="cr-cta-sub">
-          CV + cover letter. Availability, preferred zone, prior experience
-          if any. We come back within 7 business days to schedule an
-          interview or point you to the next cohort.
+          CV + cover letter. State availability, preferred zone and prior
+          experience if any. We get back within 7 working days to schedule
+          an interview or point you to the next cohort.
         </p>
         <p class="cr-cta-phone">
           Or call us,
@@ -270,7 +236,7 @@ const careersWaMessage = 'Hello GSS, I am reaching out from your website. I woul
         {!isConfigured && (
           <p class="cr-notice" role="status">
             <strong>Form awaiting configuration.</strong>
-            WhatsApp and phone remain open in the meantime.
+            In the meantime, WhatsApp and phone are open.
           </p>
         )}
 
@@ -303,13 +269,15 @@ const careersWaMessage = 'Hello GSS, I am reaching out from your website. I woul
           </label>
 
           <label class="cr-field">
-            <span class="cr-label">Role</span>
-            <select name="role">
+            <span class="cr-label">Preferred role</span>
+            <select name="role" id="cr-role-select">
               <option value="">— Choose a role —</option>
               {roles.map((r) => (
-                <option value={r.name}>{r.name}</option>
+                <option value={`${r.code} — ${r.name}`} data-code={r.code}>
+                  {r.code} — {r.name}
+                </option>
               ))}
-              <option value="other">Other / to discuss</option>
+              <option value="other">Other / open to discuss</option>
             </select>
           </label>
 
@@ -334,18 +302,18 @@ const careersWaMessage = 'Hello GSS, I am reaching out from your website. I woul
           </label>
 
           <label class="cr-field">
-            <span class="cr-label">A few words about your motivation</span>
+            <span class="cr-label">A few words on your motivation</span>
             <textarea name="message" rows="4" placeholder="Experience, interest, personal context…"></textarea>
           </label>
 
           <p class="cr-fineprint">
-            Your information stays confidential and is used only to process
+            Your information stays confidential and is only used to process
             your application.
           </p>
 
           <div class="cr-actions">
             <NeonButton type="submit" variant="solid" size="lg">
-              Send my application
+              Submit my application
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                 <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
@@ -355,6 +323,47 @@ const careersWaMessage = 'Hello GSS, I am reaching out from your website. I woul
       </div>
     </div>
   </section>
+
+  <script>
+    function preselectRole() {
+      const select = document.getElementById('cr-role-select') as HTMLSelectElement | null;
+      if (!select) return;
+      let code = new URLSearchParams(window.location.search).get('role');
+      if (!code && window.location.hash.startsWith('#cr-apply')) {
+        const q = window.location.hash.split('?')[1] ?? '';
+        code = new URLSearchParams(q).get('role');
+      }
+      if (!code) return;
+      const opt = Array.from(select.options).find((o) => o.dataset.code === code);
+      if (opt) select.value = opt.value;
+    }
+
+    function wireJobApplyLinks() {
+      document.querySelectorAll<HTMLAnchorElement>('.cr-job-apply').forEach((a) => {
+        a.addEventListener('click', (e) => {
+          const code = a.dataset.role;
+          const select = document.getElementById('cr-role-select') as HTMLSelectElement | null;
+          if (code && select) {
+            const opt = Array.from(select.options).find((o) => o.dataset.code === code);
+            if (opt) select.value = opt.value;
+          }
+          const target = document.getElementById('cr-apply');
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            history.replaceState(null, '', `?role=${code}#cr-apply`);
+          }
+        });
+      });
+    }
+
+    preselectRole();
+    wireJobApplyLinks();
+    document.addEventListener('astro:page-load', () => {
+      preselectRole();
+      wireJobApplyLinks();
+    });
+  </script>
 </BaseLayout>
 
 <style>
@@ -413,6 +422,13 @@ const careersWaMessage = 'Hello GSS, I am reaching out from your website. I woul
     max-width: 40em;
     opacity: 0.92;
   }
+  .cr-hero-actions {
+    margin-top: clamp(1.75rem, 3vw, 2.5rem);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+  }
 
   /* ─── SHARED CHROME ────────────────────────────────────────── */
   .cr-section {
@@ -451,255 +467,219 @@ const careersWaMessage = 'Hello GSS, I am reaching out from your website. I woul
   }
   .cr-section-heading-on-dark { color: var(--color-cream); }
 
-  /* ─── MANIFESTO ────────────────────────────────────────────── */
-  .cr-manifest {
-    background: var(--color-cream);
-    padding-block: clamp(4rem, 9vw, 8rem);
+  /* ─── OPEN POSITIONS ───────────────────────────────────────── */
+  .cr-jobs { background: var(--color-cream); }
+  .cr-jobs-frame { max-width: 1280px; margin-inline: auto; }
+  .cr-jobs-head { max-width: 38rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+  .cr-jobs-grid {
+    list-style: none; margin: 0; padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
-  .cr-manifest-frame { max-width: 920px; margin-inline: auto; }
-  .cr-manifest-text {
-    margin: 0.75rem 0 0;
-    font-family: var(--font-display);
-    font-variation-settings: 'opsz' 80, 'wght' 420, 'SOFT' 40;
-    font-size: clamp(1.5rem, 2.8vw, 2.5rem);
-    line-height: 1.25;
-    letter-spacing: -0.015em;
-    color: var(--color-ink);
-    text-wrap: balance;
-  }
+  @media (min-width: 720px)  { .cr-jobs-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .cr-jobs-grid { grid-template-columns: repeat(3, 1fr); } }
 
-  /* ─── WHY (dark band) ──────────────────────────────────────── */
-  .cr-why {
-    background: var(--color-ink);
-    color: var(--color-cream);
+  .cr-job {
     position: relative;
-    overflow: hidden;
-    isolation: isolate;
-  }
-  .cr-why::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(60% 60% at 90% 10%, oklch(40% 0.06 70 / 0.22), transparent 70%);
-    pointer-events: none;
-    z-index: -1;
-  }
-  .cr-why-frame { max-width: 1280px; margin-inline: auto; }
-  .cr-why-head { max-width: 44rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
-  .cr-why-grid {
-    list-style: none; margin: 0; padding: 0;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0;
-    border-top: 1px solid oklch(100% 0 0 / 0.10);
-  }
-  @media (min-width: 1024px) { .cr-why-grid { grid-template-columns: repeat(3, 1fr); } }
-  .cr-why-item {
-    padding: clamp(1.75rem, 3vw, 2.5rem) clamp(1.25rem, 2vw, 1.75rem) clamp(1.75rem, 3vw, 2.5rem) 0;
-    border-bottom: 1px solid oklch(100% 0 0 / 0.10);
-    border-right: 1px solid oklch(100% 0 0 / 0.10);
-  }
-  @media (min-width: 1024px) {
-    .cr-why-item { border-bottom: none; }
-    .cr-why-item:last-child { border-right: none; }
-  }
-  @media (max-width: 1023px) {
-    .cr-why-item:last-child { border-bottom: none; border-right: none; }
-  }
-  .cr-why-num {
-    font-family: var(--font-display);
-    font-variation-settings: 'opsz' 32, 'wght' 460;
-    font-size: 0.875rem;
-    color: var(--color-bronze-warm);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.05em;
-  }
-  .cr-why-title {
-    margin: 1rem 0 0.875rem;
-    font-family: var(--font-display);
-    font-variation-settings: 'opsz' 48, 'wght' 460;
-    font-size: clamp(1.375rem, 2vw, 1.75rem);
-    line-height: 1.15;
-    color: var(--color-cream);
-    letter-spacing: -0.015em;
-    max-width: 16em;
-    text-wrap: balance;
-  }
-  .cr-why-body {
-    margin: 0;
-    font-size: 0.9375rem;
-    line-height: 1.65;
-    color: var(--color-cream);
-    opacity: 0.78;
-    max-width: 28em;
-  }
-
-  /* ─── ROLES ───────────────────────────────────────────────── */
-  .cr-roles { background: var(--color-cream); }
-  .cr-roles-frame {
-    max-width: 1280px;
-    margin-inline: auto;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(2.5rem, 5vw, 4.5rem);
-  }
-  @media (min-width: 1024px) {
-    .cr-roles-frame {
-      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-      gap: 5rem;
-      align-items: start;
-    }
-  }
-  .cr-roles-head { max-width: 30rem; }
-  .cr-roles-sub {
-    margin: 1rem 0 0;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--color-mute-on-light);
-  }
-  .cr-roles-list { list-style: none; margin: 0; padding: 0; display: grid; }
-  .cr-role {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1.75rem;
-    padding: 1.75rem 0;
-    border-top: 1px solid var(--color-hairline-on-light);
-    align-items: baseline;
-  }
-  .cr-role:last-child { border-bottom: 1px solid var(--color-hairline-on-light); }
-  .cr-role-num {
-    font-family: var(--font-display);
-    font-variation-settings: 'opsz' 32, 'wght' 460;
-    font-size: 0.9375rem;
-    color: var(--color-bronze);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.02em;
-    padding-top: 0.25rem;
-  }
-  .cr-role-text { display: flex; flex-direction: column; gap: 0.5rem; }
-  .cr-role-name {
-    margin: 0;
-    font-family: var(--font-display);
-    font-variation-settings: 'opsz' 48, 'wght' 460;
-    font-size: clamp(1.25rem, 2vw, 1.625rem);
-    line-height: 1.15;
-    letter-spacing: -0.015em;
-    color: var(--color-ink);
-  }
-  .cr-role-body {
-    margin: 0;
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    color: var(--color-mute-on-light);
-    max-width: 38em;
-  }
-
-  /* ─── PROFILE ──────────────────────────────────────────────── */
-  .cr-profile { background: var(--color-cream-2); }
-  .cr-profile-frame { max-width: 1280px; margin-inline: auto; }
-  .cr-profile-head { max-width: 36rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
-  .cr-profile-list {
-    list-style: none; margin: 0; padding: 0;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0;
-    border-top: 1px solid var(--color-hairline-on-light);
-  }
-  @media (min-width: 1024px) {
-    .cr-profile-list { grid-template-columns: repeat(5, 1fr); }
-  }
-  .cr-profile-item {
-    padding: 1.75rem 1.25rem 1.75rem 0;
-    border-bottom: 1px solid var(--color-hairline-on-light);
-    border-right: 1px solid var(--color-hairline-on-light);
     display: flex;
     flex-direction: column;
-    gap: 0.875rem;
+    gap: 1rem;
+    padding: clamp(1.5rem, 2.4vw, 2rem);
+    background: var(--color-cream-2);
+    border: 1px solid var(--color-hairline-on-light);
+    border-radius: var(--radius-md);
+    transition:
+      transform var(--duration-normal) var(--ease-out-expo),
+      border-color var(--duration-normal) var(--ease-out-expo),
+      box-shadow var(--duration-normal) var(--ease-out-expo);
   }
-  @media (min-width: 1024px) {
-    .cr-profile-item { border-bottom: none; }
-    .cr-profile-item:last-child { border-right: none; }
+  .cr-job:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-bronze);
+    box-shadow:
+      0 1px 2px oklch(0% 0 0 / 0.04),
+      0 24px 48px -20px oklch(20% 0.04 250 / 0.25);
   }
-  @media (max-width: 1023px) {
-    .cr-profile-item:last-child { border-bottom: none; border-right: none; }
+  .cr-job-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
   }
-  .cr-profile-num {
-    font-family: var(--font-display);
-    font-variation-settings: 'opsz' 32, 'wght' 460;
-    font-size: 0.875rem;
-    color: var(--color-bronze);
+  .cr-job-code {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
     font-variant-numeric: tabular-nums;
-    letter-spacing: 0.05em;
   }
-  .cr-profile-text {
-    font-size: 0.9375rem;
-    line-height: 1.55;
+  .cr-job-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 0.3rem 0.65rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-hairline-on-light);
+    background: var(--color-cream);
     color: var(--color-ink);
   }
-
-  /* ─── HOW TO APPLY (dark band) ─────────────────────────────── */
-  .cr-apply {
-    background: var(--color-ink);
-    color: var(--color-cream);
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
+  .cr-job-dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 999px;
+    background: var(--color-mute-on-light);
   }
-  .cr-apply::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(60% 60% at 10% 10%, oklch(40% 0.06 70 / 0.22), transparent 70%);
-    pointer-events: none;
-    z-index: -1;
+  .cr-job-status-open .cr-job-dot {
+    background: oklch(68% 0.16 145);
+    box-shadow: 0 0 0 3px oklch(68% 0.16 145 / 0.18);
   }
-  .cr-apply-frame { max-width: 1280px; margin-inline: auto; }
-  .cr-apply-head { max-width: 44rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
-  .cr-apply-grid {
-    list-style: none; margin: 0; padding: 0;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0;
-    border-top: 1px solid oklch(100% 0 0 / 0.10);
+  .cr-job-status-next .cr-job-dot {
+    background: var(--color-bronze);
+    box-shadow: 0 0 0 3px oklch(70% 0.10 70 / 0.18);
   }
-  @media (min-width: 1024px) { .cr-apply-grid { grid-template-columns: repeat(4, 1fr); } }
-  .cr-apply-step {
-    padding: clamp(1.75rem, 3vw, 2.5rem) clamp(1.25rem, 2vw, 1.75rem) clamp(1.75rem, 3vw, 2.5rem) 0;
-    border-bottom: 1px solid oklch(100% 0 0 / 0.10);
-    border-right: 1px solid oklch(100% 0 0 / 0.10);
+  .cr-job-status-waitlist .cr-job-dot {
+    background: oklch(55% 0 0);
+    box-shadow: 0 0 0 3px oklch(55% 0 0 / 0.12);
   }
-  @media (min-width: 1024px) {
-    .cr-apply-step { border-bottom: none; }
-    .cr-apply-step:last-child { border-right: none; }
-  }
-  @media (max-width: 1023px) {
-    .cr-apply-step:nth-child(2n) { border-right: none; }
-    .cr-apply-step:nth-last-child(-n+2) { border-bottom: none; }
-  }
-  .cr-apply-num {
-    font-family: var(--font-display);
-    font-variation-settings: 'opsz' 32, 'wght' 460;
-    font-size: 0.875rem;
-    color: var(--color-bronze-warm);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.05em;
-  }
-  .cr-apply-title {
-    margin: 1rem 0 0.75rem;
+  .cr-job-name {
+    margin: 0;
     font-family: var(--font-display);
     font-variation-settings: 'opsz' 48, 'wght' 460;
-    font-size: clamp(1.375rem, 2vw, 1.75rem);
-    line-height: 1.1;
-    color: var(--color-cream);
+    font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+    line-height: 1.2;
     letter-spacing: -0.015em;
+    color: var(--color-ink);
   }
-  .cr-apply-body {
+  .cr-job-body {
     margin: 0;
     font-size: 0.9375rem;
-    line-height: 1.6;
-    color: var(--color-cream);
-    opacity: 0.78;
+    line-height: 1.55;
+    color: var(--color-mute-on-light);
+  }
+  .cr-job-pills {
+    list-style: none; margin: 0; padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .cr-job-pills li {
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    padding: 0.25rem 0.55rem;
+    border-radius: var(--radius-xs);
+    background: var(--color-cream);
+    border: 1px solid var(--color-hairline-on-light);
+    color: var(--color-mute-on-light);
+  }
+  .cr-job-apply {
+    margin-top: auto;
+    padding-top: 0.5rem;
+    font-size: 0.9375rem;
+    color: var(--color-bronze-deep);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid transparent;
+    align-self: flex-start;
+    transition:
+      color var(--duration-normal) var(--ease-out-expo),
+      border-color var(--duration-normal) var(--ease-out-expo),
+      gap var(--duration-normal) var(--ease-out-expo);
+  }
+  .cr-job-apply:hover {
+    color: var(--color-bronze);
+    border-bottom-color: var(--color-bronze);
+    gap: 0.75rem;
   }
 
-  /* ─── CTA (dark) ───────────────────────────────────────────── */
+  /* ─── FAQ ──────────────────────────────────────────────────── */
+  .cr-faq { background: var(--color-cream-2); }
+  .cr-faq-frame { max-width: 880px; margin-inline: auto; }
+  .cr-faq-head { margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .cr-faq-list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--color-hairline-on-light);
+  }
+  .cr-faq-item {
+    border-bottom: 1px solid var(--color-hairline-on-light);
+  }
+  .cr-faq-q {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 460;
+    font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+    line-height: 1.3;
+    color: var(--color-ink);
+    letter-spacing: -0.01em;
+  }
+  .cr-faq-q::-webkit-details-marker { display: none; }
+  .cr-faq-icon {
+    flex-shrink: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: 1px solid var(--color-hairline-on-light);
+    background: var(--color-cream);
+    color: var(--color-bronze-deep);
+    font-size: 1rem;
+    line-height: 1;
+    transition:
+      transform var(--duration-normal) var(--ease-out-expo),
+      background-color var(--duration-normal) var(--ease-out-expo);
+  }
+  .cr-faq-item[open] .cr-faq-icon {
+    transform: rotate(45deg);
+    background: var(--color-bronze);
+    color: var(--color-cream);
+    border-color: var(--color-bronze);
+  }
+  .cr-faq-a {
+    margin: 0 0 1.25rem;
+    padding-right: 2.75rem;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--color-mute-on-light);
+    max-width: 56em;
+  }
+
+  /* ─── PROFILE — compact ────────────────────────────────────── */
+  .cr-profile { background: var(--color-cream); }
+  .cr-profile-frame { max-width: 1080px; margin-inline: auto; }
+  .cr-profile-heading {
+    margin: 0.75rem 0 1rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
+    font-size: clamp(1.75rem, 3.4vw, 3.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    max-width: 22em;
+    text-wrap: balance;
+  }
+  .cr-profile-sub {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.55;
+    color: var(--color-mute-on-light);
+    max-width: 36em;
+  }
+
+  /* ─── CTA (dark) — form ────────────────────────────────────── */
   .cr-cta {
     background: var(--color-ink);
     color: var(--color-cream);
@@ -708,6 +688,7 @@ const careersWaMessage = 'Hello GSS, I am reaching out from your website. I woul
     overflow: hidden;
     isolation: isolate;
     border-top: 1px solid oklch(100% 0 0 / 0.10);
+    scroll-margin-top: 4rem;
   }
   .cr-cta::before {
     content: '';
@@ -747,7 +728,6 @@ const careersWaMessage = 'Hello GSS, I am reaching out from your website. I woul
     opacity: 0.80;
     max-width: 36em;
   }
-  .cr-cta-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
   .cr-cta-phone {
     margin: 1.25rem 0 0;
     font-size: 0.9375rem;
@@ -830,8 +810,13 @@ const careersWaMessage = 'Hello GSS, I am reaching out from your website. I woul
       background-color var(--duration-normal) var(--ease-out-expo);
   }
   .cr-field input::placeholder,
-  .cr-field textarea::placeholder { color: var(--color-cream); opacity: 0.42; }
-  .cr-field input:focus, .cr-field select:focus, .cr-field textarea:focus {
+  .cr-field textarea::placeholder {
+    color: var(--color-cream);
+    opacity: 0.42;
+  }
+  .cr-field input:focus,
+  .cr-field select:focus,
+  .cr-field textarea:focus {
     outline: none;
     border-color: var(--color-bronze-warm);
     background: oklch(100% 0 0 / 0.06);
@@ -875,5 +860,7 @@ const careersWaMessage = 'Hello GSS, I am reaching out from your website. I woul
 
   @media (prefers-reduced-motion: reduce) {
     .cr-hero-image img { animation: none; }
+    .cr-job { transition: none; }
+    .cr-job:hover { transform: none; }
   }
 </style>
