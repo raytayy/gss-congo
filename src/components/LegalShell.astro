@@ -1,0 +1,198 @@
+---
+/*
+ * LegalShell — chrome for legal/privacy/cookies pages.
+ * Hero band (eyebrow + title + last-updated date) + cream prose container
+ * styled to match the rest of the site (bronze-rule eyebrows, Fraunces opsz,
+ * tabular dates, tight rhythm). Body content is provided via <slot/>.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+interface Props {
+  title: string;
+  eyebrow: string;
+  description: string;
+  lang: 'fr' | 'en';
+  altLocaleHref: string;
+  /** ISO date string (YYYY-MM-DD) for "last updated" microcopy. */
+  lastUpdated: string;
+}
+
+const { title, eyebrow, description, lang, altLocaleHref, lastUpdated } = Astro.props;
+const lastUpdatedLabel = lang === 'fr' ? 'Mis à jour' : 'Last updated';
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  lang={lang}
+  altLocaleHref={altLocaleHref}
+>
+  <!-- Hero -->
+  <section class="lp-hero" aria-labelledby="lp-heading">
+    <div class="lp-hero-frame">
+      <p class="lp-eyebrow" data-reveal>{eyebrow}</p>
+      <h1 id="lp-heading" class="lp-hero-title" data-reveal data-reveal-delay="120">
+        {title}
+      </h1>
+      <p class="lp-hero-meta" data-reveal data-reveal-delay="240">
+        <span class="lp-meta-label">{lastUpdatedLabel}</span>
+        <span class="lp-meta-sep" aria-hidden="true">·</span>
+        <time datetime={lastUpdated}>{lastUpdated}</time>
+      </p>
+    </div>
+  </section>
+
+  <!-- Prose body -->
+  <section class="lp-body">
+    <article class="lp-prose">
+      <slot />
+    </article>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ─── HERO ─────────────────────────────────────────────────── */
+  .lp-hero {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    padding: clamp(7rem, 14vw, 12rem) clamp(1.5rem, 5vw, 4rem) clamp(2.5rem, 5vw, 4rem);
+  }
+  .lp-hero-frame { max-width: 1100px; margin-inline: auto; }
+  .lp-eyebrow {
+    margin: 0 0 1.25rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .lp-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-deep);
+  }
+  .lp-hero-title {
+    margin: 0 0 1.25rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2.25rem, 5vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--color-ink);
+    max-width: 18em;
+    text-wrap: balance;
+  }
+  .lp-hero-meta {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    color: var(--color-mute-on-light);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+  .lp-meta-label {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.6875rem;
+    color: var(--color-bronze-deep);
+  }
+  .lp-meta-sep { color: var(--color-bronze); opacity: 0.6; }
+  .lp-hero-meta time {
+    font-variant-numeric: tabular-nums;
+    color: var(--color-ink);
+  }
+
+  /* ─── BODY (prose) ─────────────────────────────────────────── */
+  .lp-body {
+    background: var(--color-cream);
+    padding: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 5vw, 4rem) clamp(6rem, 12vw, 11rem);
+  }
+  .lp-prose {
+    max-width: 44rem;
+    margin-inline: auto;
+    color: var(--color-ink);
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+  .lp-prose :global(h2) {
+    margin: 3rem 0 1rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 48, 'wght' 460;
+    font-size: clamp(1.375rem, 2vw, 1.75rem);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-hairline-on-light);
+  }
+  .lp-prose :global(h2:first-child) {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+  .lp-prose :global(h3) {
+    margin: 1.75rem 0 0.5rem;
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--color-bronze-deep);
+  }
+  .lp-prose :global(p) { margin: 0 0 1rem; color: var(--color-ink); }
+  .lp-prose :global(ul),
+  .lp-prose :global(ol) {
+    margin: 0 0 1.25rem;
+    padding-left: 1.25rem;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .lp-prose :global(li) { color: var(--color-ink); }
+  .lp-prose :global(li::marker) { color: var(--color-bronze); }
+  .lp-prose :global(strong) { color: var(--color-ink); font-weight: 500; }
+  .lp-prose :global(a) {
+    color: var(--color-bronze-deep);
+    text-decoration: underline;
+    text-decoration-color: var(--color-bronze);
+    text-underline-offset: 0.2em;
+    transition: color var(--duration-normal) var(--ease-out-expo);
+  }
+  .lp-prose :global(a:hover) { color: var(--color-ink); }
+  .lp-prose :global(code) {
+    background: var(--color-cream-2);
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    border: 1px solid var(--color-hairline-on-light);
+    font-size: 0.875em;
+  }
+  .lp-prose :global(dl) {
+    margin: 1rem 0 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem 1.5rem;
+  }
+  @media (min-width: 640px) {
+    .lp-prose :global(dl) { grid-template-columns: 8rem 1fr; }
+  }
+  .lp-prose :global(dt) {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    align-self: baseline;
+    padding-top: 0.2rem;
+  }
+  .lp-prose :global(dd) {
+    margin: 0;
+    color: var(--color-ink);
+    font-variant-numeric: tabular-nums;
+  }
+</style>

@@ -1,0 +1,60 @@
+---
+/*
+ * MotionRoot — global motion layer.
+ * Mounted once in BaseLayout, renders:
+ *  - Page progress hairline (top of viewport, bronze, scaleX-driven)
+ *  - Global reveal/counter/Lenis init script
+ *
+ * View Transitions ('astro:page-load' fires after each navigation) re-init
+ * observers so reveals work across SPA-style transitions.
+ */
+---
+
+<div class="page-progress" aria-hidden="true">
+  <div class="page-progress-bar" data-progress></div>
+</div>
+
+<script>
+  import { initMotion, initReveals, initCounters, initProgress } from '@lib/motion';
+
+  initMotion();
+
+  document.addEventListener('astro:page-load', () => {
+    initReveals();
+    initCounters();
+    initProgress();
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      initReveals();
+      initCounters();
+      initProgress();
+    });
+  }
+</script>
+
+<style>
+  .page-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    z-index: 100;
+    background: transparent;
+    pointer-events: none;
+  }
+  .page-progress-bar {
+    height: 100%;
+    background: var(--color-bronze);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    transition: transform 80ms linear;
+    will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-progress { display: none; }
+  }
+</style>

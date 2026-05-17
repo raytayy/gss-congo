@@ -1,0 +1,154 @@
+---
+/*
+ * /404 — Custom not-found page.
+ * One file, FR/EN side-by-side framing. Astro builds dist/404.html.
+ * Cloudflare Pages serves it for any unmatched URL automatically.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import NeonButton from '@components/NeonButton.astro';
+---
+
+<BaseLayout
+  title="Page introuvable / Not found"
+  description="La page demandée n'existe plus, a été déplacée, ou n'a jamais existé. The page you requested cannot be found."
+  lang="fr"
+>
+  <section class="nf-band" aria-labelledby="nf-heading">
+    <div class="nf-frame">
+      <p class="nf-eyebrow" data-reveal>404</p>
+      <h1 id="nf-heading" class="nf-title" data-reveal data-reveal-delay="120">
+        Cette page a échappé à notre vigilance.
+      </h1>
+      <p class="nf-sub-en" data-reveal data-reveal-delay="200">
+        This page slipped past our watch.
+      </p>
+      <p class="nf-body" data-reveal data-reveal-delay="320">
+        Elle a peut-être été déplacée, retirée, ou n'a jamais existé.
+        Reprenons du début.
+        <span class="nf-body-en">It may have been moved, removed, or never existed. Let's start over.</span>
+      </p>
+      <div class="nf-actions" data-reveal data-reveal-delay="420">
+        <NeonButton variant="solid" size="lg" href="/fr/">
+          Accueil
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </NeonButton>
+        <NeonButton variant="default" size="lg" href="/en/">
+          Home
+        </NeonButton>
+      </div>
+      <p class="nf-secondary" data-reveal data-reveal-delay="520">
+        <a href="/fr/services/">Nos services</a>
+        <span aria-hidden="true">·</span>
+        <a href="/fr/contact/">Contact</a>
+        <span aria-hidden="true">·</span>
+        <a href="/en/services/">Our services</a>
+        <span aria-hidden="true">·</span>
+        <a href="/en/contact/">Contact (EN)</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf-band {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    min-height: clamp(34rem, 80vh, 48rem);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: clamp(7rem, 14vw, 12rem) clamp(1.5rem, 5vw, 4rem) clamp(4rem, 8vw, 7rem);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .nf-band::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(70% 60% at 90% 0%, oklch(40% 0.06 70 / 0.20), transparent 70%),
+      radial-gradient(60% 50% at 10% 100%, oklch(40% 0.06 70 / 0.18), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .nf-frame {
+    max-width: 880px;
+    margin-inline: auto;
+    width: 100%;
+  }
+  .nf-eyebrow {
+    margin: 0 0 1.5rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 460;
+    font-size: clamp(3rem, 8vw, 7rem);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    color: var(--color-bronze-warm);
+    font-variant-numeric: tabular-nums;
+  }
+  .nf-title {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2rem, 5vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-cream);
+    max-width: 18em;
+    text-wrap: balance;
+  }
+  .nf-sub-en {
+    margin: 0 0 2rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 380, 'SOFT' 80;
+    font-style: italic;
+    font-size: clamp(1.125rem, 2vw, 1.5rem);
+    line-height: 1.2;
+    color: var(--color-cream);
+    opacity: 0.78;
+    max-width: 22em;
+  }
+  .nf-body {
+    margin: 0 0 2.5rem;
+    font-size: clamp(1rem, 1.4vw, 1.125rem);
+    line-height: 1.6;
+    color: var(--color-cream);
+    opacity: 0.85;
+    max-width: 36em;
+  }
+  .nf-body-en {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--color-cream);
+    opacity: 0.65;
+    font-size: 0.9375em;
+  }
+  .nf-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+  .nf-secondary {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.625rem;
+    font-size: 0.875rem;
+    color: var(--color-cream);
+    opacity: 0.65;
+  }
+  .nf-secondary a {
+    color: var(--color-cream);
+    text-decoration: underline;
+    text-decoration-color: var(--color-bronze-warm);
+    text-underline-offset: 0.25em;
+    transition: color var(--duration-normal) var(--ease-out-expo);
+  }
+  .nf-secondary a:hover { color: var(--color-bronze-warm); }
+  .nf-secondary span[aria-hidden] { color: var(--color-bronze-warm); opacity: 0.6; }
+</style>

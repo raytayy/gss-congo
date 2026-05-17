@@ -1,0 +1,78 @@
+---
+/*
+ * Logo — official brand mark.
+ * Renders the actual GSS shield (eagle + ribbon) at /images/logo.png.
+ * The mark already contains "Guarde Security Service" + "GSS" — we don't
+ * repeat those as adjacent text.
+ */
+
+interface Props {
+  size?: 'sm' | 'md' | 'lg';
+  variant?: 'on-light' | 'on-dark';
+  href?: string;
+  /** When true, renders as a non-link (use inside an existing link). */
+  asElement?: boolean;
+}
+
+const {
+  size = 'md',
+  variant = 'on-light',
+  href = '/',
+  asElement = false,
+} = Astro.props;
+
+const Tag = asElement ? 'span' : 'a';
+const sizeClass = `logo-${size}`;
+const variantClass = `logo-${variant}`;
+---
+
+<Tag
+  class:list={['logo', sizeClass, variantClass]}
+  {...(asElement ? {} : { href, 'aria-label': 'Guarde Security Service — accueil' })}
+>
+  <img
+    class="logo-mark"
+    src="/images/logo.png"
+    alt="Guarde Security Service"
+    width="200"
+    height="220"
+    loading="eager"
+    decoding="async"
+  />
+</Tag>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    line-height: 1;
+    transition: opacity var(--duration-normal) var(--ease-out-expo);
+  }
+  .logo:hover {
+    opacity: 0.85;
+  }
+
+  .logo-mark {
+    display: block;
+    flex-shrink: 0;
+    height: auto;
+    width: auto;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.12));
+  }
+
+  /* Sizes — internal detail (eagle, ribbon, GSS letters) stays readable */
+  .logo-sm .logo-mark { height: 3rem; }       /* 48px */
+  .logo-md .logo-mark { height: 4.5rem; }     /* 72px — header default */
+  .logo-lg .logo-mark { height: 6rem; }       /* 96px — featured / footer */
+
+  /* Variants — image is self-colored, so the variant is purely a hook
+     for parent text/link color elsewhere if needed. */
+  .logo-on-light { color: var(--color-ink); }
+  .logo-on-dark { color: var(--color-cream); }
+
+  .logo-on-dark .logo-mark {
+    filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.45));
+  }
+</style>

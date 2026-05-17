@@ -1,0 +1,472 @@
+---
+/*
+ * Method — sticky-image scroll experience.
+ * Each step pairs photographic content with editorial typography. As the
+ * reader scrolls through the step list, the sticky image on the left
+ * crossfades to match the active step (Stripe / Linear / Vercel pattern).
+ * Mobile collapses to inline image + text per step.
+ */
+
+import type { Locale } from '@lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const stepsFr = [
+  {
+    title: 'Audit',
+    kicker: 'Comprendre le terrain',
+    body: 'Évaluation des risques sur site, cartographie des points sensibles, rencontre opérationnelle. Avant tout dispositif, une lecture lucide des vulnérabilités.',
+    image: '/images/method/method-01-audit.jpg',
+  },
+  {
+    title: 'Plan',
+    kicker: 'Calibrer le dispositif',
+    body: "Dispositif sur mesure : effectifs, postures, équipements, rotations, escalades. Jamais surdimensionné. Jamais insuffisant.",
+    image: '/images/method/method-02-plan.jpg',
+  },
+  {
+    title: 'Déploiement',
+    kicker: 'Mettre en service',
+    body: 'Mise en service progressive, briefing des équipes, ajustements de terrain en 48 heures. Le dispositif ne se découvre pas en production.',
+    image: '/images/method/method-03-deploy.jpg',
+  },
+  {
+    title: 'Supervision',
+    kicker: 'Tenir la durée',
+    body: 'Contrôles continus, reporting hebdomadaire, intervention sous 20 minutes. La rigueur d’un service ne se mesure pas le premier jour.',
+    image: '/images/method/method-04-supervise.jpg',
+  },
+];
+
+const stepsEn = [
+  {
+    title: 'Audit',
+    kicker: 'Read the ground',
+    body: 'Risk assessment on site, mapping of sensitive points, operational meeting. Before any posture, a lucid read of the vulnerabilities.',
+    image: '/images/method/method-01-audit.jpg',
+  },
+  {
+    title: 'Plan',
+    kicker: 'Calibrate the posture',
+    body: 'Bespoke posture: headcount, equipment, rotations, escalation paths. Never oversized. Never insufficient.',
+    image: '/images/method/method-02-plan.jpg',
+  },
+  {
+    title: 'Deploy',
+    kicker: 'Bring it live',
+    body: 'Phased commissioning, team briefings, ground-level adjustments within 48 hours. A posture is not learned in production.',
+    image: '/images/method/method-03-deploy.jpg',
+  },
+  {
+    title: 'Supervise',
+    kicker: 'Hold the line',
+    body: 'Continuous checks, weekly reporting, response within 20 minutes. The rigour of a service is not measured on day one.',
+    image: '/images/method/method-04-supervise.jpg',
+  },
+];
+
+const steps = locale === 'fr' ? stepsFr : stepsEn;
+
+const eyebrow = locale === 'fr' ? 'Notre méthode' : 'Our method';
+const heading = locale === 'fr' ? 'Quatre temps. Un standard.' : 'Four moves. One standard.';
+const sub = locale === 'fr'
+  ? 'Chaque dispositif suit la même séquence. La rigueur est dans le procédé, pas dans le discours.'
+  : 'Every posture follows the same sequence. The rigour is in the procedure, not in the talking.';
+
+const romans = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'];
+const lastRoman = romans[steps.length - 1];
+---
+
+<section class="method" aria-labelledby="method-heading">
+  <div class="method-frame">
+    <header class="method-header" data-reveal>
+      <p class="method-eyebrow">{eyebrow}</p>
+      <h2 id="method-heading" class="method-heading">{heading}</h2>
+      <p class="method-sub">{sub}</p>
+    </header>
+
+    <div class="method-experience" data-active-stage="0">
+      <aside class="method-stage" aria-hidden="true">
+        <div class="method-stage-sticky">
+          <div class="method-stage-frame">
+            {steps.map((s, i) => (
+              <img
+                class="method-stage-image"
+                data-stage={i}
+                src={s.image}
+                alt=""
+                width="640"
+                height="800"
+                loading="lazy"
+                decoding="async"
+              />
+            ))}
+            <div class="method-stage-tone" aria-hidden="true"></div>
+            <div class="method-stage-meta">
+              <span class="method-stage-counter">
+                <span class="method-stage-current">{romans[0]}</span>
+                <span class="method-stage-divider"></span>
+                <span class="method-stage-total">{lastRoman}</span>
+              </span>
+              <span class="method-stage-progress" aria-hidden="true">
+                <span class="method-stage-progress-fill"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <ol class="method-steps">
+        {steps.map((s, i) => (
+          <li class="method-step" data-step-index={i}>
+            <div class="method-step-inline-image" aria-hidden="true">
+              <img src={s.image} alt="" width="640" height="800" loading="lazy" decoding="async" />
+              <div class="method-stage-tone"></div>
+            </div>
+            <span class="method-step-num" aria-hidden="true">{romans[i]}</span>
+            <span class="method-step-kicker">{s.kicker}</span>
+            <h3 class="method-step-title">{s.title}</h3>
+            <p class="method-step-text">{s.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Active-step driver. Updates [data-active-stage] on .method-experience as
+  // the reader scrolls through the steps; CSS handles the crossfade.
+  function initMethodStage() {
+    const root = document.querySelector<HTMLElement>('.method-experience');
+    if (!root) return;
+    const steps = Array.from(root.querySelectorAll<HTMLElement>('.method-step'));
+    if (steps.length === 0) return;
+    const counter = root.querySelector<HTMLElement>('.method-stage-current');
+    const progressFill = root.querySelector<HTMLElement>('.method-stage-progress-fill');
+
+    const romans = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'];
+
+    const setActive = (i: number) => {
+      const clamped = Math.max(0, Math.min(steps.length - 1, i));
+      root.dataset.activeStage = String(clamped);
+      if (counter) counter.textContent = romans[clamped];
+      if (progressFill) progressFill.style.transform = `scaleX(${(clamped + 1) / steps.length})`;
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Pick the most-intersecting step in the current callback batch.
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible.length === 0) return;
+        const idx = Number((visible[0].target as HTMLElement).dataset.stepIndex);
+        setActive(idx);
+      },
+      { rootMargin: '-40% 0px -40% 0px', threshold: [0, 0.5, 1] }
+    );
+
+    steps.forEach((s) => observer.observe(s));
+    setActive(0);
+  }
+
+  initMethodStage();
+  document.addEventListener('astro:page-load', initMethodStage);
+</script>
+
+<style>
+  /* No overflow:hidden here — it traps sticky positioning of the stage frame.
+     The radial gradient is contained via inset:0 on the pseudo-element. */
+  .method {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    padding: clamp(3.5rem, 12vw, 11rem) clamp(1.5rem, 5vw, 4rem) clamp(2.5rem, 8vw, 7rem);
+    position: relative;
+  }
+  .method::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(70% 50% at 0% 0%, oklch(20% 0.04 250 / 0.6), transparent 60%);
+    pointer-events: none;
+  }
+
+  .method-frame {
+    position: relative;
+    max-width: 1440px;
+    margin-inline: auto;
+  }
+
+  .method-header {
+    max-width: 38em;
+    margin-bottom: clamp(3rem, 5vw, 4.5rem);
+  }
+  .method-eyebrow {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-warm);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .method-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-warm);
+  }
+  .method-heading {
+    margin: 0 0 1rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
+    font-size: clamp(2.25rem, 4vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    color: var(--color-cream);
+    text-wrap: balance;
+  }
+  .method-sub {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-cream);
+    opacity: 0.78;
+    max-width: 36em;
+  }
+
+  /* Two-pane experience: sticky image | step list */
+  .method-experience {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 4vw, 3.5rem);
+  }
+  @media (min-width: 1024px) {
+    .method-experience {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: clamp(3rem, 6vw, 6rem);
+    }
+  }
+
+  /* === STAGE (sticky image) — desktop only === */
+  .method-stage { display: none; }
+  @media (min-width: 1024px) {
+    .method-stage {
+      display: block;
+      position: relative;
+    }
+    .method-stage-sticky {
+      position: sticky;
+      top: 12vh;
+    }
+    .method-stage-frame {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      isolation: isolate;
+      background: var(--color-ink-2);
+      border: 1px solid var(--color-hairline-on-dark);
+    }
+    .method-stage-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      opacity: 0;
+      filter: saturate(0.92) brightness(0.92);
+      transition: opacity 700ms var(--ease-out-expo),
+        transform 1200ms var(--ease-out-expo);
+      transform: scale(1.04);
+      will-change: opacity, transform;
+    }
+    .method-experience[data-active-stage="0"] .method-stage-image[data-stage="0"],
+    .method-experience[data-active-stage="1"] .method-stage-image[data-stage="1"],
+    .method-experience[data-active-stage="2"] .method-stage-image[data-stage="2"],
+    .method-experience[data-active-stage="3"] .method-stage-image[data-stage="3"] {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .method-stage-tone {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, transparent 50%, oklch(10% 0.03 250 / 0.85) 100%),
+        radial-gradient(120% 80% at 0% 0%, transparent 60%, oklch(0% 0 0 / 0.35) 100%);
+    }
+    .method-stage-meta {
+      position: absolute;
+      left: clamp(1.25rem, 2.5vw, 2rem);
+      right: clamp(1.25rem, 2.5vw, 2rem);
+      bottom: clamp(1.25rem, 2.5vw, 2rem);
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      color: var(--color-cream);
+    }
+    .method-stage-counter {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      font-family: var(--font-display);
+      font-variation-settings: 'opsz' 144, 'wght' 400, 'SOFT' 60;
+      font-style: italic;
+      letter-spacing: -0.01em;
+    }
+    .method-stage-current {
+      font-size: clamp(2rem, 3.2vw, 2.75rem);
+      line-height: 1;
+      color: var(--color-cream);
+      transition: color 400ms var(--ease-out-expo);
+      min-width: 1.6em;
+    }
+    .method-stage-divider {
+      width: 1.25rem;
+      height: 1px;
+      background: var(--color-bronze-warm);
+      transform: translateY(-0.45em);
+      opacity: 0.7;
+    }
+    .method-stage-total {
+      font-size: 0.9375rem;
+      color: var(--color-cream);
+      opacity: 0.65;
+      letter-spacing: 0.04em;
+    }
+    .method-stage-progress {
+      flex: 1;
+      height: 1px;
+      background: oklch(100% 0 0 / 0.18);
+      position: relative;
+      overflow: hidden;
+    }
+    .method-stage-progress-fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 100%;
+      transform-origin: 0 50%;
+      transform: scaleX(0.25);
+      background: var(--color-bronze-warm);
+      transition: transform 600ms var(--ease-out-expo);
+    }
+  }
+
+  /* === STEPS (scrolling list) === */
+  .method-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.5rem, 4vw, 3.5rem);
+  }
+  @media (min-width: 1024px) {
+    .method-steps { gap: clamp(8rem, 14vh, 14rem); padding-block: 6vh; }
+  }
+
+  .method-step {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+    padding-block: 0;
+    transition: opacity 600ms var(--ease-out-expo);
+  }
+  /* Inline image — mobile only */
+  .method-step-inline-image {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--color-ink-2);
+    border: 1px solid var(--color-hairline-on-dark);
+    margin-bottom: 0.5rem;
+  }
+  .method-step-inline-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    filter: saturate(0.92);
+  }
+  .method-step-inline-image .method-stage-tone {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent 60%, oklch(0% 0 0 / 0.5) 100%);
+  }
+  @media (min-width: 1024px) {
+    .method-step-inline-image { display: none; }
+  }
+
+  /* Roman numerals — editorial, period-correct, no leading-zero "AI" tell */
+  .method-step-num {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 360, 'SOFT' 110;
+    font-style: italic;
+    font-size: clamp(4.5rem, 10vw, 9.5rem);
+    line-height: 0.82;
+    color: var(--color-bronze-warm);
+    letter-spacing: -0.02em;
+    opacity: 0.55;
+    transition: opacity 500ms var(--ease-out-expo),
+      color 500ms var(--ease-out-expo);
+  }
+  .method-step-kicker {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-warm);
+    font-weight: 500;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid oklch(100% 0 0 / 0.18);
+    align-self: flex-start;
+    transition: color 500ms var(--ease-out-expo);
+  }
+  .method-step-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 440, 'SOFT' 30;
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    line-height: 1;
+    color: var(--color-cream);
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+  .method-step-text {
+    margin: 0;
+    font-size: clamp(1rem, 1.15vw, 1.125rem);
+    line-height: 1.6;
+    color: var(--color-cream);
+    opacity: 0.78;
+    max-width: 38ch;
+  }
+
+  /* Active step gets full opacity numeral; inactive recede */
+  @media (min-width: 1024px) {
+    .method-experience[data-active-stage="0"] .method-step[data-step-index="0"] .method-step-num,
+    .method-experience[data-active-stage="1"] .method-step[data-step-index="1"] .method-step-num,
+    .method-experience[data-active-stage="2"] .method-step[data-step-index="2"] .method-step-num,
+    .method-experience[data-active-stage="3"] .method-step[data-step-index="3"] .method-step-num {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .method-stage-image { transition: none; }
+    .method-step-num { transition: none; opacity: 1; }
+  }
+</style>

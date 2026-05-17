@@ -1,0 +1,630 @@
+---
+/*
+ * SocialActivity (Nos activités) — links to Instagram + Facebook profiles.
+ * No API required: clean platform CTAs that route to the live profiles.
+ * Optional highlight grid below pulls from /public/images/social/ when
+ * client drops curated photos there. Empty array = grid hidden.
+ */
+
+import { contact } from '@lib/contact';
+import type { Locale } from '@lib/i18n';
+import { fetchInstagramPosts, fetchFacebookPosts, formatTimeAgo } from '@lib/social-feed';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+// ─── Option A: curated embed URLs (no API, no tokens) ───────────────────
+// Paste post URLs below. Each URL renders as an official Instagram /
+// Facebook embed iframe. Empty arrays = falls through to API fetch (B),
+// then to CTA cards. Switch back to API mode by emptying these arrays.
+//
+// Instagram URL format: https://www.instagram.com/p/POST_ID/
+//   or                  https://www.instagram.com/reel/POST_ID/
+// Facebook URL format:  https://www.facebook.com/PageName/posts/POST_ID
+//   or                  https://www.facebook.com/photo/?fbid=...&set=...
+const embedUrls = {
+  /** Instagram has no official page embed — only individual post URLs. */
+  instagram: [
+    'https://www.instagram.com/p/C50V8J6Nm3A/',
+    // add more post URLs (up to 6)
+  ] as string[],
+  /** Facebook page plugin URL — shows page header + recent timeline. */
+  facebookPage: 'https://www.facebook.com/gsskinshasa/' as string | null,
+};
+const embedMode =
+  embedUrls.instagram.length > 0 || embedUrls.facebookPage !== null;
+
+// ─── Option C: live API fetch (only runs when embeds aren't provided) ───
+// Build-time, gracefully empty when token env vars are absent.
+const [igPosts, fbPosts] = embedMode
+  ? [[], []] as [Awaited<ReturnType<typeof fetchInstagramPosts>>, Awaited<ReturnType<typeof fetchFacebookPosts>>]
+  : await Promise.all([fetchInstagramPosts(6), fetchFacebookPosts(4)]);
+const liveMode = !embedMode && (igPosts.length > 0 || fbPosts.length > 0);
+
+/** Convert any IG post/reel URL to its official embed URL. */
+function instagramEmbedSrc(url: string): string {
+  return url.replace(/\/?$/, '/').replace(/\/$/, '/embed/');
+}
+/** Build an FB Page plugin iframe URL — shows page header + timeline. */
+function facebookPageSrc(url: string): string {
+  const params = new URLSearchParams({
+    href: url,
+    tabs: 'timeline',
+    width: '500',
+    height: '700',
+    small_header: 'false',
+    adapt_container_width: 'true',
+    hide_cover: 'false',
+    show_facepile: 'true',
+  });
+  return `https://www.facebook.com/plugins/page.php?${params.toString()}`;
+}
+
+interface Platform {
+  name: string;
+  handle: string;
+  url: string;
+  brandColor: string;
+  follow: { fr: string; en: string };
+  icon: string;
+}
+
+const platforms: Platform[] = [
+  {
+    name: 'Instagram',
+    handle: '@gsskinshasa',
+    url: contact.social.instagram,
+    /** Solid color for shadows/borders. Gradient bg lives in the .ig-mark CSS class. */
+    brandColor: '#ee2a7b',
+    follow: { fr: 'Suivre sur Instagram', en: 'Follow on Instagram' },
+    // Official IG mark — rounded square + camera lens + corner dot
+    icon: '<rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" fill="none"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-linecap="round" stroke-width="2"/>',
+  },
+  {
+    name: 'Facebook',
+    handle: 'GSS Kinshasa',
+    url: contact.social.facebook,
+    // Official Facebook brand blue
+    brandColor: '#1877F2',
+    follow: { fr: 'Suivre sur Facebook', en: 'Follow on Facebook' },
+    // Official "f" mark — filled
+    icon: '<path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z" fill="currentColor" stroke="none"/>',
+  },
+];
+
+const eyebrow = locale === 'fr' ? 'Nos activités' : 'Our activity';
+const heading = locale === 'fr'
+  ? 'Suivez nos opérations en direct.'
+  : 'Follow our operations live.';
+const sub = locale === 'fr'
+  ? 'Patrouilles, formations, déploiements terrain. Le quotidien de GSS Congo, partagé sur Instagram et Facebook.'
+  : 'Patrols, training, field deployments. The daily life of GSS Congo, shared on Instagram and Facebook.';
+const externalLabel = locale === 'fr' ? '(nouvel onglet)' : '(opens in new tab)';
+---
+
+<section class="social-activity" aria-labelledby="social-heading">
+  <div class="social-frame">
+    <header class="social-header" data-reveal>
+      <p class="social-eyebrow">{eyebrow}</p>
+      <h2 id="social-heading" class="social-heading">{heading}</h2>
+      <p class="social-sub">{sub}</p>
+    </header>
+
+    {embedMode ? (
+      <div class="social-embeds">
+        {embedUrls.instagram.length > 0 && (
+          <div class="social-embed-block">
+            <header class="social-live-head">
+              <span class="social-live-icon ig-mark" aria-hidden="true" style={`--brand: ${platforms[0].brandColor};`}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={platforms[0].icon} />
+              </span>
+              <span class="social-live-platform">Instagram · {platforms[0].handle}</span>
+              <a class="social-live-follow" href={platforms[0].url} target="_blank" rel="noopener noreferrer">
+                {platforms[0].follow[locale]}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </a>
+            </header>
+            <ul class="social-embed-grid social-embed-grid-ig">
+              {embedUrls.instagram.slice(0, 6).map((url, i) => (
+                <li class="social-embed-item" data-reveal data-reveal-delay={String(120 + i * 60)}>
+                  <iframe
+                    src={instagramEmbedSrc(url)}
+                    title={`Instagram post ${i + 1}`}
+                    loading="lazy"
+                    allowtransparency
+                    allowfullscreen
+                    frameborder="0"
+                    scrolling="no"
+                  ></iframe>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {embedUrls.facebookPage && (
+          <div class="social-embed-block">
+            <header class="social-live-head">
+              <span class="social-live-icon fb-mark" aria-hidden="true" style={`--brand: ${platforms[1].brandColor};`}>
+                <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" set:html={platforms[1].icon} />
+              </span>
+              <span class="social-live-platform">Facebook · {platforms[1].handle}</span>
+              <a class="social-live-follow" href={platforms[1].url} target="_blank" rel="noopener noreferrer">
+                {platforms[1].follow[locale]}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </a>
+            </header>
+
+            {embedUrls.facebookPage && (
+              <div class="social-embed-page" data-reveal>
+                <iframe
+                  src={facebookPageSrc(embedUrls.facebookPage)}
+                  title="Facebook page · GSS Kinshasa"
+                  loading="lazy"
+                  allowtransparency
+                  allowfullscreen
+                  frameborder="0"
+                  scrolling="no"
+                ></iframe>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    ) : liveMode ? (
+      <div class="social-live">
+        {igPosts.length > 0 && (
+          <div class="social-live-block">
+            <header class="social-live-head">
+              <span class="social-live-icon social-live-icon-ig" aria-hidden="true" style={`--brand: ${platforms[0].brandColor};`}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={platforms[0].icon} />
+              </span>
+              <span class="social-live-platform">Instagram · {platforms[0].handle}</span>
+              <a class="social-live-follow" href={platforms[0].url} target="_blank" rel="noopener noreferrer">
+                {platforms[0].follow[locale]}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </a>
+            </header>
+            <ul class="social-live-grid">
+              {igPosts.map((post, i) => (
+                <li class="social-post" data-reveal data-reveal-delay={String(120 + i * 60)}>
+                  <a class="social-post-link" href={post.permalink} target="_blank" rel="noopener noreferrer" aria-label={post.caption || 'Voir le post Instagram'}>
+                    <img class="social-post-image" src={post.image} alt={post.caption || ''} loading="lazy" decoding="async" />
+                    <div class="social-post-overlay" aria-hidden="true"></div>
+                    <div class="social-post-meta">
+                      {post.caption && <p class="social-post-caption">{post.caption}</p>}
+                      <span class="social-post-stamp">{formatTimeAgo(post.timestamp, locale)}</span>
+                    </div>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {fbPosts.length > 0 && (
+          <div class="social-live-block">
+            <header class="social-live-head">
+              <span class="social-live-icon social-live-icon-fb" aria-hidden="true" style={`--brand: ${platforms[1].brandColor};`}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={platforms[1].icon} />
+              </span>
+              <span class="social-live-platform">Facebook · {platforms[1].handle}</span>
+              <a class="social-live-follow" href={platforms[1].url} target="_blank" rel="noopener noreferrer">
+                {platforms[1].follow[locale]}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </a>
+            </header>
+            <ul class="social-live-grid social-live-grid-fb">
+              {fbPosts.map((post, i) => (
+                <li class="social-post" data-reveal data-reveal-delay={String(120 + i * 60)}>
+                  <a class="social-post-link" href={post.permalink} target="_blank" rel="noopener noreferrer" aria-label={post.caption || 'Voir le post Facebook'}>
+                    <img class="social-post-image" src={post.image} alt={post.caption || ''} loading="lazy" decoding="async" />
+                    <div class="social-post-overlay" aria-hidden="true"></div>
+                    <div class="social-post-meta">
+                      {post.caption && <p class="social-post-caption">{post.caption}</p>}
+                      <span class="social-post-stamp">{formatTimeAgo(post.timestamp, locale)}</span>
+                    </div>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    ) : (
+      <ul class="social-cards">
+        {platforms.map((p, i) => (
+          <li class="social-card" data-reveal data-reveal-delay={String(120 + i * 100)}>
+            <a
+              class="social-card-link"
+              href={p.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={`--brand: ${p.brandColor};`}
+              aria-label={`${p.follow[locale]} ${externalLabel}`}
+            >
+              <div class="social-card-head">
+                <span class="social-card-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={p.icon} />
+                </span>
+                <span class="social-card-name">{p.name}</span>
+              </div>
+              <p class="social-card-handle">{p.handle}</p>
+              <span class="social-card-cta">
+                {p.follow[locale]}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</section>
+
+<style>
+  .social-activity {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    padding: clamp(3.5rem, 12vw, 11rem) clamp(1.5rem, 5vw, 4rem);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .social-activity::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(70% 50% at 100% 0%, oklch(20% 0.04 250 / 0.55), transparent 60%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .social-frame {
+    max-width: 1280px;
+    margin-inline: auto;
+    position: relative;
+  }
+
+  .social-header {
+    max-width: 38em;
+    margin-bottom: clamp(2.5rem, 4vw, 4rem);
+  }
+  .social-eyebrow {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-warm);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .social-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-warm);
+  }
+  .social-heading {
+    margin: 0 0 1rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
+    font-size: clamp(2.25rem, 4vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    color: var(--color-cream);
+    text-wrap: balance;
+  }
+  .social-sub {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--color-cream);
+    opacity: 0.78;
+    max-width: 36em;
+  }
+
+  .social-cards {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(1rem, 2vw, 1.5rem);
+  }
+  @media (min-width: 720px) {
+    .social-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .social-card { display: flex; }
+  .social-card-link {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: clamp(2rem, 3vw, 2.75rem);
+    color: var(--color-cream);
+    text-decoration: none;
+    background: oklch(20% 0.04 250 / 0.6);
+    border: 1px solid var(--color-hairline-on-dark);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      border-color var(--duration-normal) var(--ease-out-expo),
+      transform var(--duration-normal) var(--ease-out-expo),
+      box-shadow var(--duration-normal) var(--ease-out-expo);
+    will-change: transform;
+  }
+  .social-card-link::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: radial-gradient(60% 80% at 100% 0%, var(--brand) 0%, transparent 55%);
+    opacity: 0.18;
+    pointer-events: none;
+    z-index: -1;
+    transition: opacity var(--duration-normal) var(--ease-out-expo);
+  }
+  .social-card-link:hover {
+    border-color: var(--brand);
+    transform: translateY(-3px);
+    box-shadow:
+      0 1px 2px oklch(0% 0 0 / 0.2),
+      0 18px 36px -14px oklch(20% 0.04 250 / 0.6);
+  }
+  .social-card-link:hover::before { opacity: 0.4; }
+
+  .social-card-head {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+  }
+  .social-card-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: var(--radius-sm);
+    background: var(--brand);
+    color: var(--color-cream);
+    box-shadow: 0 0 24px -8px var(--brand);
+  }
+  .social-card-icon svg { width: 1.5rem; height: 1.5rem; }
+  .social-card-name {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 460, 'SOFT' 30;
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--color-cream);
+  }
+  .social-card-handle {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--color-cream);
+    opacity: 0.72;
+    letter-spacing: 0.01em;
+  }
+  .social-card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 0.875rem;
+    border-top: 1px solid var(--color-hairline-on-dark);
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-bronze-warm);
+    transition: gap var(--duration-normal) var(--ease-out-expo),
+      color var(--duration-normal) var(--ease-out-expo);
+  }
+  .social-card-cta svg {
+    width: 0.9375rem;
+    height: 0.9375rem;
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+  }
+  .social-card-link:hover .social-card-cta { gap: 0.75rem; color: var(--color-cream); }
+  .social-card-link:hover .social-card-cta svg { transform: translateX(0.25rem); }
+
+  /* === OPTION A: CURATED EMBEDS === */
+  /* Side-by-side at desktop, stacked at narrow widths. */
+  .social-embeds {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 3vw, 2.5rem);
+  }
+  @media (min-width: 1024px) {
+    .social-embeds { grid-template-columns: repeat(2, 1fr); }
+  }
+  .social-embed-block {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1rem, 1.5vw, 1.25rem);
+    min-width: 0;
+  }
+  /* Shared frame for both IG + FB embed cards — equal sizes. */
+  .social-embed-grid,
+  .social-embed-page {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: var(--color-cream);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--color-hairline-on-dark);
+    height: clamp(28rem, 60vw, 36rem);
+  }
+  .social-embed-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .social-embed-item {
+    overflow: hidden;
+    height: 100%;
+  }
+  .social-embed-item iframe,
+  .social-embed-page iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
+  /* === LIVE FEED MODE === */
+  .social-live {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.5rem, 5vw, 4rem);
+  }
+  .social-live-block { display: flex; flex-direction: column; gap: clamp(1rem, 2vw, 1.5rem); }
+
+  .social-live-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-bottom: clamp(0.75rem, 1.5vw, 1.25rem);
+    border-bottom: 1px solid var(--color-hairline-on-dark);
+  }
+  .social-live-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-sm);
+    background: var(--brand);
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 0 18px -8px var(--brand);
+  }
+  /* Brand-accurate icon tile backgrounds */
+  .social-live-icon.ig-mark {
+    background: linear-gradient(135deg, #fdcb52 0%, #ee2a7b 50%, #6228d7 100%);
+  }
+  .social-live-icon.fb-mark {
+    background: #1877F2;
+  }
+  .social-live-icon svg { width: 1.125rem; height: 1.125rem; }
+  .social-live-platform {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 460;
+    font-size: clamp(1.125rem, 1.4vw, 1.3125rem);
+    color: var(--color-cream);
+    flex: 1;
+    min-width: 0;
+  }
+  .social-live-follow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-bronze-warm);
+    text-decoration: none;
+    transition: color var(--duration-normal) var(--ease-out-expo),
+      gap var(--duration-normal) var(--ease-out-expo);
+  }
+  .social-live-follow svg { width: 0.875rem; height: 0.875rem; transition: transform var(--duration-normal) var(--ease-out-expo); }
+  .social-live-follow:hover { color: var(--color-cream); gap: 0.6rem; }
+  .social-live-follow:hover svg { transform: translateX(0.2rem); }
+
+  .social-live-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(0.5rem, 1vw, 0.875rem);
+  }
+  @media (min-width: 720px) {
+    .social-live-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .social-live-grid { grid-template-columns: repeat(6, 1fr); }
+    .social-live-grid-fb { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .social-post {
+    display: flex;
+    aspect-ratio: 1 / 1;
+  }
+  .social-post-link {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background: var(--color-ink-2);
+    text-decoration: none;
+    color: var(--color-cream);
+    isolation: isolate;
+  }
+  .social-post-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--duration-slow) var(--ease-out-expo),
+      filter var(--duration-slow) var(--ease-out-expo);
+    filter: saturate(0.95);
+  }
+  .social-post-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 50%, oklch(0% 0 0 / 0.78) 100%);
+    opacity: 0;
+    transition: opacity var(--duration-normal) var(--ease-out-expo);
+  }
+  .social-post-meta {
+    position: absolute;
+    inset: auto 0.875rem 0.75rem 0.875rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    transform: translateY(0.625rem);
+    opacity: 0;
+    transition:
+      opacity var(--duration-normal) var(--ease-out-expo),
+      transform var(--duration-normal) var(--ease-out-expo);
+  }
+  .social-post-caption {
+    margin: 0;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--color-cream);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .social-post-stamp {
+    font-size: 0.625rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-bronze-warm);
+    font-variant-numeric: tabular-nums;
+  }
+  .social-post-link:hover .social-post-image { transform: scale(1.06); filter: saturate(1.05); }
+  .social-post-link:hover .social-post-overlay { opacity: 1; }
+  .social-post-link:hover .social-post-meta { opacity: 1; transform: translateY(0); }
+</style>

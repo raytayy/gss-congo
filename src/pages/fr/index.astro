@@ -1,0 +1,270 @@
+---
+/*
+ * /fr/ — Homepage (FR).
+ * GardaWorld-inspired sequence, calmed for institutional brand:
+ * Hero (full-bleed video) · Pillars · Stats · Industries · Method · Careers · Contact CTA.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Hero from '@components/Hero.astro';
+import ServicePillars from '@components/ServicePillars.astro';
+import StatsBand from '@components/StatsBand.astro';
+import IndustriesGrid from '@components/IndustriesGrid.astro';
+import Manifesto from '@components/Manifesto.astro';
+import SocialActivity from '@components/SocialActivity.astro';
+import Testimonials from '@components/Testimonials.astro';
+import CareersBand from '@components/CareersBand.astro';
+import Faq from '@components/Faq.astro';
+import NeonButton from '@components/NeonButton.astro';
+import { contact, whatsappLink } from '@lib/contact';
+import { faqPageSchema } from '@lib/jsonld';
+
+const stats = [
+  { value: 11, suffix: ' ans', label: 'de présence', sub: 'à Kinshasa, sans interruption' },
+  { value: 300, label: 'agents formés', sub: 'sur le terrain, en rotation 24/7' },
+  { value: 0, display: '24/7', label: 'vigilance', sub: 'présence continue, jamais en pause' },
+  { value: 20, prefix: '< ', suffix: ' min', label: "d'intervention", sub: 'temps de réponse moyen' },
+];
+---
+
+<BaseLayout
+  title="Accueil"
+  description="Guarde Security Services. Sécurité privée à Kinshasa depuis 2014. Gardiennage, sécurité résidentielle et industrielle, formation."
+  lang="fr"
+  altLocaleHref="/en/"
+  jsonLd={faqPageSchema('fr')}
+>
+  <Hero locale="fr" />
+
+  <ServicePillars locale="fr" />
+
+  <StatsBand
+    items={stats}
+    eyebrow="Onze ans, en chiffres"
+    heading="La rigueur, mesurée."
+    backgroundSrc="/images/banner1.jpg"
+  />
+
+  <IndustriesGrid locale="fr" />
+
+  <Manifesto locale="fr" />
+
+  <SocialActivity locale="fr" />
+
+  <Testimonials locale="fr" />
+
+  <Faq locale="fr" />
+
+  <CareersBand locale="fr" />
+
+  {/* CONTACT CTA */}
+  <section class="contact-cta" aria-labelledby="contact-heading">
+    <div class="contact-grid">
+      <div class="contact-frame">
+        <p class="contact-eyebrow" data-reveal>Contact</p>
+        <h2 id="contact-heading" class="contact-heading" data-reveal data-reveal-delay="120">
+          Sécuriser votre site commence par une conversation.
+        </h2>
+        <div class="contact-paths" data-reveal data-reveal-delay="220">
+          <NeonButton variant="solid" size="lg" href="/fr/contact/">
+            Demander un devis
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </NeonButton>
+          <a class="contact-cta-button contact-cta-ghost" href={whatsappLink()} target="_blank" rel="noopener noreferrer">
+            <span>WhatsApp</span>
+          </a>
+        </div>
+        <p class="contact-secondary" data-reveal data-reveal-delay="320">
+          <a href={`tel:${contact.phones.primary.tel}`} class="contact-phone">{contact.phones.primary.display}</a>
+          <span class="contact-sep" aria-hidden="true">·</span>
+          <span class="contact-hours">{contact.hours.fr}</span>
+        </p>
+        <address class="contact-address" data-reveal data-reveal-delay="380">
+          <span class="contact-address-label">Siège</span>
+          <span class="contact-address-line">{contact.addresses.hq.detail}</span>
+          <span class="contact-address-line">{contact.addresses.hq.street}</span>
+          <span class="contact-address-line">{contact.addresses.hq.city}, RDC</span>
+        </address>
+      </div>
+
+      <div class="contact-map" data-reveal data-reveal-delay="200">
+        <iframe
+          src="https://www.google.com/maps?q=Infinity%20Centre%20Avenue%20du%2024%20novembre%20Kinshasa&z=16&output=embed"
+          title="Localisation du siège GSS : Infinity Centre, Avenue du 24 novembre, Kinshasa"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-cta {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    padding: clamp(3.5rem, 12vw, 11rem) clamp(1.5rem, 5vw, 4rem);
+  }
+  .contact-grid {
+    max-width: 1280px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 5vw, 4rem);
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .contact-grid {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+      gap: clamp(3rem, 5vw, 4.5rem);
+    }
+  }
+
+  .contact-map {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--color-cream-2);
+    border: 1px solid var(--color-hairline-on-light);
+    box-shadow:
+      0 1px 2px oklch(0% 0 0 / 0.04),
+      0 18px 42px -18px oklch(20% 0.04 250 / 0.18);
+  }
+  @media (min-width: 1024px) {
+    .contact-map { aspect-ratio: 5 / 4; }
+  }
+  .contact-map iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    /* Subtle grayscale that lifts on hover for an editorial feel. */
+    filter: grayscale(0.4) saturate(0.85);
+    transition: filter var(--duration-slow) var(--ease-out-expo);
+  }
+  .contact-map:hover iframe { filter: grayscale(0) saturate(1); }
+
+  .contact-address {
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+    padding-top: clamp(1.25rem, 2vw, 1.75rem);
+    border-top: 1px solid var(--color-hairline-on-light);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-style: normal;
+    font-size: 0.9375rem;
+    color: var(--color-ink);
+    max-width: 26em;
+  }
+  .contact-address-label {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    margin-bottom: 0.4rem;
+  }
+  .contact-address-line {
+    color: var(--color-mute-on-light);
+    line-height: 1.5;
+  }
+  .contact-frame {
+    /* Now a column inside .contact-grid — no max-width / margin needed. */
+  }
+  .contact-eyebrow {
+    margin: 0 0 1rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-bronze);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .contact-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze);
+  }
+  .contact-heading {
+    margin: 0 0 2rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
+    font-size: clamp(1.875rem, 3vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    max-width: 14em;
+    text-wrap: balance;
+  }
+  .contact-paths {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.875rem 1rem;
+    margin-bottom: 2rem;
+  }
+  .contact-cta-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 1rem 1.75rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 0.9375rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    border: 1px solid transparent;
+    overflow: hidden;
+    transition: background-color var(--duration-normal) var(--ease-out-expo),
+      color var(--duration-normal) var(--ease-out-expo),
+      border-color var(--duration-normal) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo),
+      filter var(--duration-normal) var(--ease-out-expo),
+      box-shadow var(--duration-normal) var(--ease-out-expo);
+  }
+  .contact-cta-button:active { transform: scale(0.98); }
+
+  .contact-cta-ghost {
+    background: transparent;
+    color: var(--color-ink);
+    border-color: var(--color-ink);
+  }
+  .contact-cta-ghost:hover {
+    background: var(--color-ink);
+    color: var(--color-cream);
+  }
+
+  .contact-secondary {
+    margin: 0;
+    color: var(--color-mute-on-light);
+    font-size: 0.9375rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+    align-items: center;
+  }
+  .contact-phone {
+    color: var(--color-ink);
+    font-variant-numeric: tabular-nums;
+    text-decoration: underline;
+    text-decoration-color: var(--color-bronze);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    transition: color var(--duration-normal) var(--ease-out-expo),
+      text-decoration-color var(--duration-normal) var(--ease-out-expo);
+  }
+  .contact-phone:hover {
+    color: var(--color-bronze-deep);
+    text-decoration-color: var(--color-bronze-deep);
+  }
+  .contact-sep { color: var(--color-bronze); opacity: 0.6; }
+</style>

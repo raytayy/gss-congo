@@ -1,0 +1,145 @@
+---
+/*
+ * CareersBand — full-bleed dark CTA band before the contact section.
+ * GardaWorld pattern: a single emotional photographic CTA between content and footer.
+ */
+
+import type { Locale } from '@lib/i18n';
+
+interface Props {
+  locale: Locale;
+  backgroundSrc?: string;
+}
+
+const {
+  locale,
+  backgroundSrc = '/images/careers-graphique.jpg',
+} = Astro.props;
+
+const eyebrow = locale === 'fr' ? 'Carrières' : 'Careers';
+const heading = locale === 'fr'
+  ? 'Rejoindre les agents qui protègent Kinshasa.'
+  : 'Join the agents protecting Kinshasa.';
+const sub = locale === 'fr'
+  ? 'Le Centre de formation GSS recrute, forme et accompagne. Profil sérieux, perspective stable.'
+  : 'The GSS training centre recruits, trains and supports. Serious profile, stable trajectory.';
+const ctaLabel = locale === 'fr' ? 'Voir les postes' : 'See open roles';
+const ctaHref = `/${locale}/${locale === 'fr' ? 'carrieres' : 'careers'}/`;
+---
+
+<section class="careers" aria-labelledby="careers-heading">
+  <div class="careers-bg" aria-hidden="true">
+    <img src={backgroundSrc} alt="" loading="lazy" decoding="async" />
+    <div class="careers-tone"></div>
+  </div>
+
+  <div class="careers-frame">
+    <p class="careers-eyebrow" data-reveal>{eyebrow}</p>
+    <h2 id="careers-heading" class="careers-heading" data-reveal data-reveal-delay="120">{heading}</h2>
+    <p class="careers-sub" data-reveal data-reveal-delay="200">{sub}</p>
+    <a class="careers-cta" href={ctaHref} data-reveal data-reveal-delay="300">
+      <span>{ctaLabel}</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </a>
+  </div>
+</section>
+
+<style>
+  .careers {
+    position: relative;
+    min-height: clamp(28rem, 60vh, 38rem);
+    color: var(--color-cream);
+    padding: clamp(7rem, 14vw, 12rem) clamp(1.5rem, 5vw, 4rem);
+    overflow: hidden;
+    isolation: isolate;
+    display: flex;
+    align-items: end;
+  }
+  .careers-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+  .careers-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: saturate(0.85);
+  }
+  .careers-tone {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(10, 22, 40, 0.5) 0%, rgba(10, 22, 40, 0.85) 100%),
+      radial-gradient(70% 50% at 100% 100%, oklch(40% 0.06 70 / 0.25), transparent 70%);
+  }
+  .careers-frame {
+    position: relative;
+    max-width: 1440px;
+    margin-inline: auto;
+    width: 100%;
+  }
+  .careers-eyebrow {
+    margin: 0 0 1rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-bronze-warm);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .careers-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-warm);
+  }
+  .careers-heading {
+    margin: 0 0 1rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2.25rem, 5vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-cream);
+    max-width: 18em;
+    text-wrap: balance;
+  }
+  .careers-sub {
+    margin: 0 0 2.5rem;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-cream);
+    max-width: 36em;
+    opacity: 0.92;
+  }
+  .careers-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 1rem 1.75rem;
+    background: var(--color-bronze);
+    color: var(--color-cream);
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 0.9375rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: background-color var(--duration-normal) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .careers-cta:hover { background: var(--color-bronze-deep); }
+  .careers-cta:active { transform: scale(0.98); }
+  .careers-cta svg {
+    width: 1rem;
+    height: 1rem;
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+  }
+  .careers-cta:hover svg { transform: translateX(0.25rem); }
+</style>

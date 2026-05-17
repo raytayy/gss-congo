@@ -1,0 +1,24 @@
+/* TEAM */
+
+  Client: Guarde Security Services (GSS Congo)
+  Site: https://gss-congo.com
+  Location: Kinshasa, Democratic Republic of the Congo
+
+  Design & development: telic. studio
+  Site: https://telic.studio
+
+/* SITE */
+
+  Last update: 2026-05-06
+  Language: French (default), English
+  Stack: Astro 5, Tailwind v4, TypeScript
+  Hosting: Cloudflare Pages
+  Typography: Fraunces (display), Inter (body)
+  Standards: WCAG 2.2 AA, Core Web Vitals, JSON-LD
+  Components: hand-built, no template
+
+/* THANKS */
+
+  To every agent who walks a perimeter at 3am.
+  To the instructors who refuse "by exception" passes.
+  To the clients who let us see this house from inside.

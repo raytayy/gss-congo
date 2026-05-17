@@ -1,0 +1,203 @@
+---
+/*
+ * Manifesto — three typographic stanzas about posture and method.
+ *
+ * Replaces the prior 6-card "Why Choose Us" surface. The Stats band
+ * already carries the numbers (11 years, 300 agents, 24/7, <20 min);
+ * this section carries the character — calm, confident, discreet —
+ * without icons, without cards, without metrics.
+ *
+ * Each stanza: leading numeral + Fraunces lead line + Inter body.
+ * Type carries the surface.
+ */
+
+import type { Locale } from '@lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+interface Stanza {
+  n: string;
+  lead: { fr: string; en: string };
+  body: { fr: string; en: string };
+}
+
+const stanzas: Stanza[] = [
+  {
+    n: '01',
+    lead: {
+      fr: 'Une posture par site.',
+      en: 'One posture per site.',
+    },
+    body: {
+      fr: 'Aucun dispositif n’est livré en gabarit. Chaque poste se calibre au contexte, à l’heure, à la personne. C’est ce qui distingue une présence d’une silhouette.',
+      en: 'No deployment is delivered as a template. Each post is calibrated to context, to the hour, to the person. That is what separates a presence from a silhouette.',
+    },
+  },
+  {
+    n: '02',
+    lead: {
+      fr: 'Une école interne, pas un recrutement.',
+      en: 'An in-house school, not a hire.',
+    },
+    body: {
+      fr: 'Nos agents ne sont pas recrutés, ils sont formés. Cadre légal, secourisme, conduite défensive, protocole. Le centre tourne sans interruption, et personne n’en sort sans attestation.',
+      en: 'Our agents are not recruited, they are trained. Legal framework, first aid, defensive driving, protocol. The centre runs continuously, and no one leaves without a certificate.',
+    },
+  },
+  {
+    n: '03',
+    lead: {
+      fr: 'Une vigilance mesurée en silence.',
+      en: 'Vigilance measured in silence.',
+    },
+    body: {
+      fr: 'L’incident qu’on évite ne se voit pas. C’est notre exigence et notre discrétion : les chiffres sont bons parce qu’il ne se passe rien.',
+      en: 'The incident avoided is the one that goes unseen. That is our standard, and our discretion: the numbers are good because nothing happens.',
+    },
+  },
+];
+
+const eyebrow = locale === 'fr' ? 'Posture' : 'Posture';
+const heading = locale === 'fr'
+  ? 'Trois principes, tenus chaque jour.'
+  : 'Three principles, held every day.';
+---
+
+<section class="manifesto" aria-labelledby="manifesto-heading">
+  <div class="manifesto-frame">
+    <header class="manifesto-header" data-reveal>
+      <p class="manifesto-eyebrow">{eyebrow}</p>
+      <h2 id="manifesto-heading" class="manifesto-heading">{heading}</h2>
+    </header>
+
+    <ol class="manifesto-stanzas">
+      {stanzas.map((s, i) => (
+        <li
+          class="manifesto-stanza"
+          data-reveal
+          data-reveal-delay={String(180 + i * 140)}
+          style={`--reveal-delay: ${180 + i * 140}ms;`}
+        >
+          <span class="manifesto-num" aria-hidden="true">/ {s.n}</span>
+          <p class="manifesto-lead">{s.lead[locale]}</p>
+          <p class="manifesto-body">{s.body[locale]}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .manifesto {
+    background: var(--color-cream-2);
+    color: var(--color-ink);
+    padding: clamp(5rem, 13vw, 12rem) clamp(1.5rem, 5vw, 4rem);
+    border-block: 1px solid var(--color-hairline-on-light);
+  }
+  .manifesto-frame {
+    max-width: 1280px;
+    margin-inline: auto;
+  }
+  .manifesto-header {
+    max-width: 36em;
+    margin-bottom: clamp(3rem, 6vw, 5rem);
+  }
+  .manifesto-eyebrow {
+    margin: 0 0 1rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .manifesto-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-deep);
+  }
+  .manifesto-heading {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
+    font-size: clamp(2rem, 3.8vw, 3.25rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
+  .manifesto-stanzas {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .manifesto-stanza {
+    display: grid;
+    grid-template-columns: minmax(3rem, auto) 1fr;
+    column-gap: clamp(1.5rem, 4vw, 3.5rem);
+    row-gap: 0.75rem;
+    padding-block: clamp(2.5rem, 5vw, 4rem);
+    border-top: 1px solid var(--color-hairline-on-light);
+    align-items: baseline;
+  }
+  .manifesto-stanza:last-child {
+    border-bottom: 1px solid var(--color-hairline-on-light);
+  }
+
+  .manifesto-num {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 460;
+    font-size: clamp(1rem, 1.2vw, 1.125rem);
+    color: var(--color-bronze);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+    padding-top: 0.4rem;
+  }
+  .manifesto-lead {
+    grid-column: 2;
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(1.75rem, 3.4vw, 3rem);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    text-wrap: balance;
+    max-width: 18em;
+  }
+  .manifesto-body {
+    grid-column: 2;
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 1.1vw, 1.125rem);
+    line-height: 1.6;
+    color: var(--color-mute-on-light);
+    max-width: 36em;
+  }
+
+  /* Editorial split — lead and body sit side-by-side from tablet up. */
+  @media (min-width: 768px) {
+    .manifesto-stanza {
+      grid-template-columns: minmax(4rem, auto) minmax(0, 7fr) minmax(0, 5fr);
+      column-gap: clamp(2rem, 5vw, 5rem);
+      align-items: baseline;
+    }
+    .manifesto-lead { grid-column: 2; grid-row: 1; }
+    .manifesto-body { grid-column: 3; grid-row: 1; padding-top: 0.6rem; }
+  }
+</style>

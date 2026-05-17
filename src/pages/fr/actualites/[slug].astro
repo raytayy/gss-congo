@@ -1,0 +1,372 @@
+---
+/*
+ * /fr/actualites/[slug]/ — Article detail (FR).
+ * One template generates 3 routes (one per article in src/lib/news.ts).
+ * Mirror in src/pages/en/news/[slug].astro.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import NeonButton from '@components/NeonButton.astro';
+import { articles, getArticleUrl, newsLabels } from '@lib/news';
+import { articleSchema, breadcrumbSchema } from '@lib/jsonld';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths = (() => {
+  return articles.map((a) => ({
+    params: { slug: a.slug.fr },
+    props: { article: a },
+  }));
+}) satisfies GetStaticPaths;
+
+const { article } = Astro.props;
+const altLocaleHref = getArticleUrl(article, 'en');
+
+const articleIndex = articles.findIndex((a) => a.slug.fr === article.slug.fr);
+const articleNumber = String(articleIndex + 1).padStart(2, '0');
+
+const siblings = [...articles.slice(articleIndex + 1), ...articles.slice(0, articleIndex)].slice(0, 2);
+
+// SEO: NewsArticle + Breadcrumb structured data
+const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com';
+const pagePath = getArticleUrl(article, 'fr');
+const jsonLd = [
+  articleSchema(article, 'fr', siteUrl, pagePath),
+  breadcrumbSchema(
+    [
+      { name: 'Accueil', path: '/fr/' },
+      { name: newsLabels.hub.fr, path: '/fr/actualites/' },
+      { name: article.title.fr, path: pagePath },
+    ],
+    siteUrl,
+  ),
+];
+---
+
+<BaseLayout
+  title={article.title.fr}
+  description={article.excerpt.fr}
+  lang="fr"
+  altLocaleHref={altLocaleHref}
+  ogImage={article.image}
+  jsonLd={jsonLd}
+>
+  <!-- ─── HERO ────────────────────────────────────────────────── -->
+  <section class="ad-hero" aria-labelledby="ad-heading">
+    <div class="ad-hero-image" aria-hidden="true">
+      <img src={article.image} alt="" loading="eager" fetchpriority="high" decoding="async" />
+      <div class="ad-hero-overlay"></div>
+    </div>
+    <div class="ad-hero-content">
+      <p class="ad-hero-eyebrow" data-reveal>
+        <a href="/fr/actualites/">{newsLabels.hub.fr}</a>
+        <span class="ad-hero-sep" aria-hidden="true">/</span>
+        <span class="ad-hero-num">{articleNumber}</span>
+      </p>
+      <h1 id="ad-heading" class="ad-hero-title" data-reveal data-reveal-delay="120">
+        {article.title.fr}
+      </h1>
+      <p class="ad-hero-meta" data-reveal data-reveal-delay="240">
+        <span class="ad-meta-label">{newsLabels.publishedOn.fr}</span>
+        <time datetime={article.publishedAt}>{article.publishedAt}</time>
+        <span aria-hidden="true">·</span>
+        <span>{article.readingTime.fr}</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── PROSE ───────────────────────────────────────────────── -->
+  <section class="ad-body">
+    <article class="ad-prose" set:html={article.body.fr} data-reveal />
+  </section>
+
+  <!-- ─── BACK + RELATED ──────────────────────────────────────── -->
+  <section class="ad-tail" aria-labelledby="ad-tail-heading">
+    <div class="ad-tail-frame">
+      <p class="ad-eyebrow" data-reveal>Lire aussi</p>
+      <h2 id="ad-tail-heading" class="ad-tail-heading" data-reveal data-reveal-delay="100">
+        Deux autres lectures.
+      </h2>
+      <ul class="ad-related-grid">
+        {siblings.map((s, i) => (
+          <li
+            class="ad-related-item"
+            data-reveal
+            data-reveal-delay={String(150 + i * 120)}
+            style={`--reveal-delay: ${150 + i * 120}ms;`}
+          >
+            <a class="ad-related-link" href={getArticleUrl(s, 'fr')}>
+              <div class="ad-related-media">
+                <img src={s.image} alt="" loading="lazy" decoding="async" />
+                <div class="ad-related-tone" aria-hidden="true"></div>
+              </div>
+              <div class="ad-related-body">
+                <p class="ad-related-meta">
+                  <time datetime={s.publishedAt}>{s.publishedAt}</time>
+                  <span aria-hidden="true">·</span>
+                  <span>{s.readingTime.fr}</span>
+                </p>
+                <h3 class="ad-related-title">{s.title.fr}</h3>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="ad-tail-cta" data-reveal data-reveal-delay="320">
+        <NeonButton variant="default" size="lg" href="/fr/actualites/">
+          {newsLabels.backToHub.fr}
+        </NeonButton>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ─── HERO ─────────────────────────────────────────────────── */
+  .ad-hero {
+    position: relative;
+    min-height: clamp(28rem, 60vh, 38rem);
+    display: flex;
+    align-items: flex-end;
+    color: var(--color-cream);
+    overflow: hidden;
+    padding: clamp(8rem, 16vw, 14rem) clamp(1.5rem, 5vw, 4rem) clamp(3rem, 6vw, 5rem);
+    isolation: isolate;
+  }
+  .ad-hero-image { position: absolute; inset: 0; z-index: -1; }
+  .ad-hero-image img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: saturate(0.88);
+    animation: ad-ken-burns 24s ease-out 0.4s forwards;
+  }
+  @keyframes ad-ken-burns {
+    from { transform: scale(1.02); }
+    to   { transform: scale(1.08); }
+  }
+  .ad-hero-overlay {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, oklch(8% 0.03 250 / 0.30) 0%, oklch(8% 0.03 250 / 0.55) 55%, oklch(8% 0.03 250 / 0.92) 100%),
+      radial-gradient(80% 50% at 30% 90%, oklch(40% 0.06 70 / 0.20), transparent 70%);
+  }
+  .ad-hero-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 920px;
+    margin-inline: auto;
+  }
+  .ad-hero-eyebrow {
+    margin: 0 0 1.25rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-warm);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .ad-hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-warm);
+  }
+  .ad-hero-eyebrow a {
+    color: var(--color-cream);
+    text-decoration: none;
+    opacity: 0.85;
+    transition: color var(--duration-normal) var(--ease-out-expo), opacity var(--duration-normal) var(--ease-out-expo);
+  }
+  .ad-hero-eyebrow a:hover { color: var(--color-bronze-warm); opacity: 1; }
+  .ad-hero-sep { color: var(--color-bronze-warm); opacity: 0.7; }
+  .ad-hero-num { color: var(--color-cream); font-variant-numeric: tabular-nums; }
+  .ad-hero-title {
+    margin: 0 0 1.25rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2.25rem, 5.5vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--color-cream);
+    max-width: 18em;
+    text-wrap: balance;
+  }
+  .ad-hero-meta {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    color: var(--color-cream);
+    opacity: 0.85;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .ad-meta-label {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.6875rem;
+    color: var(--color-bronze-warm);
+  }
+  .ad-hero-meta time { color: var(--color-cream); }
+  .ad-hero-meta span[aria-hidden] { color: var(--color-bronze-warm); }
+
+  /* ─── PROSE ────────────────────────────────────────────────── */
+  .ad-body {
+    background: var(--color-cream);
+    padding: clamp(4rem, 9vw, 8rem) clamp(1.5rem, 5vw, 4rem);
+  }
+  .ad-prose {
+    max-width: 44rem;
+    margin-inline: auto;
+    color: var(--color-ink);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+  }
+  .ad-prose :global(p) { margin: 0 0 1.25rem; }
+  .ad-prose :global(p:first-child) {
+    font-size: 1.25rem;
+    line-height: 1.55;
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 400;
+    margin-bottom: 2rem;
+  }
+  .ad-prose :global(h2) {
+    margin: 3rem 0 1rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 48, 'wght' 460;
+    font-size: clamp(1.375rem, 2vw, 1.75rem);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-hairline-on-light);
+  }
+  .ad-prose :global(ul),
+  .ad-prose :global(ol) {
+    margin: 0 0 1.25rem;
+    padding-left: 1.25rem;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .ad-prose :global(li) { color: var(--color-ink); }
+  .ad-prose :global(li::marker) { color: var(--color-bronze); }
+  .ad-prose :global(strong) { color: var(--color-ink); font-weight: 500; }
+
+  /* ─── TAIL ─────────────────────────────────────────────────── */
+  .ad-tail {
+    background: var(--color-cream-2);
+    padding: clamp(5rem, 10vw, 9rem) clamp(1.5rem, 5vw, 4rem);
+  }
+  .ad-tail-frame { max-width: 1280px; margin-inline: auto; }
+  .ad-eyebrow {
+    margin: 0 0 1rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .ad-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-deep);
+  }
+  .ad-tail-heading {
+    margin: 0 0 2.5rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
+    font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+  .ad-related-grid {
+    list-style: none; margin: 0 0 3rem; padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+  }
+  @media (min-width: 768px) { .ad-related-grid { grid-template-columns: repeat(2, 1fr); } }
+  .ad-related-item { list-style: none; }
+  .ad-related-link {
+    display: grid;
+    grid-template-columns: 1fr;
+    text-decoration: none;
+    color: inherit;
+    background: var(--color-cream);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition:
+      transform var(--duration-normal) var(--ease-out-expo),
+      box-shadow var(--duration-normal) var(--ease-out-expo);
+  }
+  .ad-related-link:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 1px 2px oklch(0% 0 0 / 0.04),
+      0 18px 40px -16px oklch(20% 0.04 250 / 0.20);
+  }
+  .ad-related-media {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+  .ad-related-media img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: saturate(0.92);
+    transition: transform var(--duration-slow) var(--ease-out-expo);
+  }
+  .ad-related-link:hover .ad-related-media img { transform: scale(1.05); }
+  .ad-related-tone {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 60%, oklch(8% 0.03 250 / 0.30) 100%);
+    pointer-events: none;
+  }
+  .ad-related-body {
+    padding: 1.25rem 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+  .ad-related-meta {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .ad-related-meta span[aria-hidden] { color: var(--color-bronze); opacity: 0.7; }
+  .ad-related-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 48, 'wght' 460;
+    font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+  .ad-tail-cta { display: flex; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ad-hero-image img { animation: none; }
+    .ad-related-link, .ad-related-media img { transition: none; }
+  }
+</style>

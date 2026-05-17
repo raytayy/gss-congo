@@ -1,0 +1,518 @@
+---
+/*
+ * /en/contact/ — Contact (EN). Mirror of /fr/contact/index.astro.
+ * Beats: Hero → Form (left) + Direct panel (right) → FAQ.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import NeonButton from '@components/NeonButton.astro';
+import Faq from '@components/Faq.astro';
+import { contact, whatsappLink } from '@lib/contact';
+import { services } from '@lib/services';
+
+const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
+const isConfigured = accessKey.length > 10;
+const waMessage = 'Hello GSS, I am reaching out from your website. I would like to request a quote for…';
+---
+
+<BaseLayout
+  title="Contact"
+  description="Request a detailed quote for a bespoke security posture in Kinshasa. Response within 24 hours."
+  lang="en"
+  altLocaleHref="/fr/contact/"
+>
+  <!-- ─── HERO ────────────────────────────────────────────────── -->
+  <section class="ct-hero" aria-labelledby="ct-heading">
+    <div class="ct-hero-frame">
+      <p class="ct-eyebrow" data-reveal>Contact</p>
+      <h1 id="ct-heading" class="ct-hero-title" data-reveal data-reveal-delay="120">
+        Let's talk about your site.
+      </h1>
+      <p class="ct-hero-sub" data-reveal data-reveal-delay="240">
+        Tell us about your context. We come back within 24 hours with a
+        calibrated proposal — neither oversized nor insufficient.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── FORM + DIRECT PANEL ─────────────────────────────────── -->
+  <section class="ct-body" aria-labelledby="ct-form-heading">
+    <div class="ct-grid">
+      <!-- Left: form -->
+      <div class="ct-form-col">
+        <p class="ct-eyebrow" data-reveal>Detailed quote</p>
+        <h2 id="ct-form-heading" class="ct-form-title" data-reveal data-reveal-delay="100">
+          The form that opens the conversation.
+        </h2>
+
+        {!isConfigured && (
+          <p class="ct-notice" role="status">
+            <strong>Form awaiting configuration.</strong>
+            Add <code>PUBLIC_WEB3FORMS_KEY</code> to <code>.env</code>
+            (free key at <a href="https://web3forms.com" target="_blank" rel="noopener noreferrer">web3forms.com</a>).
+            In the meantime, WhatsApp and phone work.
+          </p>
+        )}
+
+        <form
+          class="ct-form"
+          action="https://api.web3forms.com/submit"
+          method="POST"
+          data-reveal
+          data-reveal-delay="200"
+        >
+          <input type="hidden" name="access_key" value={accessKey} />
+          <input type="hidden" name="redirect" value={`${Astro.url.origin}/en/thank-you/`} />
+          <input type="hidden" name="from_name" value="GSS Congo — website" />
+          <input type="hidden" name="subject" value="New quote request from gss-congo.com" />
+          <input type="checkbox" name="botcheck" class="ct-honeypot" tabindex="-1" autocomplete="off" />
+
+          <div class="ct-row">
+            <label class="ct-field">
+              <span class="ct-label">Full name *</span>
+              <input type="text" name="name" required autocomplete="name" />
+            </label>
+            <label class="ct-field">
+              <span class="ct-label">Company</span>
+              <input type="text" name="company" autocomplete="organization" />
+            </label>
+          </div>
+
+          <div class="ct-row">
+            <label class="ct-field">
+              <span class="ct-label">Email *</span>
+              <input type="email" name="email" required autocomplete="email" />
+            </label>
+            <label class="ct-field">
+              <span class="ct-label">Phone</span>
+              <input type="tel" name="phone" autocomplete="tel" placeholder="+243…" />
+            </label>
+          </div>
+
+          <label class="ct-field">
+            <span class="ct-label">Service of interest</span>
+            <select name="service">
+              <option value="">— Choose a service —</option>
+              {services.map((s) => (
+                <option value={s.name.en}>{s.name.en}</option>
+              ))}
+              <option value="other">Other / multi-service</option>
+            </select>
+          </label>
+
+          <label class="ct-field">
+            <span class="ct-label">Your need *</span>
+            <textarea name="message" required rows="5" placeholder="Describe the site, the context, any constraints…"></textarea>
+          </label>
+
+          <div class="ct-actions">
+            <NeonButton type="submit" variant="solid" size="lg">
+              Send request
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </NeonButton>
+            <p class="ct-fineprint">
+              Response within 24 business hours. Your data stays confidential.
+            </p>
+          </div>
+        </form>
+      </div>
+
+      <!-- Right: sticky direct panel -->
+      <aside class="ct-direct" aria-label="Direct channels">
+        <p class="ct-eyebrow ct-eyebrow-on-dark">Faster route</p>
+        <h2 class="ct-direct-title">For urgent needs.</h2>
+        <p class="ct-direct-sub">We're reachable around the clock.</p>
+
+        <ul class="ct-channels">
+          <li>
+            <a href={whatsappLink(waMessage)} class="ct-channel" target="_blank" rel="noopener noreferrer">
+              <span class="ct-channel-label">WhatsApp</span>
+              <span class="ct-channel-value">{contact.phones.primary.display}</span>
+            </a>
+          </li>
+          <li>
+            <a href={`tel:${contact.phones.primary.tel}`} class="ct-channel">
+              <span class="ct-channel-label">Phone</span>
+              <span class="ct-channel-value">{contact.phones.primary.display}</span>
+            </a>
+          </li>
+          <li>
+            <a href={`mailto:${contact.email}`} class="ct-channel">
+              <span class="ct-channel-label">Email</span>
+              <span class="ct-channel-value">{contact.email}</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="ct-locations">
+          <div class="ct-location">
+            <p class="ct-location-label">Headquarters</p>
+            <p class="ct-location-text">
+              {contact.addresses.hq.detail}<br />
+              {contact.addresses.hq.street}<br />
+              {contact.addresses.hq.city}
+            </p>
+            <a href={contact.addresses.hq.mapsUrl} class="ct-location-link" target="_blank" rel="noopener noreferrer">
+              Open in Maps
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </a>
+          </div>
+          <div class="ct-location">
+            <p class="ct-location-label">Training centre</p>
+            <p class="ct-location-text">
+              {contact.addresses.training.detail}<br />
+              {contact.addresses.training.street}<br />
+              {contact.addresses.training.city}
+            </p>
+            <a href={contact.addresses.training.mapsUrl} class="ct-location-link" target="_blank" rel="noopener noreferrer">
+              Open in Maps
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <p class="ct-hours">{contact.hours.en}</p>
+
+        <dl class="ct-legal">
+          <div class="ct-legal-row">
+            <dt>RCCM</dt><dd>{contact.legal.rccm}</dd>
+          </div>
+          <div class="ct-legal-row">
+            <dt>IDNAT</dt><dd>{contact.legal.idnat}</dd>
+          </div>
+          <div class="ct-legal-row">
+            <dt>Tax ID</dt><dd>{contact.legal.taxId}</dd>
+          </div>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <Faq locale="en" />
+</BaseLayout>
+
+<style>
+  /* ─── SHARED CHROME ────────────────────────────────────────── */
+  .ct-eyebrow {
+    margin: 0 0 1rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .ct-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-deep);
+  }
+  .ct-eyebrow-on-dark { color: var(--color-bronze-warm); }
+  .ct-eyebrow-on-dark::before { background: var(--color-bronze-warm); }
+
+  /* ─── HERO ─────────────────────────────────────────────────── */
+  .ct-hero {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    padding: clamp(7rem, 14vw, 12rem) clamp(1.5rem, 5vw, 4rem) clamp(2.5rem, 5vw, 4rem);
+  }
+  .ct-hero-frame {
+    max-width: 1280px;
+    margin-inline: auto;
+  }
+  .ct-hero-title {
+    margin: 0 0 1.5rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2.5rem, 6vw, 5.25rem);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--color-ink);
+    max-width: 14em;
+    text-wrap: balance;
+  }
+  .ct-hero-sub {
+    margin: 0;
+    font-size: clamp(1.0625rem, 1.5vw, 1.3125rem);
+    line-height: 1.6;
+    color: var(--color-mute-on-light);
+    max-width: 38em;
+  }
+
+  /* ─── BODY (form + direct panel) ───────────────────────────── */
+  .ct-body {
+    background: var(--color-cream);
+    padding: clamp(2rem, 4vw, 3.5rem) clamp(1.5rem, 5vw, 4rem) clamp(6rem, 12vw, 11rem);
+  }
+  .ct-grid {
+    max-width: 1280px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+  }
+  @media (min-width: 1024px) {
+    .ct-grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 5rem; align-items: start; }
+  }
+
+  /* ─── FORM ─────────────────────────────────────────────────── */
+  .ct-form-title {
+    margin: 0 0 2rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
+    font-size: clamp(1.625rem, 3vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    max-width: 18em;
+    text-wrap: balance;
+  }
+  .ct-notice {
+    background: var(--color-cream-2);
+    border: 1px solid var(--color-bronze);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.25rem;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--color-ink);
+    margin: 0 0 2rem;
+  }
+  .ct-notice strong { font-weight: 500; color: var(--color-bronze-deep); }
+  .ct-notice code {
+    background: var(--color-cream);
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    font-size: 0.85em;
+    border: 1px solid var(--color-hairline-on-light);
+  }
+  .ct-notice a {
+    color: var(--color-bronze-deep);
+    text-decoration: underline;
+    text-decoration-color: var(--color-bronze);
+    text-underline-offset: 0.2em;
+  }
+
+  .ct-form { display: grid; gap: 1.5rem; }
+  .ct-row { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+  @media (min-width: 640px) { .ct-row { grid-template-columns: 1fr 1fr; } }
+
+  .ct-field { display: grid; gap: 0.5rem; }
+  .ct-label {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--color-bronze-deep);
+  }
+  .ct-field input,
+  .ct-field select,
+  .ct-field textarea {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--color-hairline-on-light);
+    border-radius: var(--radius-sm);
+    background: oklch(99% 0.005 80);
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--color-ink);
+    transition:
+      border-color var(--duration-normal) var(--ease-out-expo),
+      box-shadow var(--duration-normal) var(--ease-out-expo);
+  }
+  .ct-field textarea { resize: vertical; min-height: 7rem; }
+  .ct-field input:focus,
+  .ct-field select:focus,
+  .ct-field textarea:focus {
+    outline: none;
+    border-color: var(--color-bronze);
+    box-shadow: 0 0 0 4px oklch(70% 0.10 70 / 0.18);
+  }
+
+  .ct-honeypot {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .ct-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2rem;
+    margin-top: 0.5rem;
+  }
+  .ct-fineprint {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--color-mute-on-light);
+    max-width: 22em;
+  }
+
+  /* ─── DIRECT PANEL (sticky, dark) ──────────────────────────── */
+  .ct-direct {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    padding: clamp(2rem, 3.5vw, 2.75rem);
+    border-radius: var(--radius-md);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .ct-direct::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(70% 50% at 100% 0%, oklch(40% 0.06 70 / 0.18), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  @media (min-width: 1024px) {
+    .ct-direct { position: sticky; top: 6rem; }
+  }
+  .ct-direct .ct-eyebrow { margin-bottom: 0.875rem; }
+  .ct-direct-title {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 48, 'wght' 460;
+    font-size: clamp(1.375rem, 2vw, 1.625rem);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    color: var(--color-cream);
+    max-width: 14em;
+    text-wrap: balance;
+  }
+  .ct-direct-sub {
+    margin: 0 0 1.5rem;
+    color: var(--color-cream);
+    opacity: 0.78;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+  }
+
+  .ct-channels {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid oklch(100% 0 0 / 0.12);
+  }
+  .ct-channel {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0;
+    border-bottom: 1px solid oklch(100% 0 0 / 0.12);
+    text-decoration: none;
+    color: var(--color-cream);
+    transition: color var(--duration-normal) var(--ease-out-expo);
+  }
+  .ct-channel:hover { color: var(--color-bronze-warm); }
+  .ct-channel-label {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-warm);
+    margin-bottom: 0.3rem;
+  }
+  .ct-channel-value {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 460;
+    font-size: 1.125rem;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.005em;
+  }
+
+  .ct-locations {
+    margin-top: 1.75rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid oklch(100% 0 0 / 0.12);
+    display: grid;
+    gap: 1.75rem;
+  }
+  .ct-location-label {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-warm);
+  }
+  .ct-location-text {
+    margin: 0 0 0.625rem;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--color-cream);
+    opacity: 0.92;
+  }
+  .ct-location-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--color-bronze-warm);
+    text-decoration: none;
+    font-size: 0.8125rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color var(--duration-normal) var(--ease-out-expo);
+  }
+  .ct-location-link svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+  }
+  .ct-location-link:hover { color: var(--color-cream); }
+  .ct-location-link:hover svg { transform: translateX(0.25rem); }
+
+  .ct-hours {
+    margin: 1.75rem 0 0;
+    padding-top: 1.75rem;
+    border-top: 1px solid oklch(100% 0 0 / 0.12);
+    font-size: 0.875rem;
+    color: var(--color-cream);
+    opacity: 0.78;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+  }
+
+  .ct-legal {
+    margin: 1.5rem 0 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid oklch(100% 0 0 / 0.12);
+    display: grid;
+    gap: 0.5rem;
+  }
+  .ct-legal-row {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    gap: 1rem;
+    font-size: 0.75rem;
+    color: var(--color-cream);
+    opacity: 0.78;
+  }
+  .ct-legal-row dt {
+    font-family: var(--font-body);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-bronze-warm);
+    opacity: 0.95;
+  }
+  .ct-legal-row dd {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.01em;
+    word-break: break-word;
+  }
+</style>

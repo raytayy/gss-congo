@@ -1,0 +1,715 @@
+---
+/*
+ * /en/gallery/ — Editorial photo gallery (EN). Mirror of /fr/galerie/index.astro.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import NeonButton from '@components/NeonButton.astro';
+import { contact, whatsappLink } from '@lib/contact';
+
+type Span = 'lead' | 'portrait' | 'square' | 'wide';
+type Category = 'field' | 'training' | 'sites' | 'supervision' | 'atmosphere';
+type MediaType = 'image' | 'video';
+
+interface Media {
+  src: string;
+  caption: string;
+  span: Span;
+  category: Category;
+  type?: MediaType;
+  poster?: string;
+}
+
+const photos: Media[] = [
+  { src: '/images/banner1.jpg',                     caption: 'Eleven years on the ground in Kinshasa, without interruption.', span: 'lead',     category: 'atmosphere' },
+  { src: '/images/careers-graphique.jpg',           caption: 'The training centre, in session.',                              span: 'portrait', category: 'training' },
+  { src: '/images/services/gardiennage.jpg',        caption: 'Guarding. Presence, posture.',                                  span: 'square',   category: 'field' },
+  { src: '/videos/hero-placeholder.mp4',            caption: 'Perimeter patrol, night view.',                                 span: 'wide',     category: 'field', type: 'video', poster: '/images/hero-fallback.jpg' },
+  { src: '/images/services/residentielle.jpg',      caption: 'Residential security. Absolute discretion.',                    span: 'square',   category: 'sites' },
+  { src: '/images/services/industrielle.jpg',       caption: 'Industrial security. Close to the flow.',                       span: 'square',   category: 'sites' },
+  { src: '/images/services/elite.jpg',              caption: 'Elite security. Civilian dress, protocol.',                     span: 'square',   category: 'field' },
+  { src: '/images/services/escorte.jpg',            caption: 'Escort. Defensive driving and coordination.',                   span: 'square',   category: 'field' },
+  { src: '/images/services/parking.jpg',            caption: 'Parking. The first contact point.',                             span: 'square',   category: 'sites' },
+  { src: '/images/services/fumigation.jpg',         caption: 'Pest control. Hygiene as a security dimension.',                span: 'square',   category: 'sites' },
+  { src: '/images/hero-atmosphere.jpg',             caption: 'Industrial perimeter.',                                         span: 'square',   category: 'atmosphere' },
+  { src: '/images/services/cameras.jpg',            caption: 'Cameras. Site survey before deployment.',                       span: 'lead',     category: 'supervision' },
+  { src: '/images/services/video-surveillance.jpg', caption: 'Supervision centre. Around the clock.',                         span: 'portrait', category: 'supervision' },
+];
+
+const filters: Array<{ key: Category | 'all'; label: string }> = [
+  { key: 'all',         label: 'All' },
+  { key: 'field',       label: 'Field' },
+  { key: 'training',    label: 'Training' },
+  { key: 'sites',       label: 'Sites' },
+  { key: 'supervision', label: 'Supervision' },
+  { key: 'atmosphere',  label: 'Atmosphere' },
+];
+
+const phoneTel = `tel:${contact.phones.primary.tel}`;
+const phoneDisplay = contact.phones.primary.display;
+const waMessage = 'Hello GSS, I am reaching out from your website. I would like to schedule a visit…';
+---
+
+<BaseLayout
+  title="Gallery"
+  description="GSS Congo photo gallery — agents on duty, the training centre, industrial and residential sites in Kinshasa."
+  lang="en"
+  altLocaleHref="/fr/galerie/"
+>
+  <!-- ─── HERO ────────────────────────────────────────────────── -->
+  <section class="gl-hero" aria-labelledby="gl-heading">
+    <div class="gl-hero-frame">
+      <p class="gl-eyebrow" data-reveal>Gallery</p>
+      <h1 id="gl-heading" class="gl-hero-title" data-reveal data-reveal-delay="120">
+        On the ground, unposed.
+      </h1>
+      <p class="gl-hero-sub" data-reveal data-reveal-delay="240">
+        A few images from the daily work — the training centre in session,
+        agents on duty, the sites we protect. No stock, no retouch. This
+        gallery will grow cohort after cohort.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── MOSAIC ──────────────────────────────────────────────── -->
+  <section class="gl-mosaic" aria-label="Photographic mosaic">
+    <nav class="gl-filters" aria-label="Filter the gallery">
+      <ul class="gl-filters-list" role="tablist">
+        {filters.map((f, i) => (
+          <li role="presentation">
+            <button
+              type="button"
+              class="gl-filter"
+              role="tab"
+              data-filter={f.key}
+              aria-selected={i === 0 ? 'true' : 'false'}
+            >
+              {f.label}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <ul class="gl-grid" data-mosaic>
+      {photos.map((p, i) => (
+        <li
+          class={`gl-tile gl-tile-${p.span}`}
+          data-reveal="bento"
+          data-reveal-delay={String(120 + i * 60)}
+          style={`--reveal-delay: ${120 + i * 60}ms;`}
+          data-category={p.category}
+        >
+          <button
+            type="button"
+            class="gl-tile-trigger"
+            data-index={i}
+            aria-label={`Open: ${p.caption}`}
+          >
+            <figure class="gl-figure">
+              <div class="gl-image">
+                {p.type === 'video' ? (
+                  <video
+                    src={p.src}
+                    poster={p.poster}
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    autoplay
+                  ></video>
+                ) : (
+                  <img src={p.src} alt={p.caption} loading="lazy" decoding="async" />
+                )}
+                <div class="gl-tone" aria-hidden="true"></div>
+                {p.type === 'video' && (
+                  <span class="gl-video-badge" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                    Video
+                  </span>
+                )}
+              </div>
+              <figcaption class="gl-caption">
+                <span class="gl-caption-num" aria-hidden="true">/ {String(i + 1).padStart(2, '0')}</span>
+                <span class="gl-caption-text">{p.caption}</span>
+              </figcaption>
+            </figure>
+          </button>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- ─── LIGHTBOX (native <dialog>) ──────────────────────────── -->
+  <dialog class="gl-lightbox" data-lightbox aria-label="Expanded image">
+    <button type="button" class="gl-lb-close" data-lb-close aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" />
+      </svg>
+    </button>
+    <button type="button" class="gl-lb-nav gl-lb-prev" data-lb-prev aria-label="Previous image">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+        <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+    <figure class="gl-lb-figure">
+      <div class="gl-lb-media" data-lb-media></div>
+      <figcaption class="gl-lb-caption" data-lb-caption></figcaption>
+    </figure>
+    <button type="button" class="gl-lb-nav gl-lb-next" data-lb-next aria-label="Next image">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+        <path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+  </dialog>
+
+  <script is:inline define:vars={{ photos }}>
+    const init = () => {
+      const dialog = document.querySelector('[data-lightbox]');
+      const mediaSlot = dialog?.querySelector('[data-lb-media]');
+      const captionSlot = dialog?.querySelector('[data-lb-caption]');
+      const triggers = Array.from(document.querySelectorAll('.gl-tile-trigger'));
+      const filterButtons = Array.from(document.querySelectorAll('[data-filter]'));
+      const tiles = Array.from(document.querySelectorAll('[data-category]'));
+      if (!dialog || !mediaSlot || !captionSlot || triggers.length === 0) return;
+
+      let currentIndex = 0;
+      let activeFilter = 'all';
+
+      const visibleIndices = () =>
+        photos
+          .map((p, i) => ({ p, i }))
+          .filter(({ p }) => activeFilter === 'all' || p.category === activeFilter)
+          .map(({ i }) => i);
+
+      const renderSlide = (idx) => {
+        const p = photos[idx];
+        if (!p) return;
+        currentIndex = idx;
+        mediaSlot.innerHTML = '';
+        if (p.type === 'video') {
+          const v = document.createElement('video');
+          v.src = p.src;
+          if (p.poster) v.poster = p.poster;
+          v.controls = true;
+          v.autoplay = true;
+          v.playsInline = true;
+          mediaSlot.appendChild(v);
+        } else {
+          const img = document.createElement('img');
+          img.src = p.src;
+          img.alt = p.caption;
+          mediaSlot.appendChild(img);
+        }
+        captionSlot.textContent = p.caption;
+      };
+
+      const open = (idx) => {
+        renderSlide(idx);
+        if (typeof dialog.showModal === 'function') dialog.showModal();
+        else dialog.setAttribute('open', '');
+        document.body.style.overflow = 'hidden';
+      };
+
+      const close = () => {
+        if (typeof dialog.close === 'function') dialog.close();
+        else dialog.removeAttribute('open');
+        mediaSlot.innerHTML = '';
+        document.body.style.overflow = '';
+      };
+
+      const navigate = (dir) => {
+        const visible = visibleIndices();
+        if (visible.length === 0) return;
+        const pos = visible.indexOf(currentIndex);
+        const nextPos = (pos + dir + visible.length) % visible.length;
+        renderSlide(visible[nextPos]);
+      };
+
+      triggers.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const idx = Number(btn.dataset.index);
+          if (!Number.isNaN(idx)) open(idx);
+        });
+      });
+
+      dialog.querySelector('[data-lb-close]')?.addEventListener('click', close);
+      dialog.querySelector('[data-lb-prev]')?.addEventListener('click', () => navigate(-1));
+      dialog.querySelector('[data-lb-next]')?.addEventListener('click', () => navigate(1));
+      dialog.addEventListener('click', (e) => {
+        if (e.target === dialog) close();
+      });
+      dialog.addEventListener('cancel', (e) => {
+        e.preventDefault();
+        close();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (!dialog.open) return;
+        if (e.key === 'ArrowLeft') navigate(-1);
+        if (e.key === 'ArrowRight') navigate(1);
+      });
+
+      filterButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.filter;
+          activeFilter = key;
+          filterButtons.forEach((b) =>
+            b.setAttribute('aria-selected', b === btn ? 'true' : 'false'),
+          );
+          tiles.forEach((t) => {
+            const matches = key === 'all' || t.dataset.category === key;
+            t.toggleAttribute('hidden', !matches);
+          });
+        });
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+    document.addEventListener('astro:page-load', init);
+  </script>
+
+  <!-- ─── CTA ────────────────────────────────────────────────── -->
+  <section class="gl-cta" aria-labelledby="gl-cta-heading">
+    <div class="gl-cta-frame">
+      <div class="gl-cta-text" data-reveal>
+        <p class="gl-eyebrow gl-eyebrow-on-dark">Visit on site</p>
+        <h2 id="gl-cta-heading" class="gl-cta-heading">
+          An image is worth a visit. A visit is worth a conversation.
+        </h2>
+        <p class="gl-cta-sub">
+          We receive you by appointment at the headquarters or the training
+          centre. The truest measure of a security house is to see it work.
+        </p>
+      </div>
+      <div class="gl-cta-actions" data-reveal data-reveal-delay="200">
+        <NeonButton variant="solid" size="lg" href="/en/contact/">
+          Request a visit
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </NeonButton>
+        <NeonButton
+          variant="default"
+          size="lg"
+          href={whatsappLink(waMessage)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          WhatsApp
+        </NeonButton>
+      </div>
+      <p class="gl-cta-phone" data-reveal data-reveal-delay="320">
+        Or call us —
+        <a href={phoneTel}>{phoneDisplay}</a>
+        <span aria-hidden="true">·</span>
+        <span>{contact.hours.en}</span>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ─── HERO ─────────────────────────────────────────────────── */
+  .gl-hero {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    padding: clamp(7rem, 14vw, 12rem) clamp(1.5rem, 5vw, 4rem) clamp(2.5rem, 5vw, 4rem);
+  }
+  .gl-hero-frame { max-width: 1280px; margin-inline: auto; }
+  .gl-eyebrow {
+    margin: 0 0 1.25rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .gl-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-deep);
+  }
+  .gl-eyebrow-on-dark { color: var(--color-bronze-warm); }
+  .gl-eyebrow-on-dark::before { background: var(--color-bronze-warm); }
+  .gl-hero-title {
+    margin: 0 0 1.5rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2.5rem, 6vw, 5.25rem);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    color: var(--color-ink);
+    max-width: 18em;
+    text-wrap: balance;
+  }
+  .gl-hero-sub {
+    margin: 0;
+    font-size: clamp(1.0625rem, 1.5vw, 1.3125rem);
+    line-height: 1.6;
+    color: var(--color-mute-on-light);
+    max-width: 38em;
+  }
+
+  /* ─── MOSAIC ───────────────────────────────────────────────── */
+  .gl-mosaic {
+    background: var(--color-cream);
+    padding: clamp(2rem, 4vw, 3rem) clamp(1rem, 4vw, 3rem) clamp(6rem, 12vw, 11rem);
+  }
+
+  /* Filters — pill row */
+  .gl-filters {
+    max-width: 1440px;
+    margin: 0 auto clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .gl-filters-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.625rem;
+  }
+  .gl-filter {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    letter-spacing: 0.06em;
+    color: var(--color-ink);
+    background: var(--color-cream-2);
+    border: 1px solid var(--color-hairline-on-light);
+    border-radius: 9999px;
+    cursor: pointer;
+    transition:
+      border-color var(--duration-normal) var(--ease-out-expo),
+      background-color var(--duration-normal) var(--ease-out-expo),
+      color var(--duration-normal) var(--ease-out-expo);
+  }
+  .gl-filter:hover {
+    border-color: var(--color-bronze);
+    color: var(--color-bronze-deep);
+  }
+  .gl-filter[aria-selected='true'] {
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+    color: var(--color-cream);
+  }
+  .gl-filter:focus-visible {
+    outline: 2px solid var(--color-bronze);
+    outline-offset: 3px;
+  }
+  .gl-grid {
+    list-style: none;
+    margin: 0 auto;
+    padding: 0;
+    max-width: 1440px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(0.75rem, 1.5vw, 1.25rem);
+  }
+  @media (min-width: 768px)  { .gl-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) { .gl-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); } }
+
+  .gl-tile { list-style: none; }
+
+  .gl-tile-lead     { grid-column: span 2; aspect-ratio: 3 / 2; }
+  .gl-tile-portrait { grid-column: span 2; aspect-ratio: 3 / 4; }
+  .gl-tile-square   { grid-column: span 2; aspect-ratio: 1 / 1; }
+  .gl-tile-wide     { grid-column: span 2; aspect-ratio: 3 / 2; }
+
+  @media (min-width: 768px) {
+    .gl-tile-lead     { grid-column: span 4; aspect-ratio: 3 / 2; }
+    .gl-tile-portrait { grid-column: span 2; aspect-ratio: 3 / 4; }
+    .gl-tile-square   { grid-column: span 2; aspect-ratio: 1 / 1; }
+    .gl-tile-wide     { grid-column: span 3; aspect-ratio: 3 / 2; }
+  }
+  @media (min-width: 1024px) {
+    .gl-tile-lead     { grid-column: span 8; aspect-ratio: 3 / 2; }
+    .gl-tile-portrait { grid-column: span 4; aspect-ratio: 3 / 4; }
+    .gl-tile-square   { grid-column: span 4; aspect-ratio: 1 / 1; }
+    .gl-tile-wide     { grid-column: span 6; aspect-ratio: 3 / 2; }
+  }
+
+  .gl-figure {
+    margin: 0;
+    height: 100%;
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--color-cream-2);
+    isolation: isolate;
+  }
+  .gl-image {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .gl-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.92);
+    transition: transform var(--duration-slow) var(--ease-out-expo);
+  }
+  .gl-image video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.92);
+    transition: transform var(--duration-slow) var(--ease-out-expo);
+  }
+  .gl-tile:hover .gl-image img,
+  .gl-tile:hover .gl-image video { transform: scale(1.04); }
+  .gl-tile[hidden] { display: none; }
+
+  .gl-tile-trigger {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+  }
+  .gl-tile-trigger:focus-visible {
+    outline: 2px solid var(--color-bronze);
+    outline-offset: 3px;
+    border-radius: var(--radius-md);
+  }
+
+  .gl-video-badge {
+    position: absolute;
+    top: 0.875rem;
+    left: 0.875rem;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.3rem 0.625rem;
+    border-radius: 9999px;
+    background: oklch(8% 0.03 250 / 0.72);
+    color: var(--color-cream);
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid oklch(100% 0 0 / 0.18);
+  }
+  .gl-video-badge svg { width: 0.75rem; height: 0.75rem; }
+
+  .gl-lightbox {
+    width: min(96vw, 1280px);
+    max-width: 96vw;
+    max-height: 92vh;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--color-cream);
+  }
+  .gl-lightbox::backdrop {
+    background: oklch(6% 0.02 250 / 0.92);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  .gl-lightbox[open] {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .gl-lb-figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-height: 88vh;
+    min-width: 0;
+  }
+  .gl-lb-media {
+    background: var(--color-ink);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    max-height: 78vh;
+  }
+  .gl-lb-media img,
+  .gl-lb-media video {
+    max-width: 100%;
+    max-height: 78vh;
+    width: auto;
+    height: auto;
+    display: block;
+    border-radius: var(--radius-md);
+  }
+  .gl-lb-caption {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 420;
+    font-size: clamp(0.9375rem, 1.4vw, 1.125rem);
+    line-height: 1.4;
+    color: var(--color-cream);
+    text-align: center;
+    opacity: 0.86;
+  }
+  .gl-lb-close,
+  .gl-lb-nav {
+    background: oklch(100% 0 0 / 0.06);
+    border: 1px solid oklch(100% 0 0 / 0.20);
+    color: var(--color-cream);
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 9999px;
+    display: inline-grid;
+    place-items: center;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-normal) var(--ease-out-expo),
+      border-color var(--duration-normal) var(--ease-out-expo);
+  }
+  .gl-lb-close { position: absolute; top: 1.25rem; right: 1.25rem; z-index: 2; }
+  .gl-lb-close svg, .gl-lb-nav svg { width: 1.125rem; height: 1.125rem; }
+  .gl-lb-close:hover,
+  .gl-lb-nav:hover {
+    background: oklch(100% 0 0 / 0.14);
+    border-color: var(--color-bronze-warm);
+  }
+  .gl-lb-close:focus-visible,
+  .gl-lb-nav:focus-visible {
+    outline: 2px solid var(--color-bronze-warm);
+    outline-offset: 3px;
+  }
+  @media (max-width: 640px) {
+    .gl-lightbox[open] { grid-template-columns: 1fr; gap: 0.5rem; }
+    .gl-lb-nav { display: none; }
+  }
+  .gl-tone {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, transparent 50%, oklch(8% 0.03 250 / 0.55) 100%);
+    pointer-events: none;
+  }
+
+  .gl-caption {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 1rem 1.25rem 1.125rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.875rem;
+    color: var(--color-cream);
+    transform: translateY(0);
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+  }
+  .gl-caption-num {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 460;
+    font-size: 0.8125rem;
+    color: var(--color-bronze-warm);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+  .gl-caption-text {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 420;
+    font-size: clamp(0.9375rem, 1.3vw, 1.0625rem);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--color-cream);
+    text-wrap: balance;
+  }
+
+  /* ─── CTA (dark) ───────────────────────────────────────────── */
+  .gl-cta {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    padding: clamp(5rem, 12vw, 11rem) clamp(1.5rem, 5vw, 4rem);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .gl-cta::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(60% 50% at 50% 100%, oklch(40% 0.06 70 / 0.22), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .gl-cta-frame {
+    position: relative;
+    max-width: 1280px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    align-items: end;
+  }
+  @media (min-width: 1024px) {
+    .gl-cta-frame { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 5rem; }
+  }
+  .gl-cta-heading {
+    margin: 1rem 0 1.25rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-cream);
+    max-width: 16em;
+    text-wrap: balance;
+  }
+  .gl-cta-sub {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-cream);
+    opacity: 0.80;
+    max-width: 36em;
+  }
+  .gl-cta-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .gl-cta-phone {
+    grid-column: 1 / -1;
+    margin: 1rem 0 0;
+    font-size: 0.9375rem;
+    color: var(--color-cream);
+    opacity: 0.75;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.625rem;
+  }
+  .gl-cta-phone a {
+    color: var(--color-cream);
+    font-variant-numeric: tabular-nums;
+    text-decoration: underline;
+    text-decoration-color: var(--color-bronze-warm);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    transition: color var(--duration-normal) var(--ease-out-expo);
+  }
+  .gl-cta-phone a:hover { color: var(--color-bronze-warm); }
+  .gl-cta-phone span[aria-hidden] { color: var(--color-bronze-warm); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gl-image img, .gl-caption { transition: none; }
+  }
+</style>

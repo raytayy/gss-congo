@@ -1,0 +1,310 @@
+---
+/*
+ * ServicesBento — true asymmetric editorial bento (impeccable craft, 2026-05-04).
+ * 12-col grid. Top 3 priority services span 7 / 5 / 6 cols with photographic tiles.
+ * 4 non-priority services span 3 cols with photographic tiles.
+ * 2 deliberately render as typographic-only tiles (no photo) for breaking rhythm.
+ */
+
+import { services, getServiceUrl, type Locale } from '@lib/services';
+
+interface Props {
+  locale: Locale;
+  eyebrow?: string;
+  heading?: string;
+}
+
+const {
+  locale,
+  eyebrow = locale === 'fr' ? 'Nos métiers' : 'Our specialities',
+  heading = locale === 'fr'
+    ? 'Neuf services, un même standard.'
+    : 'Nine services, one standard.',
+} = Astro.props;
+
+// 12-col layout map by index. `typographic: true` tiles render without photo.
+const layoutByIndex = [
+  { spanLg: 7, spanMd: 4, variant: 'feature', typographic: false }, // 0 priority 1
+  { spanLg: 5, spanMd: 4, variant: 'feature', typographic: false }, // 1 priority 2
+  { spanLg: 6, spanMd: 4, variant: 'feature', typographic: false }, // 2 priority 3
+  { spanLg: 3, spanMd: 2, variant: 'compact', typographic: false }, // 3
+  { spanLg: 3, spanMd: 2, variant: 'compact', typographic: true  }, // 4 typographic
+  { spanLg: 3, spanMd: 2, variant: 'compact', typographic: false }, // 5
+  { spanLg: 3, spanMd: 2, variant: 'compact', typographic: false }, // 6
+  { spanLg: 3, spanMd: 2, variant: 'compact', typographic: true  }, // 7 typographic
+  { spanLg: 3, spanMd: 2, variant: 'compact', typographic: false }, // 8
+];
+
+function layoutFor(i: number) {
+  return layoutByIndex[i] ?? { spanLg: 3, spanMd: 2, variant: 'compact', typographic: false };
+}
+
+const indexLabel = locale === 'fr' ? 'Catalogue' : 'Catalogue';
+---
+
+<section class="bento-section" aria-labelledby="bento-heading">
+  <div class="bento-frame">
+    <header class="bento-header">
+      <p class="eyebrow-numbered">
+        <span>04 / 09</span>
+        <span>{indexLabel}</span>
+      </p>
+      <h2 id="bento-heading" class="display-large bento-heading">{heading}</h2>
+      <p class="bento-eyebrow-aside">{eyebrow}</p>
+    </header>
+
+    <ul class="bento-grid">
+      {services.map((s, i) => {
+        const lay = layoutFor(i);
+        return (
+          <li
+            class:list={[
+              'bento-tile',
+              `bento-tile--${lay.variant}`,
+              lay.typographic && 'bento-tile--typographic',
+            ]}
+            style={`--span-md: ${lay.spanMd}; --span-lg: ${lay.spanLg};`}
+            data-reveal
+            data-reveal-delay={String(Math.min(i, 6) * 60)}
+          >
+            <a class="bento-link" href={getServiceUrl(s, locale)}>
+              {!lay.typographic && (
+                <div class="bento-image">
+                  <img
+                    src={s.image}
+                    alt={s.name[locale]}
+                    loading="lazy"
+                    decoding="async"
+                    width="640"
+                    height="400"
+                  />
+                  <div class="bento-image-tone" aria-hidden="true"></div>
+                </div>
+              )}
+              <div class="bento-body">
+                <span class="bento-index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="bento-name">{s.name[locale]}</h3>
+                <p class="bento-blurb">{s.blurb[locale]}</p>
+                <span class="bento-arrow" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </div>
+              <span class="bento-rule" aria-hidden="true"></span>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .bento-section {
+    padding-block: clamp(7rem, 13vw, 13rem);
+    padding-inline: clamp(1.5rem, 5vw, 4rem);
+    background: var(--color-cream);
+  }
+  .bento-frame { max-width: 1440px; margin-inline: auto; }
+
+  .bento-header {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+    max-width: 1280px;
+  }
+  @media (min-width: 1024px) {
+    .bento-header {
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 2rem;
+    }
+  }
+  .bento-header .eyebrow-numbered { grid-column: 1; }
+  .bento-heading {
+    grid-column: 1;
+    margin: 0;
+    color: var(--color-ink);
+    max-width: 14em;
+  }
+  .bento-eyebrow-aside {
+    grid-column: 1;
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-mute-on-light);
+    align-self: end;
+  }
+  @media (min-width: 1024px) {
+    .bento-eyebrow-aside { grid-column: 2; padding-bottom: 0.5em; }
+  }
+
+  .bento-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .bento-grid { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+    .bento-tile { grid-column: span var(--span-md, 2); }
+  }
+  @media (min-width: 1024px) {
+    .bento-grid { grid-template-columns: repeat(12, 1fr); gap: 1.5rem; }
+    .bento-tile { grid-column: span var(--span-lg, 3); }
+  }
+
+  .bento-tile { display: block; }
+  .bento-link {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 14rem;
+    text-decoration: none;
+    color: inherit;
+    background: var(--color-cream-2);
+    border: 1px solid var(--color-hairline-on-light);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: border-color var(--duration-normal) var(--ease-out-expo),
+      background-color var(--duration-normal) var(--ease-out-expo);
+  }
+  .bento-link:hover { border-color: var(--color-bronze); }
+
+  .bento-rule {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    width: 0;
+    background: var(--color-bronze);
+    transition: width var(--duration-slow) var(--ease-out-expo);
+  }
+  .bento-link:hover .bento-rule { width: 100%; }
+
+  .bento-image {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--color-ink-2);
+    position: relative;
+  }
+  .bento-tile--feature .bento-image { aspect-ratio: 21 / 10; }
+  .bento-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform var(--duration-slow) var(--ease-out-expo),
+      filter var(--duration-slow) var(--ease-out-expo);
+    filter: saturate(0.92);
+  }
+  .bento-link:hover .bento-image img {
+    transform: scale(1.04);
+    filter: saturate(1);
+  }
+  .bento-image-tone {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, transparent 50%, oklch(0% 0 0 / 0.15) 100%),
+      radial-gradient(120% 80% at 50% 50%, transparent 60%, oklch(0% 0 0 / 0.35) 100%);
+    transition: opacity var(--duration-slow) var(--ease-out-expo);
+  }
+  .bento-link:hover .bento-image-tone { opacity: 0.6; }
+
+  .bento-body {
+    padding: 1.75rem 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 0.625rem;
+    position: relative;
+  }
+  .bento-tile--feature .bento-body { padding: 2rem 1.75rem 1.75rem; gap: 0.875rem; }
+
+  .bento-index {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-bronze);
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  .bento-name {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 460;
+    font-size: clamp(1.375rem, 1.8vw, 1.75rem);
+    margin: 0;
+    line-height: 1.1;
+    color: var(--color-ink);
+    letter-spacing: -0.01em;
+  }
+  .bento-tile--feature .bento-name {
+    font-size: clamp(1.625rem, 2.4vw, 2.25rem);
+  }
+
+  .bento-blurb {
+    margin: 0;
+    color: var(--color-mute-on-light);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    flex: 1;
+  }
+
+  .bento-arrow {
+    display: inline-grid;
+    place-items: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--color-ink);
+    transition: transform var(--duration-normal) var(--ease-out-expo),
+      color var(--duration-normal) var(--ease-out-expo);
+    margin-top: 0.5rem;
+  }
+  .bento-arrow svg { width: 100%; height: 100%; }
+  .bento-link:hover .bento-arrow {
+    transform: translateX(0.5rem);
+    color: var(--color-bronze);
+  }
+
+  /* TYPOGRAPHIC-ONLY VARIANT — no photo, oversized italic name on ink */
+  .bento-tile--typographic .bento-link {
+    background: var(--color-ink);
+    border-color: var(--color-hairline-on-dark);
+    min-height: clamp(16rem, 24vw, 20rem);
+    justify-content: space-between;
+  }
+  .bento-tile--typographic .bento-link:hover {
+    border-color: var(--color-bronze);
+  }
+  .bento-tile--typographic .bento-body {
+    flex: 1;
+    justify-content: space-between;
+  }
+  .bento-tile--typographic .bento-index {
+    color: var(--color-bronze-warm);
+  }
+  .bento-tile--typographic .bento-name {
+    color: var(--color-cream);
+    font-size: clamp(2rem, 3vw, 2.75rem);
+    font-variation-settings: 'opsz' 80, 'wght' 420, 'SOFT' 30;
+    font-style: italic;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .bento-tile--typographic .bento-blurb { color: var(--color-mute-on-dark); }
+  .bento-tile--typographic .bento-arrow { color: var(--color-cream); }
+  .bento-tile--typographic .bento-link:hover .bento-arrow {
+    color: var(--color-bronze-warm);
+  }
+</style>

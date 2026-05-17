@@ -1,0 +1,89 @@
+---
+/*
+ * /fr/politique-cookies/ — Cookies policy (FR).
+ * Mirror in src/pages/en/cookies-policy/index.astro.
+ */
+import LegalShell from '@components/LegalShell.astro';
+import { contact } from '@lib/contact';
+---
+
+<LegalShell
+  title="Politique de cookies"
+  eyebrow="Cookies"
+  description="Quels cookies et traceurs sont utilisés sur gss-congo.com, et comment les contrôler."
+  lang="fr"
+  altLocaleHref="/en/cookies-policy/"
+  lastUpdated="2026-05-06"
+>
+  <h2>Qu'est-ce qu'un cookie ?</h2>
+  <p>
+    Un cookie est un petit fichier texte déposé par un site web sur votre
+    navigateur. Il permet de mémoriser des préférences, de mesurer
+    l'audience, ou de proposer des fonctionnalités tierces.
+  </p>
+
+  <h2>Notre approche</h2>
+  <p>
+    Le site <strong>gss-congo.com</strong> a été conçu pour fonctionner sans
+    aucun cookie de pistage. La mesure d'audience est assurée par
+    <strong>Cloudflare Web Analytics</strong>, un outil sans cookie et sans
+    identifiant utilisateur, qui ne nécessite donc pas de bandeau de
+    consentement spécifique.
+  </p>
+
+  <h2>Cookies actuellement utilisés</h2>
+  <h3>Cookies essentiels</h3>
+  <p>
+    Aucun. Le site ne dépose pas de cookie essentiel — aucun panier d'achat,
+    aucune session utilisateur, aucune authentification.
+  </p>
+
+  <h3>Cookies de mesure d'audience</h3>
+  <p>
+    Cloudflare Web Analytics ne dépose pas de cookie. Les statistiques sont
+    agrégées de manière anonyme à partir des en-têtes HTTP standards et ne
+    permettent pas de réidentifier un visiteur.
+  </p>
+
+  <h3>Cookies tiers</h3>
+  <p>
+    Le site ne charge pas de scripts publicitaires ni de pixels de réseaux
+    sociaux. Les seuls contenus tiers chargés sont :
+  </p>
+  <ul>
+    <li>
+      <strong>Google Maps</strong> — l'embed de la carte sur la page contact
+      peut déposer ses propres cookies au moment où il est chargé. Si vous
+      souhaitez l'éviter totalement, ne défilez pas jusqu'à la carte ou
+      bloquez les iframes tierces dans votre navigateur.
+    </li>
+    <li>
+      <strong>Instagram & Facebook</strong> — sur la page d'accueil, les
+      embeds peuvent déposer leurs propres cookies au moment où ils sont
+      chargés. Mêmes conseils de blocage que ci-dessus.
+    </li>
+  </ul>
+
+  <h2>Comment refuser ou supprimer les cookies</h2>
+  <p>
+    Tous les navigateurs modernes permettent de bloquer les cookies tiers
+    et de supprimer les cookies déjà déposés :
+  </p>
+  <ul>
+    <li><strong>Chrome</strong> : Paramètres → Confidentialité et sécurité → Cookies.</li>
+    <li><strong>Firefox</strong> : Paramètres → Vie privée et sécurité.</li>
+    <li><strong>Safari</strong> : Préférences → Confidentialité.</li>
+    <li><strong>Edge</strong> : Paramètres → Cookies et autorisations de site.</li>
+  </ul>
+  <p>
+    Bloquer les cookies tiers n'altère pas le fonctionnement du site GSS —
+    seuls les embeds Google Maps, Instagram et Facebook peuvent être affectés.
+  </p>
+
+  <h2>Modification</h2>
+  <p>
+    Cette politique évolue avec le site. La date en haut de page indique la
+    dernière révision. Pour toute question :
+    <a href={`mailto:${contact.email}`}>{contact.email}</a>.
+  </p>
+</LegalShell>

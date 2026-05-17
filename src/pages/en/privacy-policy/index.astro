@@ -1,0 +1,135 @@
+---
+/*
+ * /en/privacy-policy/ — Privacy policy (EN). Mirror of /fr/politique-confidentialite/.
+ */
+import LegalShell from '@components/LegalShell.astro';
+import { contact } from '@lib/contact';
+---
+
+<LegalShell
+  title="Privacy policy"
+  eyebrow="Privacy"
+  description="How GSS Congo collects, uses, and protects your personal data."
+  lang="en"
+  altLocaleHref="/fr/politique-confidentialite/"
+  lastUpdated="2026-05-06"
+>
+  <h2>Preamble</h2>
+  <p>
+    Guarde Security Services (GSS) takes the privacy of visitors, prospects,
+    and applicants seriously. This policy describes the data we collect, how
+    we use it, how long we keep it, and the rights you can exercise.
+  </p>
+
+  <h2>Data controller</h2>
+  <p>
+    Guarde Security Services SARL — {contact.addresses.hq.detail},
+    {contact.addresses.hq.street}, {contact.addresses.hq.city}, DRC.
+    Contact: <a href={`mailto:${contact.email}`}>{contact.email}</a>.
+  </p>
+
+  <h2>Data we collect</h2>
+  <p>
+    We collect only the data you submit to us voluntarily, primarily through
+    the contact form:
+  </p>
+  <ul>
+    <li>Full name</li>
+    <li>Email address</li>
+    <li>Phone number (optional)</li>
+    <li>Company name (optional)</li>
+    <li>Service of interest</li>
+    <li>Description of your need</li>
+  </ul>
+  <p>
+    The site also collects anonymised audience metrics via Cloudflare Web
+    Analytics (no cookies, no user identifiers).
+  </p>
+
+  <h2>Purposes of processing</h2>
+  <ul>
+    <li>Respond to your quote or information request.</li>
+    <li>Establish a service contract if you decide to work with us.</li>
+    <li>Improve the quality of our site and services.</li>
+  </ul>
+  <p>
+    No data is used for unsolicited commercial outreach, nor sold or shared
+    with third parties for marketing.
+  </p>
+
+  <h2>Legal basis</h2>
+  <p>
+    Form data processing rests on your consent (voluntary submission) and,
+    where applicable, on the performance of pre-contractual measures taken
+    at your request.
+  </p>
+
+  <h2>Retention</h2>
+  <ul>
+    <li>
+      <strong>Inactive quote requests</strong>: 24 months after the last
+      exchange, then deletion.
+    </li>
+    <li>
+      <strong>Contract data</strong>: contract duration + 5 years to satisfy
+      accounting and legal obligations.
+    </li>
+    <li>
+      <strong>Applications</strong>: 24 months after receipt, then deletion
+      unless extended retention is requested.
+    </li>
+    <li>
+      <strong>Audience metrics</strong>: aggregated and anonymised, retained
+      according to Cloudflare's policy.
+    </li>
+  </ul>
+
+  <h2>Recipients</h2>
+  <p>
+    Your data is accessible only to GSS staff whose role requires it (sales,
+    operations, HR). No data is transmitted to third parties beyond:
+  </p>
+  <ul>
+    <li>
+      Web3Forms (form transmission gateway — data passes through and is
+      delivered to the GSS email inbox, with no storage on the Web3Forms side
+      beyond delivery).
+    </li>
+    <li>
+      Cloudflare (hosting, anonymised audience metrics).
+    </li>
+  </ul>
+
+  <h2>Security</h2>
+  <p>
+    The site is served over strict HTTPS. Form data is transmitted encrypted.
+    Internal access to received emails is restricted to authorised staff.
+  </p>
+
+  <h2>Your rights</h2>
+  <p>In line with general data protection principles, you have:</p>
+  <ul>
+    <li>The right to access your data.</li>
+    <li>The right to correct it if inaccurate.</li>
+    <li>The right to deletion (subject to legal retention obligations).</li>
+    <li>The right to object to processing.</li>
+    <li>The right to data portability.</li>
+  </ul>
+  <p>
+    To exercise these rights, write to <a href={`mailto:${contact.email}`}>{contact.email}</a>
+    stating the subject of your request. We respond within a reasonable
+    timeframe, typically under 30 days.
+  </p>
+
+  <h2>Cookies</h2>
+  <p>
+    See the <a href="/en/cookies-policy/">cookies policy</a> for details on
+    trackers used.
+  </p>
+
+  <h2>Updates</h2>
+  <p>
+    This policy may be updated. The date at the top of the page indicates the
+    latest revision. Substantive changes are announced on the site.
+  </p>
+</LegalShell>

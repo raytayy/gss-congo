@@ -1,0 +1,62 @@
+{
+  "url": "http://localhost:4321/fr/",
+  "breakpoints": {
+    "desktop": {
+      "viewport": "screenshots/audit-desktop-viewport.png",
+      "full": "screenshots/audit-desktop-fullpage.png"
+    },
+    "tablet": {
+      "viewport": "screenshots/audit-tablet-viewport.png",
+      "full": "screenshots/audit-tablet-fullpage.png"
+    },
+    "mobile": {
+      "viewport": "screenshots/audit-mobile-viewport.png",
+      "full": "screenshots/audit-mobile-fullpage.png"
+    }
+  },
+  "axe": {
+    "violations": [],
+    "passes": 40,
+    "incomplete": 2
+  },
+  "perf": {
+    "domContentLoaded": 181,
+    "loadEvent": 182,
+    "fcp": 120,
+    "lcp": 132,
+    "transferSize": 211478,
+    "encodedBodySize": 211178
+  },
+  "layout": {
+    ".hero": {
+      "h": 828,
+      "bg": "rgb(10, 53, 86)"
+    },
+    ".pillars": {
+      "h": 1248,
+      "bg": "rgb(245, 240, 230)"
+    },
+    ".stats-band": {
+      "h": 970,
+      "bg": "rgb(10, 53, 86)"
+    },
+    ".industries": {
+      "h": 1285,
+      "bg": "rgb(94, 61, 28)"
+    },
+    ".method": "NOT FOUND",
+    ".careers": {
+      "h": 746,
+      "bg": "rgba(0, 0, 0, 0)"
+    },
+    ".contact-cta": {
+      "h": 794,
+      "bg": "rgb(245, 240, 230)"
+    },
+    ".site-footer": {
+      "h": 639,
+      "bg": "rgb(10, 53, 86)"
+    }
+  },
+  "errors": []
+}

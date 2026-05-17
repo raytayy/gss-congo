@@ -1,0 +1,386 @@
+---
+/*
+ * ServicePillars — asymmetric editorial layout.
+ * One lead pillar (full-bleed photo, oversized index, large heading) +
+ * two support pillars stacked beside it (image left, text right). Breaks
+ * the three-equal-card grid pattern.
+ */
+
+import { services, getServiceUrl, type Locale } from '@lib/services';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const priority = services.filter((s) => s.priority).slice(0, 3);
+const [lead, ...support] = priority;
+
+const eyebrow = locale === 'fr' ? 'Nos métiers' : 'What we do';
+const heading = locale === 'fr'
+  ? 'Trois métiers fondateurs.'
+  : 'Three founding disciplines.';
+const sub = locale === 'fr'
+  ? 'Onze ans à les pratiquer à Kinshasa, calibrés site par site.'
+  : 'Eleven years practising them in Kinshasa, calibrated site by site.';
+const more = locale === 'fr' ? 'Tous les services' : 'All services';
+const moreHref = `/${locale}/services/`;
+---
+
+<section class="pillars" aria-labelledby="pillars-heading">
+  <div class="pillars-frame">
+    <header class="pillars-header" data-reveal>
+      <p class="pillars-eyebrow">{eyebrow}</p>
+      <h2 id="pillars-heading" class="pillars-heading">{heading}</h2>
+      <p class="pillars-sub">{sub}</p>
+    </header>
+
+    <div class="pillars-editorial">
+      <article class="pillar pillar-lead" data-reveal data-reveal-delay="100">
+        <a class="pillar-link pillar-lead-link" href={getServiceUrl(lead, locale)}>
+          <span class="pillar-lead-index" aria-hidden="true">/ 01</span>
+          <div class="pillar-lead-media">
+            <img src={lead.image} alt="" loading="lazy" decoding="async" width="960" height="720" />
+            <div class="pillar-image-tone" aria-hidden="true"></div>
+          </div>
+          <div class="pillar-lead-body">
+            <h3 class="pillar-lead-name">{lead.name[locale]}</h3>
+            <p class="pillar-lead-blurb">{lead.blurb[locale]}</p>
+            <span class="pillar-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </div>
+        </a>
+      </article>
+
+      <ul class="pillars-support">
+        {support.map((s, i) => (
+          <li class="pillar pillar-support" data-reveal data-reveal-delay={String(220 + i * 100)}>
+            <a class="pillar-link pillar-support-link" href={getServiceUrl(s, locale)}>
+              <div class="pillar-support-media">
+                <img src={s.image} alt="" loading="lazy" decoding="async" width="640" height="480" />
+                <div class="pillar-image-tone" aria-hidden="true"></div>
+              </div>
+              <div class="pillar-support-body">
+                <span class="pillar-support-index" aria-hidden="true">/ {String(i + 2).padStart(2, '0')}</span>
+                <h3 class="pillar-support-name">{s.name[locale]}</h3>
+                <p class="pillar-support-blurb">{s.blurb[locale]}</p>
+                <span class="pillar-arrow" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <p class="pillars-more" data-reveal data-reveal-delay="500">
+      <a href={moreHref}>
+        <span>{more}</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .pillars {
+    background: var(--color-cream);
+    padding: clamp(3.5rem, 12vw, 11rem) clamp(1.5rem, 5vw, 4rem);
+  }
+  .pillars-frame { max-width: 1440px; margin-inline: auto; }
+  .pillars-header {
+    max-width: 38em;
+    margin-bottom: clamp(3rem, 5vw, 4.5rem);
+  }
+  .pillars-eyebrow {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .pillars-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-deep);
+  }
+  .pillars-heading {
+    margin: 0 0 1rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
+    font-size: clamp(2.25rem, 4vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+  .pillars-sub {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--color-mute-on-light);
+    max-width: 36em;
+  }
+
+  /* Editorial layout: lead | support-stack */
+  .pillars-editorial {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 3vw, 2.5rem);
+  }
+  @media (min-width: 1024px) {
+    .pillars-editorial {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: clamp(2rem, 3vw, 3rem);
+      align-items: stretch;
+    }
+  }
+
+  .pillar-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+  }
+
+  /* LEAD pillar — full-bleed photo, dark, editorial */
+  .pillar-lead {
+    position: relative;
+    background: var(--color-ink);
+    color: var(--color-cream);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    isolation: isolate;
+    min-height: clamp(28rem, 50vw, 38rem);
+  }
+  .pillar-lead-link {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-rows: 1fr auto;
+  }
+  .pillar-lead-index {
+    position: absolute;
+    top: clamp(1.5rem, 3vw, 2.25rem);
+    left: clamp(1.5rem, 3vw, 2.25rem);
+    z-index: 3;
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-warm);
+    font-variant-numeric: tabular-nums;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-bronze-warm);
+  }
+  .pillar-lead-media {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .pillar-lead-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    filter: saturate(0.88) brightness(0.85);
+    transition: transform var(--duration-slow) var(--ease-out-expo),
+      filter var(--duration-slow) var(--ease-out-expo);
+  }
+  .pillar-lead-link:hover .pillar-lead-media img {
+    transform: scale(1.03);
+    filter: saturate(0.95) brightness(0.9);
+  }
+  .pillar-lead .pillar-image-tone {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background:
+      linear-gradient(
+        180deg,
+        oklch(15% 0.04 250 / 0.25) 0%,
+        oklch(15% 0.04 250 / 0.5) 50%,
+        oklch(10% 0.04 250 / 0.92) 100%
+      );
+  }
+  .pillar-lead-body {
+    grid-row: 2;
+    position: relative;
+    z-index: 3;
+    padding: clamp(1.75rem, 3vw, 2.5rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    align-self: end;
+  }
+  .pillar-lead-name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 40;
+    font-size: clamp(1.875rem, 3.2vw, 2.875rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-cream);
+    text-wrap: balance;
+  }
+  .pillar-lead-blurb {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.5;
+    color: var(--color-cream);
+    opacity: 0.85;
+    max-width: 28em;
+  }
+
+  /* SUPPORT pillars (stacked) */
+  .pillars-support {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(1.5rem, 2.5vw, 2rem);
+  }
+
+  .pillar-support {
+    background: var(--color-cream-2);
+    border: 1px solid var(--color-hairline-on-light);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: border-color var(--duration-normal) var(--ease-out-expo);
+  }
+  .pillar-support:hover { border-color: var(--color-bronze-deep); }
+  .pillar-support-link {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    height: 100%;
+  }
+  @media (min-width: 560px) {
+    .pillar-support-link {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    }
+  }
+  .pillar-support-media {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background: var(--color-ink-2);
+  }
+  @media (min-width: 560px) {
+    .pillar-support-media { aspect-ratio: 4 / 5; }
+  }
+  @media (min-width: 1024px) {
+    .pillar-support-media { aspect-ratio: auto; }
+  }
+  .pillar-support-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    filter: saturate(0.92);
+    transition: transform var(--duration-slow) var(--ease-out-expo),
+      filter var(--duration-slow) var(--ease-out-expo);
+  }
+  .pillar-support-link:hover .pillar-support-media img {
+    transform: scale(1.04);
+    filter: saturate(1);
+  }
+  .pillar-support .pillar-image-tone {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent 70%, oklch(0% 0 0 / 0.18) 100%);
+  }
+  .pillar-support-body {
+    padding: clamp(1.5rem, 2.5vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    justify-content: space-between;
+    min-width: 0;
+  }
+  .pillar-support-index {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    font-variant-numeric: tabular-nums;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-bronze-deep);
+    align-self: flex-start;
+  }
+  .pillar-support-name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 460;
+    font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+    line-height: 1.15;
+    color: var(--color-ink);
+    letter-spacing: -0.01em;
+  }
+  .pillar-support-blurb {
+    margin: 0;
+    color: var(--color-mute-on-light);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+
+  .pillar-arrow {
+    display: inline-grid;
+    place-items: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: currentColor;
+    transition: transform var(--duration-normal) var(--ease-out-expo),
+      color var(--duration-normal) var(--ease-out-expo);
+    margin-top: 0.375rem;
+    align-self: flex-start;
+  }
+  .pillar-arrow svg { width: 100%; height: 100%; }
+  .pillar-link:hover .pillar-arrow { transform: translateX(0.5rem); }
+  .pillar-support-link:hover .pillar-arrow { color: var(--color-bronze-deep); }
+
+  .pillars-more { margin: clamp(2rem, 4vw, 3rem) 0 0; }
+  .pillars-more a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 0.9375rem;
+    letter-spacing: 0.04em;
+    color: var(--color-ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-bronze-deep);
+    padding: 0.25rem 0;
+    transition: color var(--duration-normal) var(--ease-out-expo);
+  }
+  .pillars-more a svg {
+    width: 0.9375rem;
+    height: 0.9375rem;
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+  }
+  .pillars-more a:hover { color: var(--color-bronze-deep); }
+  .pillars-more a:hover svg { transform: translateX(0.25rem); }
+</style>

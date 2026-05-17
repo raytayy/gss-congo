@@ -1,0 +1,70 @@
+---
+/*
+ * Marquee — pure-CSS infinite horizontal slider.
+ * Pure-CSS port of the React InfiniteSlider (no framer-motion, no
+ * react-use-measure). Slot is rendered twice for a seamless loop:
+ * the track translates -50% (= one full set), then snaps back invisibly.
+ */
+
+interface Props {
+  duration?: number;       // seconds for one full loop
+  gap?: number;            // px between items
+  reverse?: boolean;       // direction toggle
+  pauseOnHover?: boolean;
+  class?: string;
+}
+
+const {
+  duration = 30,
+  gap = 48,
+  reverse = false,
+  pauseOnHover = false,
+  class: className = '',
+} = Astro.props;
+
+const styleVars = `--marquee-duration: ${duration}s; --marquee-gap: ${gap}px; --marquee-direction: ${reverse ? 'reverse' : 'normal'};`;
+---
+
+<div class:list={['marquee', className]} style={styleVars}>
+  <div class:list={['marquee-track', { 'marquee-pause-on-hover': pauseOnHover }]}>
+    <div class="marquee-set"><slot /></div>
+    <div class="marquee-set" aria-hidden="true"><slot /></div>
+  </div>
+</div>
+
+<style>
+  .marquee {
+    overflow: hidden;
+    width: 100%;
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    gap: var(--marquee-gap, 1rem);
+    animation: marquee-roll var(--marquee-duration, 30s) linear infinite;
+    animation-direction: var(--marquee-direction, normal);
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+  }
+  .marquee-set {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--marquee-gap, 1rem);
+  }
+  .marquee-pause-on-hover:hover {
+    animation-play-state: paused;
+  }
+  @keyframes marquee-roll {
+    from { transform: translate3d(0, 0, 0); }
+    to {
+      /* Translate by exactly one set + one gap so the duplicate snaps in
+         seamlessly. The track width is 2 × set + 1 × gap (gap between sets). */
+      transform: translate3d(calc(-50% - var(--marquee-gap, 1rem) / 2), 0, 0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track { animation: none; }
+  }
+</style>

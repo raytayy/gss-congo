@@ -1,0 +1,252 @@
+---
+/*
+ * IndustriesGrid — photographic marquee of protected environments.
+ *
+ * Auto-scrolling horizontal slider of sector tiles, framed by the
+ * single committed bronze color moment of the homepage. The marquee
+ * pauses on hover and on keyboard focus, and respects
+ * `prefers-reduced-motion` (Marquee.astro disables the animation
+ * entirely in that case so the tiles read as a static row).
+ */
+
+import type { Locale } from '@lib/i18n';
+import Marquee from './Marquee.astro';
+import ProgressiveBlur from './ProgressiveBlur.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+interface Sector {
+  label: string;
+  sub: string;
+  image: string;
+}
+
+const sectorsFr: Sector[] = [
+  { label: 'Industries',          sub: 'Usines, entrepôts, sites miniers',     image: '/images/sectors/sector-01-industries.jpg'   },
+  { label: 'Ambassades',          sub: 'Diplomatie, ONG, institutions',        image: '/images/sectors/sector-02-embassies.jpg'    },
+  { label: 'Hôtellerie',          sub: 'Hôtels, restaurants, événementiel',    image: '/images/sectors/sector-03-hospitality.jpg'  },
+  { label: 'BTP et chantiers',    sub: 'Sites en construction',                image: '/images/sectors/sector-04-construction.jpg' },
+  { label: 'Résidences VIP',      sub: 'Familles, expatriés, cadres',          image: '/images/sectors/sector-05-residences.jpg'   },
+  { label: 'Centres commerciaux', sub: 'Parkings, accès, flux',                image: '/images/sectors/sector-06-retail.jpg'       },
+];
+
+const sectorsEn: Sector[] = [
+  { label: 'Industries',     sub: 'Factories, warehouses, mining sites', image: '/images/sectors/sector-01-industries.jpg'   },
+  { label: 'Embassies',      sub: 'Diplomacy, NGOs, institutions',       image: '/images/sectors/sector-02-embassies.jpg'    },
+  { label: 'Hospitality',    sub: 'Hotels, restaurants, events',         image: '/images/sectors/sector-03-hospitality.jpg'  },
+  { label: 'Construction',   sub: 'Active building sites',                image: '/images/sectors/sector-04-construction.jpg' },
+  { label: 'VIP residences', sub: 'Families, expats, executives',         image: '/images/sectors/sector-05-residences.jpg'   },
+  { label: 'Retail centres', sub: 'Parking, access, flow',                image: '/images/sectors/sector-06-retail.jpg'       },
+];
+
+const sectors = locale === 'fr' ? sectorsFr : sectorsEn;
+
+const eyebrow = locale === 'fr' ? 'Pour qui' : 'Who we serve';
+const heading = locale === 'fr'
+  ? 'Six secteurs, une posture par site.'
+  : 'Six sectors, one posture per site.';
+const sub = locale === 'fr'
+  ? 'Chaque dispositif est dimensionné au contexte. Jamais surdimensionné. Jamais insuffisant.'
+  : 'Every posture is sized to context. Never oversized. Never insufficient.';
+---
+
+<section class="industries" aria-labelledby="industries-heading">
+  <div class="industries-frame">
+    <header class="industries-header" data-reveal>
+      <p class="industries-eyebrow">{eyebrow}</p>
+      <h2 id="industries-heading" class="industries-heading">{heading}</h2>
+      <p class="industries-sub">{sub}</p>
+    </header>
+
+    <div class="industries-slider">
+      <Marquee duration={36} gap={28} pauseOnHover>
+        {sectors.map((s, i) => (
+          <article class="sector-tile">
+            <img
+              class="sector-tile-image"
+              src={s.image}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              width="1280"
+              height="1024"
+            />
+            <div class="sector-tile-tone" aria-hidden="true"></div>
+            <div class="sector-tile-content">
+              <span class="sector-tile-num" aria-hidden="true">/ {String(i + 1).padStart(2, '0')}</span>
+              <h3 class="sector-tile-name">{s.label}</h3>
+              <p class="sector-tile-sub">{s.sub}</p>
+            </div>
+          </article>
+        ))}
+      </Marquee>
+      <ProgressiveBlur class="industries-slider-blur industries-slider-blur-left" direction="left" blurLayers={5} blurIntensity={0.8} />
+      <ProgressiveBlur class="industries-slider-blur industries-slider-blur-right" direction="right" blurLayers={5} blurIntensity={0.8} />
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Bronze frame — the single committed color moment of the homepage. */
+  .industries {
+    position: relative;
+    background:
+      radial-gradient(120% 80% at 0% 0%, oklch(52% 0.075 70) 0%, transparent 55%),
+      var(--color-bronze-deep);
+    padding: clamp(4rem, 13vw, 12rem) clamp(1.5rem, 5vw, 4rem);
+    color: var(--color-cream);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .industries-frame {
+    max-width: 1440px;
+    margin-inline: auto;
+    position: relative;
+  }
+  .industries-header {
+    max-width: 38em;
+    margin-bottom: clamp(3rem, 5vw, 4.5rem);
+  }
+  .industries-eyebrow {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-cream);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    opacity: 0.82;
+  }
+  .industries-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-cream);
+    opacity: 0.6;
+  }
+  .industries-heading {
+    margin: 0 0 1rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: var(--color-cream);
+    text-wrap: balance;
+  }
+  .industries-sub {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--color-cream);
+    opacity: 0.82;
+    max-width: 36em;
+  }
+
+  /* Marquee container — full-bleed within the section padding */
+  .industries-slider {
+    position: relative;
+    margin-inline: calc(-1 * clamp(1.5rem, 5vw, 4rem));
+  }
+
+  /* Slider tile */
+  .sector-tile {
+    position: relative;
+    flex-shrink: 0;
+    width: clamp(22rem, 32vw, 30rem);   /* 352 – 480px */
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--color-ink);
+    isolation: isolate;
+  }
+
+  /* Edge fades — gentler than the original 8-layer / 1.2 intensity */
+  .industries-slider-blur {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: clamp(4rem, 10vw, 8rem);
+    z-index: 3;
+    pointer-events: none;
+  }
+  .industries-slider-blur-left { left: 0; }
+  .industries-slider-blur-right { right: 0; }
+
+  .sector-tile-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    filter: saturate(0.86) brightness(0.78);
+    transition:
+      transform 900ms var(--ease-out-expo),
+      filter 900ms var(--ease-out-expo);
+    will-change: transform;
+  }
+  @media (hover: hover) {
+    .sector-tile:hover .sector-tile-image {
+      transform: scale(1.04);
+      filter: saturate(0.95) brightness(0.86);
+    }
+  }
+
+  .sector-tile-tone {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      linear-gradient(180deg, transparent 30%, oklch(15% 0.04 250 / 0.55) 75%, oklch(8% 0.03 250 / 0.92) 100%),
+      linear-gradient(110deg, oklch(22% 0.06 70 / 0.18) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .sector-tile-content {
+    position: absolute;
+    z-index: 2;
+    left: clamp(1.25rem, 2.2vw, 1.875rem);
+    right: clamp(1.25rem, 2.2vw, 1.875rem);
+    bottom: clamp(1.25rem, 2.2vw, 1.875rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: var(--color-cream);
+  }
+  .sector-tile-num {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-warm);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 0.25rem;
+  }
+  .sector-tile-name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 460, 'SOFT' 30;
+    font-size: clamp(1.75rem, 2.4vw, 2.25rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    color: var(--color-cream);
+    text-wrap: balance;
+  }
+  .sector-tile-sub {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--color-cream);
+    opacity: 0.82;
+    max-width: 28em;
+  }
+</style>

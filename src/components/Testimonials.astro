@@ -1,0 +1,197 @@
+---
+/*
+ * Testimonials — anonymized client voice.
+ *
+ * Quotes are credited by role + sector only, per client confidentiality
+ * requests typical in security work. When a client agrees to be named
+ * publicly, switch the role+sector attribution to a single named line.
+ */
+
+import type { Locale } from '@lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+interface Quote {
+  quote: { fr: string; en: string };
+  role: { fr: string; en: string };
+  sector: { fr: string; en: string };
+}
+
+const quotes: Quote[] = [
+  {
+    quote: {
+      fr: 'En onze ans, nous n’avons jamais eu à renégocier ce qui a été promis. Le dispositif tient, les rotations tiennent, et la communication ne fait jamais défaut.',
+      en: 'In eleven years, we’ve never had to renegotiate what was promised. The posture holds, the rotations hold, and communication never lapses.',
+    },
+    role: { fr: 'Directeur de site', en: 'Site Director' },
+    sector: { fr: 'Industrie · Kinshasa', en: 'Industry · Kinshasa' },
+  },
+  {
+    quote: {
+      fr: 'L’équipe a compris notre contexte sans qu’on ait à tout réexpliquer. C’est rare, et ça change tout dans la durée.',
+      en: 'The team understood our context without us having to explain everything. That’s rare, and it changes everything over time.',
+    },
+    role: { fr: 'Responsable sécurité', en: 'Head of Security' },
+    sector: { fr: 'Représentation diplomatique', en: 'Diplomatic mission' },
+  },
+];
+
+const eyebrow = locale === 'fr' ? 'Ce qu’on dit de nous' : 'What clients say';
+const heading = locale === 'fr'
+  ? 'La rigueur se mesure dans la durée.'
+  : 'Rigour shows over time.';
+const sub = locale === 'fr'
+  ? 'Onze ans de relations clients à Kinshasa. Citations anonymisées à la demande des intéressés.'
+  : 'Eleven years of client relationships in Kinshasa. Quotes anonymized at the request of those concerned.';
+---
+
+<section class="testimonials" aria-labelledby="testimonials-heading">
+  <div class="testimonials-frame">
+    <header class="testimonials-header" data-reveal>
+      <p class="testimonials-eyebrow">{eyebrow}</p>
+      <h2 id="testimonials-heading" class="testimonials-heading">{heading}</h2>
+      <p class="testimonials-sub">{sub}</p>
+    </header>
+
+    <ul class="testimonials-list">
+      {quotes.map((q, i) => (
+        <li class="testimonial glow-card" data-glow-tone="light" data-reveal data-reveal-delay={String(120 + i * 100)}>
+          <article>
+            <span class="testimonial-mark" aria-hidden="true">“</span>
+            <blockquote class="testimonial-quote">{q.quote[locale]}</blockquote>
+            <footer class="testimonial-attribution">
+              <span class="testimonial-role">{q.role[locale]}</span>
+              <span class="testimonial-meta">
+                <span class="testimonial-sector">{q.sector[locale]}</span>
+              </span>
+            </footer>
+          </article>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .testimonials {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    padding: clamp(3.5rem, 12vw, 11rem) clamp(1.5rem, 5vw, 4rem);
+  }
+  .testimonials-frame {
+    max-width: 1280px;
+    margin-inline: auto;
+  }
+  .testimonials-header {
+    max-width: 38em;
+    margin-bottom: clamp(2.5rem, 4vw, 4rem);
+  }
+  .testimonials-eyebrow {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .testimonials-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-deep);
+  }
+  .testimonials-heading {
+    margin: 0 0 1rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
+    font-size: clamp(2.25rem, 4vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+  .testimonials-sub {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--color-mute-on-light);
+    max-width: 36em;
+  }
+
+  .testimonials-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 3vw, 3rem);
+  }
+  @media (min-width: 900px) {
+    .testimonials-list { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .testimonial {
+    position: relative;
+    padding-top: clamp(2rem, 3vw, 2.75rem);
+    border-top: 1px solid var(--color-hairline-on-light);
+  }
+
+  .testimonial-mark {
+    position: absolute;
+    top: clamp(0.25rem, 0.5vw, 0.5rem);
+    left: 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'wght' 360, 'SOFT' 100;
+    font-size: clamp(3.5rem, 6vw, 5rem);
+    line-height: 0.6;
+    color: var(--color-bronze);
+    opacity: 0.55;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .testimonial-quote {
+    margin: 0 0 clamp(1.5rem, 2.5vw, 2rem);
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 380, 'SOFT' 50;
+    font-size: clamp(1.25rem, 1.8vw, 1.625rem);
+    line-height: 1.4;
+    letter-spacing: -0.005em;
+    color: var(--color-ink);
+    text-wrap: balance;
+    max-width: 32em;
+    padding-left: clamp(2.5rem, 4vw, 3.5rem);
+  }
+
+  .testimonial-attribution {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding-left: clamp(2.5rem, 4vw, 3.5rem);
+  }
+  .testimonial-role {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    font-weight: 500;
+  }
+  .testimonial-meta {
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    color: var(--color-mute-on-light);
+  }
+  .testimonial-sector {
+    color: var(--color-mute-on-light);
+  }
+</style>

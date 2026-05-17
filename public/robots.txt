@@ -1,0 +1,10 @@
+# GSS Congo — robots.txt
+# https://gss-congo.com
+
+User-agent: *
+Allow: /
+
+# No private areas at the moment. If admin or staging routes are added later,
+# block them here before launch.
+
+Sitemap: https://gss-congo.com/sitemap-index.xml

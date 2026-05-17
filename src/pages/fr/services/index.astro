@@ -1,0 +1,436 @@
+---
+/*
+ * /fr/services/ — Services hub.
+ * Editorial hero + asymmetric photographic mosaic of 9 services + CTA band.
+ * Same design system as the homepage (NeonButton, [data-reveal] stagger,
+ * Fraunces optical sizing, bronze accents).
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import NeonButton from '@components/NeonButton.astro';
+import { services, getServiceUrl } from '@lib/services';
+
+// Layout spans for the asymmetric mosaic
+//   Row 1: lead (8) + portrait (4)
+//   Row 2: 3 squares (4 + 4 + 4)
+//   Row 3: 3 squares (4 + 4 + 4)
+const layout: Array<'lead' | 'portrait' | 'square' | 'banner'> = [
+  'lead',     // 0 — gardiennage   (span 8)
+  'portrait', // 1 — résidentielle (span 4)
+  'square',   // 2 — industrielle  (span 4)
+  'square',   // 3 — élite         (span 4)
+  'square',   // 4 — escorte       (span 4)
+  'square',   // 5 — parking       (span 4)
+  'square',   // 6 — fumigation    (span 4)
+  'square',   // 7 — vidéo         (span 4)
+  'banner',   // 8 — caméras       (span 12, closing feature)
+];
+---
+
+<BaseLayout
+  title="Nos services"
+  description="Neuf métiers de la sécurité privée à Kinshasa. Gardiennage, résidentiel, industriel, élite, escorte, parking, fumigation, vidéo surveillance, installation caméras."
+  lang="fr"
+  altLocaleHref="/en/services/"
+>
+  <section class="svc-hub-hero" aria-labelledby="svc-hub-heading">
+    <div class="svc-hub-frame">
+      <p class="svc-hub-eyebrow" data-reveal>Nos services</p>
+      <h1 id="svc-hub-heading" class="svc-hub-heading" data-reveal data-reveal-delay="120">
+        Neuf métiers, <span class="svc-hub-heading-accent">un même standard.</span>
+      </h1>
+      <p class="svc-hub-sub" data-reveal data-reveal-delay="240">
+        Onze ans à pratiquer la sécurité privée à Kinshasa. Chaque dispositif est calibré
+        au site, jamais surdimensionné, jamais insuffisant. Voici le détail de ce que
+        nous prenons en charge.
+      </p>
+    </div>
+  </section>
+
+  <section class="svc-hub-mosaic" aria-label="Catalogue des services">
+    <div class="svc-hub-mosaic-frame">
+      <ul class="svc-hub-grid">
+        {services.map((s, i) => {
+          const span = layout[i] ?? 'square';
+          return (
+            <li
+              class={`svc-card svc-card-${span}`}
+              data-reveal="bento"
+              data-reveal-delay={String(120 + i * 70)}
+              style={`--reveal-delay: ${120 + i * 70}ms;`}
+            >
+              <a class="svc-card-link" href={getServiceUrl(s, 'fr')}>
+                <div class="svc-card-media">
+                  <img src={s.image} alt="" loading="lazy" decoding="async" />
+                  <div class="svc-card-tone" aria-hidden="true"></div>
+                </div>
+                <div class="svc-card-content">
+                  <span class="svc-card-num" aria-hidden="true">/ {String(i + 1).padStart(2, '0')}</span>
+                  <h2 class="svc-card-name">{s.name.fr}</h2>
+                  <p class="svc-card-blurb">{s.blurb.fr}</p>
+                  <span class="svc-card-cue">
+                    Découvrir
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                      <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                </div>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+
+  <section class="svc-hub-cta" aria-labelledby="svc-hub-cta-heading">
+    <div class="svc-hub-cta-frame">
+      <div class="svc-hub-cta-text" data-reveal>
+        <p class="svc-hub-cta-eyebrow">Devis</p>
+        <h2 id="svc-hub-cta-heading" class="svc-hub-cta-heading">
+          Une posture sur mesure commence par un échange.
+        </h2>
+        <p class="svc-hub-cta-sub">
+          Décrivez-nous votre site et votre contexte. Nous revenons sous 24 heures
+          avec une proposition calibrée — ni surdimensionnée, ni insuffisante.
+        </p>
+      </div>
+      <div class="svc-hub-cta-actions" data-reveal data-reveal-delay="200">
+        <NeonButton variant="solid" size="lg" href="/fr/contact/">
+          Demander un devis
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </NeonButton>
+        <NeonButton variant="default" size="lg" href={`tel:+243996666699`}>
+          +243 99 666 6699
+        </NeonButton>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ─── HERO ───────────────────────────────────────────────────── */
+  .svc-hub-hero {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    padding: clamp(7rem, 14vw, 12rem) clamp(1.5rem, 5vw, 4rem) clamp(3rem, 6vw, 5rem);
+  }
+  .svc-hub-frame {
+    max-width: 1280px;
+    margin-inline: auto;
+  }
+  .svc-hub-eyebrow {
+    margin: 0 0 1.25rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .svc-hub-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-deep);
+  }
+  .svc-hub-heading {
+    margin: 0 0 1.5rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2.75rem, 7vw, 6rem);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--color-ink);
+    max-width: 14em;
+    text-wrap: balance;
+  }
+  .svc-hub-heading-accent {
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'wght' 400, 'SOFT' 100;
+    color: var(--color-bronze);
+  }
+  .svc-hub-sub {
+    margin: 0;
+    font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+    line-height: 1.55;
+    color: var(--color-mute-on-light);
+    max-width: 38em;
+  }
+
+  /* ─── MOSAIC ─────────────────────────────────────────────────── */
+  .svc-hub-mosaic {
+    background: var(--color-cream);
+    padding: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 5vw, 4rem) clamp(4rem, 8vw, 7rem);
+  }
+  .svc-hub-mosaic-frame {
+    max-width: 1280px;
+    margin-inline: auto;
+  }
+  .svc-hub-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(1rem, 1.5vw, 1.5rem);
+  }
+  @media (min-width: 720px) {
+    .svc-hub-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .svc-hub-grid {
+      grid-template-columns: repeat(12, 1fr);
+      gap: clamp(1rem, 1.5vw, 1.5rem);
+    }
+    /* Row 1: 8 lead + 4 portrait */
+    .svc-card-lead     { grid-column: span 8; aspect-ratio: 3 / 2; }
+    .svc-card-portrait { grid-column: span 4; aspect-ratio: 3 / 4; }
+    /* Rows 2 + 3: three squares each */
+    .svc-card-square   { grid-column: span 4; aspect-ratio: 1 / 1; }
+    /* Row 4: closing banner */
+    .svc-card-banner   { grid-column: span 12; aspect-ratio: 12 / 4; }
+  }
+  @media (min-width: 720px) and (max-width: 1023px) {
+    .svc-card-lead     { grid-column: span 2; aspect-ratio: 3 / 2; }
+    .svc-card-portrait { aspect-ratio: 5 / 6; }
+    .svc-card-square   { aspect-ratio: 1 / 1; }
+    .svc-card-banner   { grid-column: span 2; aspect-ratio: 16 / 7; }
+  }
+  @media (max-width: 719px) {
+    .svc-card-lead, .svc-card-portrait, .svc-card-square { aspect-ratio: 4 / 3; }
+    .svc-card-banner { aspect-ratio: 16 / 9; }
+  }
+
+  /* ─── CARD ───────────────────────────────────────────────────── */
+  .svc-card {
+    display: flex;
+    will-change: transform, opacity, filter;
+  }
+  /* CSS keyframe matching framer-motion's easeOut [0.16, 1, 0.3, 1] */
+  html.js .svc-card[data-reveal='bento']:not([data-revealed='true']) {
+    opacity: 0;
+    transform: translateY(28px);
+    filter: blur(8px);
+  }
+  .svc-card[data-reveal='bento'] {
+    transition:
+      opacity 800ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 800ms cubic-bezier(0.16, 1, 0.3, 1),
+      filter 800ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .svc-card-link {
+    flex: 1;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background: var(--color-ink);
+    isolation: isolate;
+    text-decoration: none;
+    color: var(--color-cream);
+    transition: transform var(--duration-normal) var(--ease-out-expo),
+      box-shadow var(--duration-normal) var(--ease-out-expo);
+    will-change: transform;
+  }
+  .svc-card-link:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 1px 2px oklch(0% 0 0 / 0.15),
+      0 22px 44px -16px oklch(20% 0.04 250 / 0.55);
+  }
+
+  .svc-card-media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .svc-card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    filter: saturate(0.88) brightness(0.82);
+    transition:
+      transform 800ms var(--ease-out-expo),
+      filter 800ms var(--ease-out-expo);
+  }
+  .svc-card-link:hover .svc-card-media img {
+    transform: scale(1.05);
+    filter: saturate(0.98) brightness(0.88);
+  }
+  .svc-card-tone {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      linear-gradient(180deg, transparent 35%, oklch(15% 0.04 250 / 0.55) 75%, oklch(8% 0.03 250 / 0.94) 100%),
+      linear-gradient(110deg, oklch(22% 0.06 70 / 0.18) 0%, transparent 60%);
+  }
+
+  .svc-card-content {
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: clamp(1.5rem, 2.5vw, 2rem);
+  }
+  .svc-card-num {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-warm);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 0.25rem;
+  }
+  .svc-card-name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 460, 'SOFT' 30;
+    font-size: clamp(1.375rem, 2vw, 1.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-cream);
+    text-wrap: balance;
+  }
+  /* Lead, portrait, banner cards get larger names */
+  .svc-card-lead .svc-card-name { font-size: clamp(2rem, 3vw, 2.75rem); }
+  .svc-card-portrait .svc-card-name { font-size: clamp(1.625rem, 2.4vw, 2.125rem); }
+  .svc-card-banner .svc-card-name { font-size: clamp(2rem, 3vw, 2.75rem); }
+  @media (min-width: 1024px) {
+    .svc-card-banner .svc-card-content { max-width: 56%; }
+  }
+
+  .svc-card-blurb {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--color-cream);
+    opacity: 0.85;
+    max-width: 36em;
+  }
+  /* Clamp blurb on small squares to keep cards readable */
+  @media (min-width: 1024px) {
+    .svc-card-square .svc-card-blurb {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+
+  .svc-card-cue {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-bronze-warm);
+    transition: gap var(--duration-normal) var(--ease-out-expo),
+      color var(--duration-normal) var(--ease-out-expo);
+  }
+  .svc-card-cue svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+  }
+  .svc-card-link:hover .svc-card-cue {
+    gap: 0.625rem;
+    color: var(--color-bronze-gold);
+  }
+  .svc-card-link:hover .svc-card-cue svg { transform: translateX(0.25rem); }
+
+  /* ─── CTA ────────────────────────────────────────────────────── */
+  .svc-hub-cta {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    padding: clamp(4rem, 10vw, 8rem) clamp(1.5rem, 5vw, 4rem);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .svc-hub-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(60% 50% at 50% 100%, oklch(40% 0.06 70 / 0.20), transparent 70%);
+    pointer-events: none;
+  }
+  .svc-hub-cta-frame {
+    max-width: 1280px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 4vw, 3.5rem);
+    align-items: end;
+  }
+  @media (min-width: 1024px) {
+    .svc-hub-cta-frame { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+  }
+  .svc-hub-cta-eyebrow {
+    margin: 0 0 0.875rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-warm);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .svc-hub-cta-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-warm);
+  }
+  .svc-hub-cta-heading {
+    margin: 0 0 1rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-cream);
+    max-width: 16em;
+    text-wrap: balance;
+  }
+  .svc-hub-cta-sub {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-cream);
+    opacity: 0.78;
+    max-width: 36em;
+  }
+  .svc-hub-cta-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.js .svc-card[data-reveal='bento'] {
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+      transition: none !important;
+    }
+    .svc-card-link, .svc-card-media img { transition: none; }
+  }
+</style>

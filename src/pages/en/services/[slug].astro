@@ -1,0 +1,662 @@
+---
+/*
+ * /en/services/[slug]/ — Service detail page (EN).
+ * Mirror of /fr/services/[slug].astro.
+ * Beats: Hero → Scope → Method → Audience → CTA → Related.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import NeonButton from '@components/NeonButton.astro';
+import { services, getServiceUrl } from '@lib/services';
+import { contact, whatsappLink } from '@lib/contact';
+import { serviceSchema, breadcrumbSchema } from '@lib/jsonld';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths = (() => {
+  return services.map((s) => ({
+    params: { slug: s.slug.en },
+    props: { service: s },
+  }));
+}) satisfies GetStaticPaths;
+
+const { service } = Astro.props;
+const altLocaleHref = getServiceUrl(service, 'fr');
+
+const serviceIndex = services.findIndex((s) => s.slug.en === service.slug.en);
+const serviceNumber = String(serviceIndex + 1).padStart(2, '0');
+
+const siblings = [...services.slice(serviceIndex + 1), ...services.slice(0, serviceIndex)].slice(0, 3);
+
+const methodSteps = [
+  {
+    n: '01',
+    title: 'Audit',
+    body: 'Site visit, risk and sensitive-point mapping, listening to operational constraints.',
+  },
+  {
+    n: '02',
+    title: 'Plan',
+    body: 'Calibrated posture: headcount, rotation, equipment, response procedures. Validated with you.',
+  },
+  {
+    n: '03',
+    title: 'Deployment',
+    body: 'Go-live, team briefing, integration with site flows. First week under reinforced supervision.',
+  },
+  {
+    n: '04',
+    title: 'Supervision',
+    body: '24/7 central coordination, activity reports, continuous adjustment from field feedback.',
+  },
+];
+
+const phoneTel = `tel:${contact.phones.primary.tel}`;
+const phoneDisplay = contact.phones.primary.display;
+const waMessage = 'Hello GSS, I am reaching out from your website. I would like to request a quote for…';
+
+// SEO: Service + Breadcrumb structured data
+const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com';
+const jsonLd = [
+  serviceSchema(service, 'en', siteUrl),
+  breadcrumbSchema(
+    [
+      { name: 'Home', path: '/en/' },
+      { name: 'Services', path: '/en/services/' },
+      { name: service.name.en, path: getServiceUrl(service, 'en') },
+    ],
+    siteUrl,
+  ),
+];
+---
+
+<BaseLayout
+  title={service.name.en}
+  description={service.blurb.en}
+  lang="en"
+  altLocaleHref={altLocaleHref}
+  ogImage={service.image}
+  jsonLd={jsonLd}
+>
+  <!-- ─── HERO ────────────────────────────────────────────────── -->
+  <section class="svc-hero" aria-labelledby="svc-heading">
+    <div class="svc-hero-image" aria-hidden="true">
+      <img src={service.image} alt="" loading="eager" fetchpriority="high" decoding="async" />
+      <div class="svc-hero-overlay"></div>
+    </div>
+    <div class="svc-hero-content">
+      <p class="svc-hero-eyebrow" data-reveal>
+        <a href="/en/services/">Services</a>
+        <span class="svc-hero-sep" aria-hidden="true">/</span>
+        <span class="svc-hero-num">{serviceNumber}</span>
+      </p>
+      <h1 id="svc-heading" class="svc-hero-title" data-reveal data-reveal-delay="120">
+        {service.name.en}
+      </h1>
+      {service.intro && (
+        <p class="svc-hero-intro" data-reveal data-reveal-delay="240">{service.intro.en}</p>
+      )}
+    </div>
+  </section>
+
+  <!-- ─── SCOPE ───────────────────────────────────────────────── -->
+  {service.scope && (
+    <section class="svc-section svc-scope" aria-labelledby="svc-scope-heading">
+      <div class="svc-scope-frame">
+        <div class="svc-scope-label">
+          <p class="svc-eyebrow" data-reveal>Scope</p>
+          <h2 id="svc-scope-heading" class="svc-section-heading" data-reveal data-reveal-delay="100">
+            What we take on.
+          </h2>
+        </div>
+        <ol class="svc-scope-list">
+          {service.scope.en.map((item, i) => (
+            <li
+              data-reveal
+              data-reveal-delay={String(120 + i * 80)}
+              style={`--reveal-delay: ${120 + i * 80}ms;`}
+            >
+              <span class="svc-scope-num" aria-hidden="true">/ {String(i + 1).padStart(2, '0')}</span>
+              <span class="svc-scope-text">{item}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )}
+
+  <!-- ─── METHOD ──────────────────────────────────────────────── -->
+  <section class="svc-section svc-method" aria-labelledby="svc-method-heading">
+    <div class="svc-method-frame">
+      <div class="svc-method-head">
+        <p class="svc-eyebrow svc-eyebrow-on-dark" data-reveal>Method</p>
+        <h2 id="svc-method-heading" class="svc-section-heading svc-method-heading" data-reveal data-reveal-delay="100">
+          Four steps, on every site.
+        </h2>
+        <p class="svc-method-sub" data-reveal data-reveal-delay="200">
+          No posture is copy-pasted. The same protocol is applied to every
+          mission, from residential to industrial.
+        </p>
+      </div>
+      <ol class="svc-method-grid">
+        {methodSteps.map((step, i) => (
+          <li
+            class="svc-method-step"
+            data-reveal
+            data-reveal-delay={String(150 + i * 100)}
+            style={`--reveal-delay: ${150 + i * 100}ms;`}
+          >
+            <span class="svc-method-num">{step.n}</span>
+            <h3 class="svc-method-title">{step.title}</h3>
+            <p class="svc-method-body">{step.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ─── AUDIENCE ────────────────────────────────────────────── -->
+  {service.audience && (
+    <section class="svc-section svc-audience" aria-labelledby="svc-audience-heading">
+      <div class="svc-audience-frame">
+        <p class="svc-eyebrow" data-reveal>Who it's for</p>
+        <p id="svc-audience-heading" class="svc-audience-text" data-reveal data-reveal-delay="120">
+          {service.audience.en}
+        </p>
+      </div>
+    </section>
+  )}
+
+  <!-- ─── CTA ────────────────────────────────────────────────── -->
+  <section class="svc-cta" aria-labelledby="svc-cta-heading">
+    <div class="svc-cta-frame">
+      <div class="svc-cta-text" data-reveal>
+        <p class="svc-eyebrow svc-eyebrow-on-dark">Quote</p>
+        <h2 id="svc-cta-heading" class="svc-cta-heading">
+          Let's talk about your specific need.
+        </h2>
+        <p class="svc-cta-sub">
+          Every posture is calibrated on site. Tell us about your context —
+          we come back within 24 hours with a proposal.
+        </p>
+      </div>
+      <div class="svc-cta-actions" data-reveal data-reveal-delay="200">
+        <NeonButton variant="solid" size="lg" href="/en/contact/">
+          Request a quote
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </NeonButton>
+        <NeonButton
+          variant="default"
+          size="lg"
+          href={whatsappLink(waMessage)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          WhatsApp
+        </NeonButton>
+      </div>
+      <p class="svc-cta-phone" data-reveal data-reveal-delay="320">
+        Or call us —
+        <a href={phoneTel}>{phoneDisplay}</a>
+        <span aria-hidden="true">·</span>
+        <span>{contact.hours.en}</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── RELATED ─────────────────────────────────────────────── -->
+  <section class="svc-section svc-related" aria-labelledby="svc-related-heading">
+    <div class="svc-related-frame">
+      <p class="svc-eyebrow" data-reveal>See also</p>
+      <h2 id="svc-related-heading" class="svc-section-heading" data-reveal data-reveal-delay="100">
+        Three other crafts of the house.
+      </h2>
+      <ul class="svc-related-grid">
+        {siblings.map((s, i) => {
+          const idx = services.findIndex((x) => x.slug.en === s.slug.en);
+          const num = String(idx + 1).padStart(2, '0');
+          return (
+            <li
+              class="svc-related-item"
+              data-reveal
+              data-reveal-delay={String(150 + i * 120)}
+              style={`--reveal-delay: ${150 + i * 120}ms;`}
+            >
+              <a class="svc-related-link" href={getServiceUrl(s, 'en')}>
+                <div class="svc-related-media">
+                  <img src={s.image} alt="" loading="lazy" decoding="async" />
+                  <div class="svc-related-tone" aria-hidden="true"></div>
+                </div>
+                <div class="svc-related-content">
+                  <span class="svc-related-num" aria-hidden="true">/ {num}</span>
+                  <h3 class="svc-related-name">{s.name.en}</h3>
+                  <p class="svc-related-blurb">{s.blurb.en}</p>
+                  <span class="svc-related-cue">
+                    Discover
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                      <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                </div>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ─── HERO ─────────────────────────────────────────────────── */
+  .svc-hero {
+    position: relative;
+    min-height: clamp(34rem, 78vh, 46rem);
+    display: flex;
+    align-items: flex-end;
+    color: var(--color-cream);
+    overflow: hidden;
+    padding: clamp(8rem, 16vw, 14rem) clamp(1.5rem, 5vw, 4rem) clamp(4rem, 8vw, 7rem);
+    isolation: isolate;
+  }
+  .svc-hero-image { position: absolute; inset: 0; z-index: -1; }
+  .svc-hero-image img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: saturate(0.88);
+    animation: svc-ken-burns 24s ease-out 0.4s forwards;
+  }
+  @keyframes svc-ken-burns {
+    from { transform: scale(1.02); }
+    to   { transform: scale(1.08); }
+  }
+  .svc-hero-overlay {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, oklch(8% 0.03 250 / 0.30) 0%, oklch(8% 0.03 250 / 0.55) 55%, oklch(8% 0.03 250 / 0.92) 100%),
+      radial-gradient(80% 50% at 30% 90%, oklch(40% 0.06 70 / 0.22), transparent 70%);
+  }
+  .svc-hero-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+  }
+  .svc-hero-eyebrow {
+    margin: 0 0 1.5rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-warm);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .svc-hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-warm);
+  }
+  .svc-hero-eyebrow a {
+    color: var(--color-cream);
+    text-decoration: none;
+    opacity: 0.85;
+    transition: opacity var(--duration-normal) var(--ease-out-expo), color var(--duration-normal) var(--ease-out-expo);
+  }
+  .svc-hero-eyebrow a:hover { color: var(--color-bronze-warm); opacity: 1; }
+  .svc-hero-sep { color: var(--color-bronze-warm); opacity: 0.7; }
+  .svc-hero-num { color: var(--color-cream); font-variant-numeric: tabular-nums; }
+  .svc-hero-title {
+    margin: 0 0 1.5rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2.75rem, 7vw, 6rem);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--color-cream);
+    max-width: 14em;
+    text-wrap: balance;
+  }
+  .svc-hero-intro {
+    margin: 0;
+    font-size: clamp(1.0625rem, 1.5vw, 1.3125rem);
+    line-height: 1.6;
+    color: var(--color-cream);
+    max-width: 38em;
+    opacity: 0.92;
+  }
+
+  /* ─── SHARED SECTION CHROME ────────────────────────────────── */
+  .svc-section {
+    padding: clamp(5rem, 11vw, 10rem) clamp(1.5rem, 5vw, 4rem);
+  }
+  .svc-eyebrow {
+    margin: 0 0 1rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .svc-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-deep);
+  }
+  .svc-eyebrow-on-dark { color: var(--color-bronze-warm); }
+  .svc-eyebrow-on-dark::before { background: var(--color-bronze-warm); }
+  .svc-section-heading {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
+    font-size: clamp(1.75rem, 3.4vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    max-width: 18em;
+    text-wrap: balance;
+  }
+
+  /* ─── SCOPE ────────────────────────────────────────────────── */
+  .svc-scope { background: var(--color-cream); }
+  .svc-scope-frame {
+    max-width: 1280px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+  }
+  @media (min-width: 1024px) {
+    .svc-scope-frame { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 5rem; }
+  }
+  .svc-scope-list { list-style: none; margin: 0; padding: 0; display: grid; }
+  .svc-scope-list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.75rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--color-hairline-on-light);
+    align-items: baseline;
+  }
+  .svc-scope-list li:last-child { border-bottom: 1px solid var(--color-hairline-on-light); }
+  .svc-scope-num {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 460;
+    font-size: 0.9375rem;
+    color: var(--color-bronze);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+  }
+  .svc-scope-text {
+    font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+    line-height: 1.5;
+    color: var(--color-ink);
+  }
+
+  /* ─── METHOD (dark band) ───────────────────────────────────── */
+  .svc-method {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .svc-method::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(70% 60% at 90% 0%, oklch(40% 0.06 70 / 0.20), transparent 65%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .svc-method-frame { max-width: 1280px; margin-inline: auto; }
+  .svc-method-head { max-width: 44rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+  .svc-method-heading { color: var(--color-cream); }
+  .svc-method-sub {
+    margin: 1.25rem 0 0;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-cream);
+    opacity: 0.78;
+    max-width: 36em;
+  }
+  .svc-method-grid {
+    list-style: none; margin: 0; padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-top: 1px solid oklch(100% 0 0 / 0.10);
+  }
+  @media (min-width: 1024px) { .svc-method-grid { grid-template-columns: repeat(4, 1fr); } }
+  .svc-method-step {
+    padding: clamp(1.75rem, 3vw, 2.5rem) clamp(1.25rem, 2vw, 1.75rem) clamp(1.75rem, 3vw, 2.5rem) 0;
+    border-bottom: 1px solid oklch(100% 0 0 / 0.10);
+    border-right: 1px solid oklch(100% 0 0 / 0.10);
+  }
+  @media (min-width: 1024px) {
+    .svc-method-step { border-bottom: none; }
+    .svc-method-step:last-child { border-right: none; }
+  }
+  @media (max-width: 1023px) {
+    .svc-method-step:nth-child(2n) { border-right: none; }
+    .svc-method-step:nth-last-child(-n+2) { border-bottom: none; }
+  }
+  .svc-method-num {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 460;
+    font-size: 0.875rem;
+    color: var(--color-bronze-warm);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+  }
+  .svc-method-title {
+    margin: 1rem 0 0.75rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 48, 'wght' 460;
+    font-size: clamp(1.375rem, 2vw, 1.75rem);
+    line-height: 1.1;
+    color: var(--color-cream);
+    letter-spacing: -0.015em;
+  }
+  .svc-method-body {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-cream);
+    opacity: 0.78;
+  }
+
+  /* ─── AUDIENCE ─────────────────────────────────────────────── */
+  .svc-audience { background: var(--color-cream-2); }
+  .svc-audience-frame { max-width: 1100px; margin-inline: auto; }
+  .svc-audience-text {
+    margin: 1rem 0 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 420, 'SOFT' 40;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    max-width: 22em;
+    text-wrap: balance;
+  }
+
+  /* ─── CTA (dark) ───────────────────────────────────────────── */
+  .svc-cta {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    padding: clamp(5rem, 12vw, 11rem) clamp(1.5rem, 5vw, 4rem);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .svc-cta::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(60% 50% at 50% 100%, oklch(40% 0.06 70 / 0.22), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .svc-cta-frame {
+    position: relative;
+    max-width: 1280px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    align-items: end;
+  }
+  @media (min-width: 1024px) {
+    .svc-cta-frame { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 5rem; }
+  }
+  .svc-cta-heading {
+    margin: 1rem 0 1.25rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-cream);
+    max-width: 14em;
+    text-wrap: balance;
+  }
+  .svc-cta-sub {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-cream);
+    opacity: 0.80;
+    max-width: 36em;
+  }
+  .svc-cta-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .svc-cta-phone {
+    grid-column: 1 / -1;
+    margin: 1rem 0 0;
+    font-size: 0.9375rem;
+    color: var(--color-cream);
+    opacity: 0.75;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.625rem;
+  }
+  .svc-cta-phone a {
+    color: var(--color-cream);
+    font-variant-numeric: tabular-nums;
+    text-decoration: underline;
+    text-decoration-color: var(--color-bronze-warm);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    transition: color var(--duration-normal) var(--ease-out-expo);
+  }
+  .svc-cta-phone a:hover { color: var(--color-bronze-warm); }
+  .svc-cta-phone span[aria-hidden] { color: var(--color-bronze-warm); }
+
+  /* ─── RELATED ─────────────────────────────────────────────── */
+  .svc-related { background: var(--color-cream); }
+  .svc-related-frame { max-width: 1280px; margin-inline: auto; }
+  .svc-related-grid {
+    list-style: none;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+  }
+  @media (min-width: 768px) {
+    .svc-related-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .svc-related-item { list-style: none; }
+  .svc-related-link {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    text-decoration: none;
+    color: inherit;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--color-cream-2);
+    transition: transform var(--duration-normal) var(--ease-out-expo),
+      box-shadow var(--duration-normal) var(--ease-out-expo);
+  }
+  .svc-related-link:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 1px 2px oklch(0% 0 0 / 0.04),
+      0 18px 40px -16px oklch(20% 0.04 250 / 0.20);
+  }
+  .svc-related-media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; }
+  .svc-related-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.92);
+    transition: transform var(--duration-slow) var(--ease-out-expo);
+  }
+  .svc-related-link:hover .svc-related-media img { transform: scale(1.05); }
+  .svc-related-tone {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 55%, oklch(8% 0.03 250 / 0.40) 100%);
+    pointer-events: none;
+  }
+  .svc-related-content {
+    padding: 1.5rem 1.5rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+  .svc-related-num {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 460;
+    font-size: 0.8125rem;
+    color: var(--color-bronze);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+  }
+  .svc-related-name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 48, 'wght' 460;
+    font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+  }
+  .svc-related-blurb {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--color-mute-on-light);
+  }
+  .svc-related-cue {
+    margin-top: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+  }
+  .svc-related-cue svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+  }
+  .svc-related-link:hover .svc-related-cue svg { transform: translateX(0.25rem); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .svc-hero-image img { animation: none; }
+    .svc-related-link, .svc-related-media img { transition: none; }
+  }
+</style>

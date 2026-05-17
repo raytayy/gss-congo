@@ -1,0 +1,50 @@
+{
+  "name": "gss-congo",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Site web Guarde Security Services (GSS Congo) — Premium build by telic. studio",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check",
+    "format": "prettier --write \"**/*.{astro,ts,tsx,js,jsx,md,mdx,json,css}\"",
+    "lint": "eslint \"src/**/*.{astro,ts,tsx,js,jsx}\""
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.0.0",
+    "@astrojs/react": "^5.0.4",
+    "@astrojs/sitemap": "^3.2.0",
+    "@fontsource-variable/fraunces": "^5.1.0",
+    "@fontsource-variable/inter": "^5.1.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "astro": "^5.0.0",
+    "astro-seo": "^0.8.4",
+    "framer-motion": "^12.38.0",
+    "gsap": "^3.13.0",
+    "lenis": "^1.1.0",
+    "lucide-react": "^1.14.0",
+    "lucide-static": "^0.469.0",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@axe-core/playwright": "^4.11.3",
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/node": "^22.10.0",
+    "playwright": "^1.59.1",
+    "prettier": "^3.4.0",
+    "prettier-plugin-astro": "^0.14.1",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

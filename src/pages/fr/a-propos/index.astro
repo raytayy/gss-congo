@@ -1,0 +1,646 @@
+---
+/*
+ * /fr/a-propos/ — Credentials dossier (FR).
+ * Persona: P1 (Procurement) + P2 (Embassy security officer).
+ * Beats: Hero → Manifeste → Chiffres → Histoire → Convictions → Mandats → CTA.
+ * Mirror in src/pages/en/about/index.astro.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import NeonButton from '@components/NeonButton.astro';
+import { contact, whatsappLink } from '@lib/contact';
+
+const stats = [
+  { display: '11', suffix: ' ans', label: 'sur le terrain', sub: 'à Kinshasa, sans interruption' },
+  { display: '300', suffix: '',    label: 'agents formés', sub: 'en rotation, 24/7' },
+  { display: '24/7', suffix: '',   label: 'vigilance',     sub: 'présence continue, jamais relâchée' },
+  { display: '< 20', suffix: ' min', label: 'intervention', sub: 'temps moyen sur incident' },
+];
+
+const convictions = [
+  {
+    n: '01',
+    title: 'Calibrer, jamais surdimensionner.',
+    body: 'Chaque dispositif est étudié sur site. Effectif, rotation, équipements — proportionnés au risque réel, jamais à l’apparence du contrat.',
+  },
+  {
+    n: '02',
+    title: 'Former avant de déployer.',
+    body: 'Aucun agent n’entre en mission sans avoir suivi notre cycle de formation. Le centre tourne en continu — c’est notre première exigence, pas un argument commercial.',
+  },
+  {
+    n: '03',
+    title: 'Rendre des comptes, en clair.',
+    body: 'Coordination centrale 24/7, rapports d’activité réguliers, ajustements continus. Le client ne devine pas — il voit.',
+  },
+];
+
+const mandates = [
+  { label: 'RCCM',     value: contact.legal.rccm },
+  { label: 'IDNAT',    value: contact.legal.idnat },
+  { label: 'N° impôt', value: contact.legal.taxId },
+  { label: 'Fondée',   value: String(contact.legal.foundedYear) },
+];
+
+const phoneTel = `tel:${contact.phones.primary.tel}`;
+const phoneDisplay = contact.phones.primary.display;
+---
+
+<BaseLayout
+  title="À propos"
+  description="Guarde Security Services — onze ans de sécurité privée à Kinshasa. Calibrer le dispositif, former les agents, rendre des comptes en clair."
+  lang="fr"
+  altLocaleHref="/en/about/"
+>
+  <!-- ─── HERO ────────────────────────────────────────────────── -->
+  <section class="ap-hero" aria-labelledby="ap-heading">
+    <div class="ap-hero-image" aria-hidden="true">
+      <img src="/images/banner1.jpg" alt="" loading="eager" fetchpriority="high" decoding="async" />
+      <div class="ap-hero-overlay"></div>
+    </div>
+    <div class="ap-hero-content">
+      <p class="ap-eyebrow ap-eyebrow-on-dark" data-reveal>À propos</p>
+      <h1 id="ap-heading" class="ap-hero-title" data-reveal data-reveal-delay="120">
+        Onze ans, sans interruption.
+      </h1>
+      <p class="ap-hero-intro" data-reveal data-reveal-delay="240">
+        Guarde Security Services protège des sites industriels, des résidences,
+        des ambassades et des chantiers à Kinshasa depuis 2014. Sans fanfare,
+        sans intermittence — juste une présence calibrée et une chaîne de
+        commandement qui répond.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── MANIFESTE ───────────────────────────────────────────── -->
+  <section class="ap-section ap-manifest" aria-labelledby="ap-manifest-heading">
+    <div class="ap-manifest-frame">
+      <p class="ap-eyebrow" data-reveal>Manifeste</p>
+      <p id="ap-manifest-heading" class="ap-manifest-text" data-reveal data-reveal-delay="120">
+        La sécurité, ce n’est ni un uniforme, ni un slogan. C’est une discipline
+        — qu’on exerce avec rigueur, qu’on évalue chaque mois, qu’on corrige
+        chaque semaine.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── CHIFFRES ────────────────────────────────────────────── -->
+  <section class="ap-section ap-stats" aria-labelledby="ap-stats-heading">
+    <div class="ap-stats-frame">
+      <div class="ap-stats-head">
+        <p class="ap-eyebrow" data-reveal>En chiffres</p>
+        <h2 id="ap-stats-heading" class="ap-section-heading" data-reveal data-reveal-delay="100">
+          Les ordres de grandeur.
+        </h2>
+      </div>
+      <ul class="ap-stats-grid">
+        {stats.map((s, i) => (
+          <li
+            class="ap-stat"
+            data-reveal
+            data-reveal-delay={String(150 + i * 100)}
+            style={`--reveal-delay: ${150 + i * 100}ms;`}
+          >
+            <span class="ap-stat-value">
+              {s.display}<span class="ap-stat-suffix">{s.suffix}</span>
+            </span>
+            <span class="ap-stat-label">{s.label}</span>
+            <span class="ap-stat-sub">{s.sub}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ─── HISTOIRE ────────────────────────────────────────────── -->
+  <section class="ap-section ap-story" aria-labelledby="ap-story-heading">
+    <div class="ap-story-frame">
+      <div class="ap-story-media" data-reveal>
+        <img src="/images/careers-graphique.jpg" alt="Centre de formation GSS — session en cours" loading="lazy" decoding="async" />
+        <div class="ap-story-media-tone" aria-hidden="true"></div>
+      </div>
+      <div class="ap-story-text">
+        <p class="ap-eyebrow" data-reveal>Histoire</p>
+        <h2 id="ap-story-heading" class="ap-section-heading" data-reveal data-reveal-delay="100">
+          De Kinshasa, par des opérationnels.
+        </h2>
+        <div class="ap-story-body" data-reveal data-reveal-delay="200">
+          <p>
+            La maison naît en 2014 d’un constat simple : la sécurité privée
+            à Kinshasa méritait mieux qu’un effectif aligné en uniforme.
+            Il fallait une méthode, un centre de formation, une coordination centrale.
+          </p>
+          <p>
+            Onze ans plus tard, GSS protège quotidiennement des industries,
+            des chantiers, des résidences VIP, des ambassades, et opère son propre
+            centre de formation — une école interne qui forme nos agents et,
+            sur demande, ceux d’autres maisons.
+          </p>
+          <p>
+            Le siège est à <strong>{contact.addresses.hq.detail}</strong>,
+            {contact.addresses.hq.street}, Gombe.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CONVICTIONS (dark band) ─────────────────────────────── -->
+  <section class="ap-section ap-convictions" aria-labelledby="ap-convictions-heading">
+    <div class="ap-convictions-frame">
+      <div class="ap-convictions-head">
+        <p class="ap-eyebrow ap-eyebrow-on-dark" data-reveal>Convictions</p>
+        <h2 id="ap-convictions-heading" class="ap-section-heading ap-section-heading-on-dark" data-reveal data-reveal-delay="100">
+          Trois principes, sur chaque mission.
+        </h2>
+      </div>
+      <ol class="ap-convictions-list">
+        {convictions.map((c, i) => (
+          <li
+            class="ap-conviction"
+            data-reveal
+            data-reveal-delay={String(150 + i * 120)}
+            style={`--reveal-delay: ${150 + i * 120}ms;`}
+          >
+            <span class="ap-conviction-num">{c.n}</span>
+            <h3 class="ap-conviction-title">{c.title}</h3>
+            <p class="ap-conviction-body">{c.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ─── MANDATS INSTITUTIONNELS ─────────────────────────────── -->
+  <section class="ap-section ap-mandates" aria-labelledby="ap-mandates-heading">
+    <div class="ap-mandates-frame">
+      <div class="ap-mandates-head">
+        <p class="ap-eyebrow" data-reveal>Mandats institutionnels</p>
+        <h2 id="ap-mandates-heading" class="ap-section-heading" data-reveal data-reveal-delay="100">
+          Enregistrée, en règle, vérifiable.
+        </h2>
+        <p class="ap-mandates-sub" data-reveal data-reveal-delay="200">
+          Les références utiles aux services achats, conformité, et postes de
+          sécurité diplomatique. Disponibles sur demande pour les pièces officielles.
+        </p>
+      </div>
+      <dl class="ap-mandates-grid">
+        {mandates.map((m, i) => (
+          <div
+            class="ap-mandate"
+            data-reveal
+            data-reveal-delay={String(200 + i * 80)}
+            style={`--reveal-delay: ${200 + i * 80}ms;`}
+          >
+            <dt class="ap-mandate-label">{m.label}</dt>
+            <dd class="ap-mandate-value">{m.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- ─── CTA ────────────────────────────────────────────────── -->
+  <section class="ap-cta" aria-labelledby="ap-cta-heading">
+    <div class="ap-cta-frame">
+      <div class="ap-cta-text" data-reveal>
+        <p class="ap-eyebrow ap-eyebrow-on-dark">Échange</p>
+        <h2 id="ap-cta-heading" class="ap-cta-heading">
+          Mieux qu’une plaquette : un échange.
+        </h2>
+        <p class="ap-cta-sub">
+          Décrivez-nous votre site et votre contexte. Nous revenons sous
+          24 heures avec une lecture honnête de ce qui se justifie — et de ce
+          qui ne se justifie pas.
+        </p>
+      </div>
+      <div class="ap-cta-actions" data-reveal data-reveal-delay="200">
+        <NeonButton variant="solid" size="lg" href="/fr/contact/">
+          Demander un devis
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </NeonButton>
+        <NeonButton
+          variant="default"
+          size="lg"
+          href={whatsappLink()}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          WhatsApp
+        </NeonButton>
+      </div>
+      <p class="ap-cta-phone" data-reveal data-reveal-delay="320">
+        Ou appelez-nous —
+        <a href={phoneTel}>{phoneDisplay}</a>
+        <span aria-hidden="true">·</span>
+        <span>{contact.hours.fr}</span>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ─── HERO ─────────────────────────────────────────────────── */
+  .ap-hero {
+    position: relative;
+    min-height: clamp(34rem, 78vh, 46rem);
+    display: flex;
+    align-items: flex-end;
+    color: var(--color-cream);
+    overflow: hidden;
+    padding: clamp(8rem, 16vw, 14rem) clamp(1.5rem, 5vw, 4rem) clamp(4rem, 8vw, 7rem);
+    isolation: isolate;
+  }
+  .ap-hero-image { position: absolute; inset: 0; z-index: -1; }
+  .ap-hero-image img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center 35%;
+    filter: saturate(0.88);
+    animation: ap-ken-burns 26s ease-out 0.4s forwards;
+  }
+  @keyframes ap-ken-burns {
+    from { transform: scale(1.02); }
+    to   { transform: scale(1.08); }
+  }
+  .ap-hero-overlay {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, oklch(8% 0.03 250 / 0.30) 0%, oklch(8% 0.03 250 / 0.55) 55%, oklch(8% 0.03 250 / 0.92) 100%),
+      radial-gradient(80% 50% at 30% 90%, oklch(40% 0.06 70 / 0.20), transparent 70%);
+  }
+  .ap-hero-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+  }
+  .ap-hero-title {
+    margin: 1rem 0 1.5rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2.75rem, 7vw, 6rem);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--color-cream);
+    max-width: 14em;
+    text-wrap: balance;
+  }
+  .ap-hero-intro {
+    margin: 0;
+    font-size: clamp(1.0625rem, 1.5vw, 1.3125rem);
+    line-height: 1.6;
+    color: var(--color-cream);
+    max-width: 38em;
+    opacity: 0.92;
+  }
+
+  /* ─── SHARED CHROME ────────────────────────────────────────── */
+  .ap-section {
+    padding: clamp(5rem, 11vw, 10rem) clamp(1.5rem, 5vw, 4rem);
+  }
+  .ap-eyebrow {
+    margin: 0 0 1rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .ap-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-deep);
+  }
+  .ap-eyebrow-on-dark { color: var(--color-bronze-warm); }
+  .ap-eyebrow-on-dark::before { background: var(--color-bronze-warm); }
+  .ap-section-heading {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
+    font-size: clamp(1.75rem, 3.4vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    max-width: 18em;
+    text-wrap: balance;
+  }
+  .ap-section-heading-on-dark { color: var(--color-cream); }
+
+  /* ─── MANIFESTE ────────────────────────────────────────────── */
+  .ap-manifest {
+    background: var(--color-cream);
+    padding-block: clamp(4rem, 9vw, 8rem);
+  }
+  .ap-manifest-frame { max-width: 920px; margin-inline: auto; }
+  .ap-manifest-text {
+    margin: 0.75rem 0 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 420, 'SOFT' 40;
+    font-size: clamp(1.5rem, 2.8vw, 2.5rem);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
+  /* ─── CHIFFRES ─────────────────────────────────────────────── */
+  .ap-stats { background: var(--color-cream-2); }
+  .ap-stats-frame { max-width: 1280px; margin-inline: auto; }
+  .ap-stats-head { max-width: 36rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+  .ap-stats-grid {
+    list-style: none; margin: 0; padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--color-hairline-on-light);
+  }
+  @media (min-width: 1024px) { .ap-stats-grid { grid-template-columns: repeat(4, 1fr); } }
+  .ap-stat {
+    padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1rem, 2vw, 1.75rem) clamp(1.5rem, 3vw, 2.25rem) 0;
+    border-bottom: 1px solid var(--color-hairline-on-light);
+    border-right: 1px solid var(--color-hairline-on-light);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  @media (min-width: 1024px) {
+    .ap-stat { border-bottom: none; }
+    .ap-stat:last-child { border-right: none; }
+  }
+  @media (max-width: 1023px) {
+    .ap-stat:nth-child(2n) { border-right: none; }
+    .ap-stat:nth-last-child(-n+2) { border-bottom: none; }
+  }
+  .ap-stat-value {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    color: var(--color-ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .ap-stat-suffix {
+    font-size: 0.55em;
+    color: var(--color-bronze);
+    margin-left: 0.1em;
+  }
+  .ap-stat-label {
+    margin-top: 0.5rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+  }
+  .ap-stat-sub {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--color-mute-on-light);
+  }
+
+  /* ─── HISTOIRE (split) ─────────────────────────────────────── */
+  .ap-story { background: var(--color-cream); }
+  .ap-story-frame {
+    max-width: 1280px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .ap-story-frame { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 5rem; }
+  }
+  .ap-story-media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--color-cream-2);
+  }
+  .ap-story-media img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: saturate(0.92);
+  }
+  .ap-story-media-tone {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 60%, oklch(8% 0.03 250 / 0.25) 100%);
+    pointer-events: none;
+  }
+  .ap-story-text { display: flex; flex-direction: column; }
+  .ap-story-body {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    color: var(--color-ink);
+    max-width: 36em;
+  }
+  .ap-story-body p { margin: 0; }
+  .ap-story-body strong { color: var(--color-ink); font-weight: 500; }
+
+  /* ─── CONVICTIONS (dark band) ──────────────────────────────── */
+  .ap-convictions {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .ap-convictions::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(60% 60% at 90% 10%, oklch(40% 0.06 70 / 0.22), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .ap-convictions-frame { max-width: 1280px; margin-inline: auto; }
+  .ap-convictions-head { max-width: 44rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+  .ap-convictions-list {
+    list-style: none; margin: 0; padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border-top: 1px solid oklch(100% 0 0 / 0.10);
+  }
+  @media (min-width: 1024px) { .ap-convictions-list { grid-template-columns: repeat(3, 1fr); } }
+  .ap-conviction {
+    padding: clamp(1.75rem, 3vw, 2.5rem) clamp(1.25rem, 2vw, 1.75rem) clamp(1.75rem, 3vw, 2.5rem) 0;
+    border-bottom: 1px solid oklch(100% 0 0 / 0.10);
+    border-right: 1px solid oklch(100% 0 0 / 0.10);
+  }
+  @media (min-width: 1024px) {
+    .ap-conviction { border-bottom: none; }
+    .ap-conviction:last-child { border-right: none; }
+  }
+  .ap-conviction-num {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 460;
+    font-size: 0.875rem;
+    color: var(--color-bronze-warm);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+  }
+  .ap-conviction-title {
+    margin: 1rem 0 0.875rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 48, 'wght' 460;
+    font-size: clamp(1.375rem, 2vw, 1.75rem);
+    line-height: 1.15;
+    color: var(--color-cream);
+    letter-spacing: -0.015em;
+    max-width: 16em;
+    text-wrap: balance;
+  }
+  .ap-conviction-body {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--color-cream);
+    opacity: 0.78;
+    max-width: 28em;
+  }
+
+  /* ─── MANDATS ──────────────────────────────────────────────── */
+  .ap-mandates { background: var(--color-cream); }
+  .ap-mandates-frame { max-width: 1280px; margin-inline: auto; }
+  .ap-mandates-head { max-width: 44rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .ap-mandates-sub {
+    margin: 1rem 0 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-mute-on-light);
+    max-width: 36em;
+  }
+  .ap-mandates-grid {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--color-hairline-on-light);
+  }
+  @media (min-width: 1024px) { .ap-mandates-grid { grid-template-columns: repeat(4, 1fr); } }
+  .ap-mandate {
+    padding: clamp(1.25rem, 2vw, 1.75rem) clamp(1rem, 2vw, 1.75rem) clamp(1.25rem, 2vw, 1.75rem) 0;
+    border-bottom: 1px solid var(--color-hairline-on-light);
+    border-right: 1px solid var(--color-hairline-on-light);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  @media (min-width: 1024px) {
+    .ap-mandate { border-bottom: none; }
+    .ap-mandate:last-child { border-right: none; }
+  }
+  @media (max-width: 1023px) {
+    .ap-mandate:nth-child(2n) { border-right: none; }
+    .ap-mandate:nth-last-child(-n+2) { border-bottom: none; }
+  }
+  .ap-mandate-label {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+  }
+  .ap-mandate-value {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 460;
+    font-size: clamp(1.0625rem, 1.6vw, 1.375rem);
+    line-height: 1.2;
+    color: var(--color-ink);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.01em;
+    word-break: break-word;
+  }
+
+  /* ─── CTA (dark) ───────────────────────────────────────────── */
+  .ap-cta {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    padding: clamp(5rem, 12vw, 11rem) clamp(1.5rem, 5vw, 4rem);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .ap-cta::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(60% 50% at 50% 100%, oklch(40% 0.06 70 / 0.22), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .ap-cta-frame {
+    position: relative;
+    max-width: 1280px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    align-items: end;
+  }
+  @media (min-width: 1024px) {
+    .ap-cta-frame { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 5rem; }
+  }
+  .ap-cta-heading {
+    margin: 1rem 0 1.25rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-cream);
+    max-width: 14em;
+    text-wrap: balance;
+  }
+  .ap-cta-sub {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-cream);
+    opacity: 0.80;
+    max-width: 36em;
+  }
+  .ap-cta-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .ap-cta-phone {
+    grid-column: 1 / -1;
+    margin: 1rem 0 0;
+    font-size: 0.9375rem;
+    color: var(--color-cream);
+    opacity: 0.75;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.625rem;
+  }
+  .ap-cta-phone a {
+    color: var(--color-cream);
+    font-variant-numeric: tabular-nums;
+    text-decoration: underline;
+    text-decoration-color: var(--color-bronze-warm);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    transition: color var(--duration-normal) var(--ease-out-expo);
+  }
+  .ap-cta-phone a:hover { color: var(--color-bronze-warm); }
+  .ap-cta-phone span[aria-hidden] { color: var(--color-bronze-warm); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ap-hero-image img { animation: none; }
+  }
+</style>

@@ -1,0 +1,283 @@
+---
+/*
+ * WhyChooseUs — bento grid of 6 reasons.
+ *
+ * Animation: CSS keyframes hand-tuned to match framer-motion's easeOut
+ * cubic-bezier(0.16, 1, 0.3, 1). Stagger via existing [data-reveal] +
+ * data-reveal-delay system (motion.ts IntersectionObserver). Hover lift
+ * + bronze edge glow. Reduced-motion respected.
+ */
+
+import type { Locale } from '@lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+interface Reason {
+  iconPath: string;          // lucide SVG inner content (paths/circles)
+  metric?: { fr: string; en: string };
+  title: { fr: string; en: string };
+  body: { fr: string; en: string };
+}
+
+// Lucide-style 24×24 viewBox icons, inlined so no React/lucide-react needed.
+const reasons: Reason[] = [
+  {
+    iconPath: '<circle cx="12" cy="14" r="8"/><path d="M12 10v4l2 2"/><path d="M9 2h6"/><path d="M12 6v0"/>',
+    metric: { fr: '< 20 min', en: '< 20 min' },
+    title: { fr: 'Temps de réponse rapide', en: 'Fast response time' },
+    body: {
+      fr: 'Nos délais de réponse sont inférieurs à 20 minutes — la mesure concrète de notre engagement à fournir une assistance rapide.',
+      en: 'Our response times are under 20 minutes — a measure of our commitment to swift assistance.',
+    },
+  },
+  {
+    iconPath: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><path d="M12 3v3"/><path d="M12 18v3"/><path d="M3 12h3"/><path d="M18 12h3"/>',
+    metric: { fr: '24/7', en: '24/7' },
+    title: { fr: 'Patrouille continue', en: 'Continuous patrol' },
+    body: {
+      fr: 'Sécurité 24 h/24, 7 j/7 par patrouilles continues. Salle d’opération en contact permanent avec tous les sites via radio Motorola.',
+      en: '24/7 security through continuous patrols, coordinated by our operations room in permanent radio contact with every site.',
+    },
+  },
+  {
+    iconPath: '<circle cx="12" cy="9" r="6"/><path d="M8.21 13.89 7 22l5-3 5 3-1.21-8.12"/>',
+    title: { fr: 'Expérience avérée', en: 'Proven experience' },
+    body: {
+      fr: 'Onze ans à Kinshasa. De nombreux clients résidentiels et commerciaux nous font confiance, à travers tout le pays.',
+      en: 'Eleven years in Kinshasa. Many residential and commercial clients trust us, across the country.',
+    },
+  },
+  {
+    iconPath: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+    metric: { fr: '300', en: '300' },
+    title: { fr: 'Professionnels expérimentés', en: 'Experienced professionals' },
+    body: {
+      fr: 'Une équipe de gardiens en uniforme, parfaitement formés au centre GSS, qui font de leur mieux pour protéger votre sécurité.',
+      en: 'Uniformed guards, fully trained at our GSS centre, dedicated to protecting your safety.',
+    },
+  },
+  {
+    iconPath: '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3"/><path d="M15 1v3"/><path d="M9 20v3"/><path d="M15 20v3"/><path d="M20 9h3"/><path d="M20 14h3"/><path d="M1 9h3"/><path d="M1 14h3"/>',
+    title: { fr: 'Technologie de pointe', en: 'Cutting-edge technology' },
+    body: {
+      fr: 'Dernière génération de surveillance pour détecter et prévenir les intrusions — détection efficace, prévention contractuelle.',
+      en: 'Latest-generation surveillance to detect and prevent intrusions — effective detection, contractual prevention.',
+    },
+  },
+  {
+    iconPath: '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+    title: { fr: 'Couverture complète', en: 'Complete coverage' },
+    body: {
+      fr: 'Une gamme étendue de services de sécurité privés et publics, calibrés à chaque contexte. Jamais surdimensionnés. Jamais insuffisants.',
+      en: 'A broad range of private and public security services, calibrated to context. Never oversized. Never insufficient.',
+    },
+  },
+];
+
+const eyebrow = locale === 'fr' ? 'Pourquoi nous' : 'Why us';
+const heading = locale === 'fr' ? 'Pourquoi nous choisir ?' : 'Why choose us?';
+const sub = locale === 'fr'
+  ? 'Choisissez Guarde Security Service pour des services de sécurité fiables et vigilants, disponibles 24 heures sur 24.'
+  : 'Choose Guarde Security Service for reliable, vigilant security services, available 24 hours a day.';
+---
+
+<section class="why" aria-labelledby="why-heading">
+  <div class="why-frame">
+    <header class="why-header" data-reveal>
+      <p class="why-eyebrow">{eyebrow}</p>
+      <h2 id="why-heading" class="why-heading">{heading}</h2>
+      <p class="why-sub">{sub}</p>
+    </header>
+
+    <ul class="why-grid">
+      {reasons.map((r, i) => (
+        <li
+          class="why-card"
+          data-reveal="bento"
+          data-reveal-delay={String(120 + i * 80)}
+          style={`--reveal-delay: ${120 + i * 80}ms;`}
+        >
+          <article class="why-card-inner">
+            <div class="why-card-head">
+              <span class="why-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={r.iconPath} />
+              </span>
+              {r.metric && <span class="why-card-metric">{r.metric[locale]}</span>}
+            </div>
+            <h3 class="why-card-title">{r.title[locale]}</h3>
+            <p class="why-card-body">{r.body[locale]}</p>
+          </article>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .why {
+    background: var(--color-cream-2);
+    color: var(--color-ink);
+    padding: clamp(3.5rem, 12vw, 11rem) clamp(1.5rem, 5vw, 4rem);
+    border-block: 1px solid var(--color-hairline-on-light);
+    position: relative;
+    overflow: hidden;
+  }
+  .why-frame { max-width: 1440px; margin-inline: auto; }
+
+  .why-header {
+    max-width: 38em;
+    margin-bottom: clamp(2.5rem, 4vw, 4rem);
+  }
+  .why-eyebrow {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .why-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-deep);
+  }
+  .why-heading {
+    margin: 0 0 1rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
+    font-size: clamp(2.25rem, 4vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+  .why-sub {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--color-mute-on-light);
+    max-width: 36em;
+  }
+
+  .why-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(1rem, 1.5vw, 1.5rem);
+  }
+  @media (min-width: 720px) {
+    .why-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .why-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* Card entrance — framer-motion easeOut equivalent. Defaults to visible;
+     only hidden when JS has set html.js, then revealed by the existing
+     IntersectionObserver in motion.ts that flips data-revealed="true". */
+  .why-card { display: flex; }
+  html.js .why-card[data-reveal='bento']:not([data-revealed='true']) {
+    opacity: 0;
+    transform: translateY(24px);
+    filter: blur(8px);
+  }
+  .why-card[data-reveal='bento'] {
+    transition:
+      opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      filter 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .why-card-inner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: clamp(1.75rem, 2.5vw, 2.25rem);
+    background: var(--color-cream);
+    border: 1px solid var(--color-hairline-on-light);
+    border-radius: var(--radius-md);
+    transition:
+      border-color var(--duration-normal) var(--ease-out-expo),
+      box-shadow var(--duration-normal) var(--ease-out-expo),
+      transform var(--duration-normal) var(--ease-out-expo);
+    min-height: clamp(14rem, 22vw, 18rem);
+    will-change: transform;
+  }
+  .why-card-inner:hover {
+    border-color: var(--color-bronze);
+    transform: translateY(-4px);
+    box-shadow:
+      0 1px 2px oklch(0% 0 0 / 0.04),
+      0 14px 32px -12px oklch(35% 0.08 70 / 0.22);
+  }
+
+  .why-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .why-card-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--radius-sm);
+    background: oklch(48% 0.05 70 / 0.08);
+    color: var(--color-bronze-deep);
+    border: 1px solid oklch(60% 0.06 70 / 0.20);
+  }
+  .why-card-icon svg {
+    width: 1.375rem;
+    height: 1.375rem;
+  }
+  .why-card-metric {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 460, 'SOFT' 40;
+    font-size: clamp(1.5rem, 2vw, 1.875rem);
+    line-height: 1;
+    color: var(--color-bronze-deep);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  .why-card-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 480;
+    font-size: clamp(1.125rem, 1.4vw, 1.3125rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+  .why-card-body {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-mute-on-light);
+    flex: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.js .why-card[data-reveal='bento'] {
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+      transition: none !important;
+    }
+    .why-card-inner { transition: none; }
+  }
+</style>

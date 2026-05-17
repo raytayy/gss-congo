@@ -1,0 +1,84 @@
+---
+/*
+ * /en/cookies-policy/ — Cookies policy (EN). Mirror of /fr/politique-cookies/.
+ */
+import LegalShell from '@components/LegalShell.astro';
+import { contact } from '@lib/contact';
+---
+
+<LegalShell
+  title="Cookies policy"
+  eyebrow="Cookies"
+  description="Which cookies and trackers gss-congo.com uses, and how to control them."
+  lang="en"
+  altLocaleHref="/fr/politique-cookies/"
+  lastUpdated="2026-05-06"
+>
+  <h2>What is a cookie?</h2>
+  <p>
+    A cookie is a small text file that a website stores on your browser.
+    It can remember preferences, measure audience, or enable third-party
+    features.
+  </p>
+
+  <h2>Our approach</h2>
+  <p>
+    The site <strong>gss-congo.com</strong> is designed to run without any
+    tracking cookies. Audience measurement is handled by
+    <strong>Cloudflare Web Analytics</strong>, a cookieless tool with no user
+    identifiers, and therefore needs no consent banner.
+  </p>
+
+  <h2>Cookies currently in use</h2>
+  <h3>Essential cookies</h3>
+  <p>
+    None. The site does not set any essential cookie — there is no shopping
+    cart, no user session, no authentication.
+  </p>
+
+  <h3>Audience measurement cookies</h3>
+  <p>
+    Cloudflare Web Analytics does not set cookies. Statistics are aggregated
+    anonymously from standard HTTP headers and cannot re-identify a visitor.
+  </p>
+
+  <h3>Third-party cookies</h3>
+  <p>
+    The site does not load advertising scripts or social-media pixels. The
+    only third-party content loaded is:
+  </p>
+  <ul>
+    <li>
+      <strong>Google Maps</strong> — the map embed on the contact page may
+      set its own cookies when it loads. To avoid this entirely, do not scroll
+      to the map or block third-party iframes in your browser.
+    </li>
+    <li>
+      <strong>Instagram & Facebook</strong> — on the homepage, the embeds may
+      set their own cookies when they load. Same blocking guidance as above.
+    </li>
+  </ul>
+
+  <h2>How to refuse or delete cookies</h2>
+  <p>
+    All modern browsers let you block third-party cookies and delete those
+    already stored:
+  </p>
+  <ul>
+    <li><strong>Chrome</strong>: Settings → Privacy and security → Cookies.</li>
+    <li><strong>Firefox</strong>: Settings → Privacy & Security.</li>
+    <li><strong>Safari</strong>: Preferences → Privacy.</li>
+    <li><strong>Edge</strong>: Settings → Cookies and site permissions.</li>
+  </ul>
+  <p>
+    Blocking third-party cookies does not impair GSS site functionality —
+    only the Google Maps, Instagram, and Facebook embeds may be affected.
+  </p>
+
+  <h2>Updates</h2>
+  <p>
+    This policy evolves with the site. The date at the top of the page
+    indicates the latest revision. Questions:
+    <a href={`mailto:${contact.email}`}>{contact.email}</a>.
+  </p>
+</LegalShell>

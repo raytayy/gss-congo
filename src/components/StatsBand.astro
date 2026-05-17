@@ -1,0 +1,80 @@
+---
+/*
+ * StatsBand — editorial asymmetric layout.
+ * Lead stat (items[0]) dominates at oversized display scale; remaining
+ * stats stack as a hairline-separated support list. Breaks the four-equal-
+ * cell "hero metric template" pattern.
+ */
+
+interface Stat {
+  value: number;
+  display?: string;
+  prefix?: string;
+  suffix?: string;
+  label: string;
+  sub?: string;
+}
+
+interface Props {
+  items: Stat[];
+  eyebrow: string;
+  heading: string;
+  backgroundSrc?: string;
+}
+
+const { items, eyebrow, heading, backgroundSrc } = Astro.props;
+const styleAttr = backgroundSrc ? `--stats-bg: url(${backgroundSrc})` : undefined;
+
+const [lead, ...support] = items;
+
+const renderText = (item: Stat) =>
+  item.display ?? `${item.prefix ?? ''}${item.value}${item.suffix ?? ''}`;
+---
+
+<section class="stats-band" aria-label={heading} style={styleAttr}>
+  {backgroundSrc && <div class="stats-band-bg" aria-hidden="true"></div>}
+  <div class="stats-band-overlay" aria-hidden="true"></div>
+
+  <div class="stats-band-frame">
+    <p class="stats-band-eyebrow" data-reveal>{eyebrow}</p>
+    <h2 class="stats-band-heading" data-reveal data-reveal-delay="120">{heading}</h2>
+
+    <div class="stats-band-editorial">
+      <div class="stats-band-lead" data-reveal data-reveal-delay="220">
+        <span class="stats-band-lead-value">
+          {lead.display ? (
+            <span class="stats-band-display">{lead.display}</span>
+          ) : (
+            <span
+              data-counter={String(lead.value)}
+              data-counter-display={renderText(lead)}
+            >{renderText(lead)}</span>
+          )}
+        </span>
+        <span class="stats-band-lead-label">{lead.label}</span>
+        {lead.sub && <p class="stats-band-lead-sub">{lead.sub}</p>}
+      </div>
+
+      <ul class="stats-band-support">
+        {support.map((item, i) => (
+          <li class="stats-band-support-item" data-reveal data-reveal-delay={String(320 + i * 80)}>
+            <span class="stats-band-support-value">
+              {item.display ? (
+                <span class="stats-band-display">{item.display}</span>
+              ) : (
+                <span
+                  data-counter={String(item.value)}
+                  data-counter-display={renderText(item)}
+                >{renderText(item)}</span>
+              )}
+            </span>
+            <span class="stats-band-support-meta">
+              <span class="stats-band-support-label">{item.label}</span>
+              {item.sub && <span class="stats-band-support-sub">{item.sub}</span>}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>

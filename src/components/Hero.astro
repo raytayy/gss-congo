@@ -1,0 +1,484 @@
+---
+/*
+ * Hero — full-bleed photographic plate.
+ * Static security-themed image + dark overlay + CSS-only entrance.
+ * Will swap to real GSS-shot video once footage is delivered.
+ */
+
+import type { Locale } from '@lib/i18n';
+import NeonButton from './NeonButton.astro';
+import { contact } from '@lib/contact';
+
+interface Props {
+  locale: Locale;
+  /** Hero video URL (relative to /public). */
+  videoSrc?: string;
+  /** Poster image — shown until the video decodes; also acts as the LCP element. */
+  poster?: string;
+}
+
+const {
+  locale,
+  videoSrc = '/videos/hero.mp4',
+  poster = '/images/services/gardiennage.jpg',
+} = Astro.props;
+
+const copy = locale === 'fr'
+  ? {
+      eyebrow: 'GSS Congo · depuis 2014',
+      headline: 'La sécurité,',
+      headlineAccent: 'exercée comme un métier.',
+      sub:
+        'Onze ans de présence à Kinshasa. Trois cents agents formés. Une vigilance permanente.',
+      ctaPrimaryLabel: 'Demander un devis',
+      ctaPrimaryHref: '/fr/contact/',
+      ctaSecondaryLabel: 'Nos services',
+      ctaSecondaryHref: '/fr/services/',
+      scrollLabel: 'Découvrir',
+      responseLabel: 'Réponse < 20 min',
+      hoursLabel: '24/7',
+      rccmLabel: 'RCCM',
+      idnatLabel: 'IDNAT',
+    }
+  : {
+      eyebrow: 'GSS Congo · since 2014',
+      headline: 'Security,',
+      headlineAccent: 'practised as a craft.',
+      sub:
+        'Eleven years on the ground in Kinshasa. Three hundred trained agents. Permanent vigilance.',
+      ctaPrimaryLabel: 'Request a quote',
+      ctaPrimaryHref: '/en/contact/',
+      ctaSecondaryLabel: 'Our services',
+      ctaSecondaryHref: '/en/services/',
+      scrollLabel: 'Scroll',
+      responseLabel: 'Response < 20 min',
+      hoursLabel: '24/7',
+      rccmLabel: 'RCCM',
+      idnatLabel: 'IDNAT',
+    };
+---
+
+<script>
+  // Fade the hero video in once the first frame is decoded.
+  // Listens to the canplay event (frames decoded, ready to play) rather than
+  // loadeddata so we never reveal an unrendered black canvas.
+  const heroVideo = document.querySelector<HTMLVideoElement>('.hero-plate');
+  if (heroVideo) {
+    const reveal = () => heroVideo.classList.add('is-ready');
+    if (heroVideo.readyState >= 3) {
+      // HAVE_FUTURE_DATA already — bfcache or fast network.
+      reveal();
+    } else {
+      heroVideo.addEventListener('canplay', reveal, { once: true });
+      // Hard fallback: if for any reason canplay never fires, reveal after 1.2s
+      // so the hero is never permanently invisible.
+      setTimeout(reveal, 1200);
+    }
+  }
+</script>
+
+<section class="hero" aria-label={locale === 'fr' ? 'Présentation' : 'Introduction'}>
+  <div class="hero-media" aria-hidden="true">
+    <video
+      class="hero-plate"
+      src={videoSrc}
+      poster={poster}
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      disablepictureinpicture
+      width="1920"
+      height="1080"
+    ></video>
+    <img
+      class="hero-plate-mobile"
+      src={poster}
+      alt=""
+      fetchpriority="high"
+      decoding="async"
+      width="1920"
+      height="1080"
+    />
+    <div class="hero-overlay-tone"></div>
+    <div class="hero-overlay-vignette"></div>
+  </div>
+
+  <div class="hero-frame">
+    <div class="hero-overlay-content">
+      <p class="hero-overlay-eyebrow hero-fade" style="--delay: 100ms">{copy.eyebrow}</p>
+      <h1 class="hero-overlay-headline hero-fade" style="--delay: 250ms">
+        {copy.headline}
+        {copy.headlineAccent && (
+          <>
+            {' '}
+            <span class="hero-overlay-headline-accent">{copy.headlineAccent}</span>
+          </>
+        )}
+      </h1>
+      <p class="hero-overlay-sub hero-fade" style="--delay: 550ms">{copy.sub}</p>
+      <div class="hero-overlay-ctas hero-fade" style="--delay: 800ms">
+        <NeonButton variant="solid" size="lg" href={copy.ctaPrimaryHref}>
+          {copy.ctaPrimaryLabel}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </NeonButton>
+        <a class="hero-overlay-secondary" href={copy.ctaSecondaryHref}>
+          {copy.ctaSecondaryLabel}
+          <span class="hero-overlay-secondary-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+      <div class="hero-trust hero-fade" style="--delay: 980ms">
+        <span class="hero-trust-pill">
+          <span class="hero-trust-dot" aria-hidden="true"></span>
+          {copy.responseLabel}
+          <span class="hero-trust-mid" aria-hidden="true">·</span>
+          <span class="hero-trust-pill-hours">{copy.hoursLabel}</span>
+        </span>
+        <span class="hero-trust-creds">
+          <span class="hero-trust-cred">{copy.rccmLabel}&nbsp;{contact.legal.rccm}</span>
+          <span class="hero-trust-sep" aria-hidden="true">·</span>
+          <span class="hero-trust-cred">{copy.idnatLabel}&nbsp;{contact.legal.idnat}</span>
+        </span>
+      </div>
+      {copy.scrollLabel && (
+        <div class="hero-scroll-cue hero-fade" style="--delay: 1150ms" aria-hidden="true">
+          <span>{copy.scrollLabel}</span>
+          <span class="hero-scroll-line"></span>
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  /* Hero overlay typography + CTAs — global because the React island can't see Astro scoped CSS. */
+  .hero-overlay-content {
+    position: relative;
+    max-width: 60rem;
+    color: var(--color-cream);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  /* Hero entrance — CSS-only blur+transform; opacity stays 1 so the
+     headline remains eligible as Largest Contentful Paint per the
+     web-vitals spec (elements that animate from opacity:0 are excluded). */
+  .hero-fade {
+    filter: blur(8px);
+    transform: translate3d(0, 12px, 0);
+    animation: hero-fade-in 900ms cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0ms) forwards;
+    will-change: transform, filter;
+  }
+  @keyframes hero-fade-in {
+    to {
+      filter: blur(0);
+      transform: translate3d(0, 0, 0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-fade {
+      animation: none;
+      filter: none;
+      transform: none;
+    }
+  }
+
+  .hero-overlay-eyebrow {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-bronze-warm);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .hero-overlay-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-warm);
+  }
+
+  .hero-overlay-headline {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2.75rem, 7vw, 6.5rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--color-cream);
+    text-wrap: balance;
+  }
+  .hero-overlay-headline-accent {
+    color: var(--color-bronze-warm);
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'wght' 440, 'SOFT' 30;
+  }
+
+  .hero-overlay-sub {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 1.3vw, 1.1875rem);
+    line-height: 1.6;
+    color: var(--color-cream);
+    max-width: 36em;
+    opacity: 0.92;
+  }
+
+  .hero-overlay-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.875rem 1.5rem;
+    margin-top: 0.75rem;
+  }
+
+  /* Quiet secondary action — pure typographic link, no button gravity.
+     Fixes the "two CTAs compete" critique by demoting the secondary. */
+  .hero-overlay-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-cream);
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    padding-block: 0.45rem;
+    border-bottom: 1px solid oklch(100% 0 0 / 0.35);
+    transition:
+      color var(--duration-normal) var(--ease-out-expo),
+      border-color var(--duration-normal) var(--ease-out-expo);
+  }
+  .hero-overlay-secondary:hover {
+    color: var(--color-bronze-warm);
+    border-bottom-color: var(--color-bronze-warm);
+  }
+  .hero-overlay-secondary-arrow {
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+  }
+  .hero-overlay-secondary:hover .hero-overlay-secondary-arrow {
+    transform: translateX(0.25rem);
+  }
+
+  /* Trust strip — response-time pill + verifiable institutional credentials.
+     Restrained, single-line on desktop, wrappable on mobile. */
+  .hero-trust {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    color: var(--color-cream);
+  }
+  .hero-trust-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.875rem 0.4rem 0.75rem;
+    border: 1px solid oklch(100% 0 0 / 0.28);
+    border-radius: 9999px;
+    font-weight: 500;
+    color: var(--color-cream);
+    background: oklch(100% 0 0 / 0.05);
+    font-variant-numeric: tabular-nums;
+  }
+  .hero-trust-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--color-bronze-warm);
+    box-shadow: 0 0 0 3px oklch(70% 0.1 70 / 0.18);
+    flex-shrink: 0;
+  }
+  .hero-trust-mid {
+    color: var(--color-bronze-warm);
+    opacity: 0.8;
+  }
+  .hero-trust-pill-hours {
+    letter-spacing: 0.12em;
+  }
+  .hero-trust-creds {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.625rem 0.875rem;
+    color: var(--color-cream);
+    opacity: 0.7;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+  }
+  .hero-trust-cred { white-space: nowrap; }
+  .hero-trust-sep { color: var(--color-bronze-warm); opacity: 0.55; }
+
+  .hero-cta {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.95rem 1.6rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 0.9375rem;
+    letter-spacing: 0.01em;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    border: 1px solid transparent;
+    overflow: hidden;
+    transition:
+      background-color var(--duration-normal) var(--ease-out-expo),
+      color var(--duration-normal) var(--ease-out-expo),
+      border-color var(--duration-normal) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo),
+      filter var(--duration-normal) var(--ease-out-expo),
+      box-shadow var(--duration-normal) var(--ease-out-expo);
+  }
+  .hero-cta:active { transform: scale(0.98); }
+  .hero-cta svg {
+    width: 1rem;
+    height: 1rem;
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+  }
+  .hero-cta:hover svg { transform: translateX(0.25rem); }
+
+  .hero-scroll-cue {
+    position: absolute;
+    left: 0;
+    bottom: -3.25rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.875rem;
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-bronze-warm);
+  }
+  .hero-scroll-line {
+    display: inline-block;
+    width: 3rem;
+    height: 1px;
+    background: var(--color-bronze-warm);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-scroll-line::after {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 30%;
+    background: var(--color-cream);
+    animation: hero-scroll-pulse 2.4s var(--ease-in-out) infinite;
+  }
+  @keyframes hero-scroll-pulse {
+    0%   { transform: translateX(-100%); }
+    50%  { transform: translateX(0%); }
+    100% { transform: translateX(330%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-scroll-line::after { animation: none; }
+  }
+</style>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: clamp(36rem, 92vh, 56rem);
+    width: 100%;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--color-ink);
+    color: var(--color-cream);
+    display: flex;
+    align-items: flex-end;
+  }
+  .hero-media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .hero-plate {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    pointer-events: none;
+    z-index: 1;
+    filter: saturate(0.92) contrast(1.04);
+    opacity: 0;
+    transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hero-plate.is-ready { opacity: 1; }
+
+  /* Mobile fallback image — replaces the heavy video on small viewports
+     so P3/P4/P5 (mobile, low-bandwidth Kinshasa users) don't pay the
+     full video download cost. Desktop hides this image and uses the
+     video; mobile hides the video and uses this image with ken-burns. */
+  .hero-plate-mobile {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    pointer-events: none;
+    z-index: 1;
+    filter: saturate(0.92) contrast(1.04);
+    display: none;
+    animation: hero-mobile-kenburns 22s ease-out infinite alternate;
+  }
+  @keyframes hero-mobile-kenburns {
+    from { transform: scale(1.02); }
+    to   { transform: scale(1.08); }
+  }
+  @media (max-width: 767px) {
+    .hero-plate { display: none; }
+    .hero-plate-mobile { display: block; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-plate { opacity: 1; transition: none; }
+    .hero-plate-mobile { animation: none; }
+  }
+  .hero-overlay-tone, .hero-overlay-vignette { z-index: 2; }
+  .hero-overlay-tone {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(10, 22, 40, 0.55) 0%,
+        rgba(10, 22, 40, 0.35) 50%,
+        rgba(10, 22, 40, 0.85) 100%
+      );
+  }
+  .hero-overlay-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 90% at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.45) 100%);
+    pointer-events: none;
+  }
+  .hero-frame {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding: clamp(7rem, 12vw, 10rem) clamp(1.5rem, 5vw, 4rem) clamp(6rem, 10vw, 8rem);
+  }
+</style>

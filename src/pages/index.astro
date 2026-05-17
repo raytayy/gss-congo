@@ -1,0 +1,28 @@
+---
+/*
+ * Root `/` — redirects to /fr/ (default locale per decision D2).
+ * For users with `Accept-Language: en-*`, the future Cloudflare Worker
+ * may rewrite this to /en/ at the edge. For now, a static redirect to /fr/.
+ */
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <title>GSS Congo</title>
+    <meta http-equiv="refresh" content="0; url=/fr/" />
+    <link rel="canonical" href="/fr/" />
+    <script>
+      // Client-side fallback (instant when JS is on, before meta-refresh fires)
+      window.location.replace('/fr/');
+    </script>
+  </head>
+  <body>
+    <noscript>
+      <p>
+        Vous serez redirigé vers <a href="/fr/">la page d'accueil</a>.
+      </p>
+    </noscript>
+  </body>
+</html>

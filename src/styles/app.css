@@ -1,0 +1,710 @@
+/*
+ * GSS Congo — Global Stylesheet
+ * Source of truth: design/BRAND.md (do not diverge — update both)
+ * Tailwind v4 CSS-first config: tokens declared in @theme become utilities.
+ */
+
+@import 'tailwindcss';
+
+/* Self-hosted variable fonts (decision B6, C6) */
+@import '@fontsource-variable/fraunces/index.css';
+@import '@fontsource-variable/inter/index.css';
+
+/* ------------------------------------------------------------------ */
+/*  DESIGN TOKENS — mirror design/BRAND.md §1                          */
+/* ------------------------------------------------------------------ */
+
+@theme {
+  /* COLOURS — derived from the GSS logo (bronze + blue) */
+
+  /* INK — pulled toward the logo ribbon's deep teal-blue (#0d4e76) so dark
+     surfaces read as the same family as the brand mark, not a generic navy. */
+  --color-ink: #0a3556;
+  --color-ink-2: #114870;
+
+  /* BLUE — direct match to the logo ribbon banner. Used for brand callbacks. */
+  --color-blue: #1d6ea0;
+  --color-blue-deep: #0d4e76;
+  --color-blue-glow: #2898d0;
+
+  /* CREAM — warm surface, harmonises with bronze */
+  --color-cream: #f5f0e6;
+  --color-cream-2: #ece4d3;
+
+  /* BRONZE — derived directly from the metallic shield in the logo.
+     Three tiers mirror the shield gradient: deep shadow → mid metal → gold highlight.
+     bronze (default) tuned for AA on cream, bronze-warm / -gold reserved for on-dark. */
+  --color-bronze: #8a6533;
+  --color-bronze-deep: #5e3d1c;
+  --color-bronze-warm: #c89c63;
+  --color-bronze-gold: #d4a574;
+
+  /* HAIRLINES — 1px borders */
+  --color-hairline-on-dark: #1e3a5c;
+  --color-hairline-on-light: #d9cfb8;
+
+  /* MUTED — secondary text */
+  --color-mute-on-light: #6b6258;
+  --color-mute-on-dark: #a6b0bf;
+
+  /* ALERT — critical errors only, never decorative */
+  --color-alert: #b85838;
+
+  /* TYPEFACES — self-hosted variable */
+  --font-display: 'Fraunces Variable', 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* SPACING — 8px base, modular */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-4: 1rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-24: 6rem;
+  --spacing-32: 8rem;
+  --spacing-48: 12rem;
+  --spacing-64: 16rem;
+
+  /* CONTAINERS */
+  --container-prose: 640px;
+  --container-narrow: 900px;
+  --container-content: 1280px;
+  --container-max: 1440px;
+
+  /* RADIUS */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 9999px;
+
+  /* MOTION */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-expo: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* MOTION durations — calibrated to UI/UX Pro Max guidelines:
+     micro-interactions 150-300ms, reveals 600-1200ms */
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 400ms;
+  --duration-reveal: 900ms;
+  --duration-hero: 1200ms;
+}
+
+/* ------------------------------------------------------------------ */
+/*  BASE — sensible global defaults                                    */
+/* ------------------------------------------------------------------ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  hanging-punctuation: first last;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1.125rem; /* 18px body default */
+  line-height: 1.55;
+  color: var(--color-ink);
+  background-color: var(--color-cream);
+  font-feature-settings: 'cv11', 'ss01'; /* Inter humanist alternates */
+}
+
+/* Display utility classes — Fraunces optical sizing (BRAND §2.3) */
+.display-hero {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+  font-size: clamp(3.5rem, 9vw, 8rem); /* 56 → 128 */
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.display-large {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+}
+
+.display-medium {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 32, 'wght' 460;
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.display-small {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 14, 'wght' 500;
+  font-size: 1.5rem;
+  line-height: 1.25;
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-bronze);
+}
+
+/* Section rhythm — generous, hotel-lobby vertical breathing (BRAND §3.2) */
+.section {
+  padding-block: clamp(6rem, 12vw, 12rem);
+  padding-inline: clamp(1rem, 4vw, 3rem);
+}
+
+/* Container widths */
+.container-prose {
+  max-width: var(--container-prose);
+  margin-inline: auto;
+}
+.container-narrow {
+  max-width: var(--container-narrow);
+  margin-inline: auto;
+}
+.container-content {
+  max-width: var(--container-content);
+  margin-inline: auto;
+}
+
+/* Tabular numerals on KPI surfaces */
+.kpi,
+.phone,
+.footer-hours {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Selection colour — premium subconscious detail (BRAND §10) */
+::selection {
+  background: var(--color-bronze);
+  color: var(--color-cream);
+}
+
+/* Custom scrollbar — restraint */
+@media (pointer: fine) {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-bronze) var(--color-ink-2);
+  }
+}
+
+/* Focus rings — bronze halo, never default browser blue (BRAND §5) */
+:focus-visible {
+  outline: 2px solid var(--color-bronze);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Cursor-pointer on every interactive surface (UI/UX Pro Max HIGH) */
+a,
+button,
+summary,
+[role='button'],
+[role='link'],
+[data-clickable] {
+  cursor: pointer;
+}
+button:disabled,
+[aria-disabled='true'] {
+  cursor: not-allowed;
+}
+
+/* Premium CTA — bronze gradient with subtle inner sheen + lift on hover.
+   Apply via class .btn-bronze-primary on <a> or <button>. */
+.btn-bronze-primary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.95rem 1.6rem;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  letter-spacing: 0.01em;
+  color: var(--color-cream);
+  background:
+    linear-gradient(180deg, var(--color-bronze-warm) 0%, var(--color-bronze) 55%, var(--color-bronze-deep) 100%);
+  border: 1px solid oklch(100% 0 0 / 0.18);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  box-shadow:
+    inset 0 1px 0 oklch(100% 0 0 / 0.25),
+    0 1px 2px oklch(0% 0 0 / 0.08),
+    0 8px 24px -10px oklch(35% 0.08 70 / 0.45);
+  transition:
+    transform var(--duration-normal) var(--ease-out-expo),
+    box-shadow var(--duration-normal) var(--ease-out-expo),
+    filter var(--duration-normal) var(--ease-out-expo);
+  isolation: isolate;
+}
+.btn-bronze-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, oklch(100% 0 0 / 0.12) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+.btn-bronze-primary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+  box-shadow:
+    inset 0 1px 0 oklch(100% 0 0 / 0.3),
+    0 2px 4px oklch(0% 0 0 / 0.1),
+    0 14px 32px -10px oklch(35% 0.08 70 / 0.55);
+}
+.btn-bronze-primary:active {
+  transform: translateY(0);
+  filter: brightness(0.97);
+}
+
+/* Skip link — first focusable on every page (WCAG 2.2) */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: var(--color-ink);
+  color: var(--color-cream);
+  padding: 0.75rem 1.25rem;
+  text-decoration: none;
+  font-weight: 500;
+  z-index: 1000;
+  transition: top 200ms var(--ease-out-expo);
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* Subtle film grain overlay (BRAND §8.2) — premium texture, ~2KB inline */
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* ------------------------------------------------------------------ */
+/*  REVEAL ON SCROLL — driven by data-reveal attribute                  */
+/*  Mirrors src/lib/motion.ts                                            */
+/* ------------------------------------------------------------------ */
+
+/* Reveal-on-scroll — graceful degradation:
+   default state is VISIBLE so JS failure doesn't hide content.
+   The .js class on <html> (set by initReveals) opts into the hidden initial state. */
+[data-reveal] {
+  --reveal-distance: 24px;
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition:
+    opacity 900ms var(--ease-out-expo),
+    transform 900ms var(--ease-out-expo);
+  will-change: opacity, transform;
+}
+
+html.js [data-reveal]:not([data-revealed='true']) {
+  opacity: 0;
+  transform: translate3d(0, var(--reveal-distance), 0);
+}
+html.js [data-reveal='fade']:not([data-revealed='true']) {
+  --reveal-distance: 0;
+  transform: none;
+}
+html.js [data-reveal='mask']:not([data-revealed='true']) {
+  --reveal-distance: 0;
+  clip-path: inset(0 100% 0 0);
+  opacity: 1;
+  transform: none;
+  transition: clip-path 1100ms var(--ease-out-expo);
+}
+
+/* Hero entrance — runs once on first paint */
+@keyframes hero-mask-rise {
+  from { transform: translate3d(0, 110%, 0); }
+  to   { transform: translate3d(0, 0, 0); }
+}
+@keyframes hero-img-clear {
+  from { filter: blur(14px); transform: scale(1.06); opacity: 0; }
+  to   { filter: blur(0);    transform: scale(1);    opacity: 1; }
+}
+@keyframes ken-burns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.05); }
+}
+
+/* Word/line wrapper used by hero — overflow hidden so masked text rises */
+.line-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.line-mask > span {
+  display: inline-block;
+  transform: translateY(110%);
+  animation: hero-mask-rise 1100ms var(--ease-out-expo) forwards;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+
+/* Word/line wrapper used by hero — overflow hidden so masked text rises */
+.line-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.line-mask > span {
+  display: inline-block;
+  transform: translateY(110%);
+  animation: hero-mask-rise 1100ms var(--ease-out-expo) forwards;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+
+/* ------------------------------------------------------------------ */
+/*  EYEBROW NUMBERED — used by Footer + services hub pages              */
+/* ------------------------------------------------------------------ */
+
+.eyebrow-numbered {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-bronze);
+  margin: 0;
+}
+.eyebrow-numbered::before {
+  content: '';
+  display: inline-block;
+  width: 2.5rem;
+  height: 1px;
+  background: var(--color-bronze);
+}
+.eyebrow-numbered > span:first-of-type {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.eyebrow-numbered > span + span {
+  color: var(--color-mute-on-light);
+}
+.eyebrow-numbered.on-dark { color: var(--color-bronze-warm); }
+.eyebrow-numbered.on-dark::before { background: var(--color-bronze-warm); }
+.eyebrow-numbered.on-dark > span + span { color: var(--color-mute-on-dark); }
+
+/* ------------------------------------------------------------------ */
+/*  STATSBAND (React island — global CSS)                              */
+/* ------------------------------------------------------------------ */
+
+.stats-band {
+  position: relative;
+  background: var(--color-ink);
+  color: var(--color-cream);
+  padding: clamp(3.5rem, 12vw, 11rem) clamp(1.5rem, 5vw, 4rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+.stats-band-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image: var(--stats-bg, none);
+  background-size: cover;
+  background-position: center;
+  filter: saturate(0.9);
+}
+.stats-band-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(10, 22, 40, 0.7) 0%, rgba(10, 22, 40, 0.92) 100%),
+    radial-gradient(70% 50% at 0% 0%, oklch(20% 0.04 250 / 0.5), transparent 60%);
+}
+
+.stats-band-frame {
+  position: relative;
+  max-width: 1440px;
+  margin-inline: auto;
+}
+
+.stats-band-eyebrow {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-bronze-warm);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.stats-band-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 2.5rem;
+  height: 1px;
+  background: var(--color-bronze-warm);
+}
+
+.stats-band-heading {
+  margin: 0 0 clamp(2.5rem, 4vw, 4rem);
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
+  font-size: clamp(2.25rem, 4vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: var(--color-cream);
+  max-width: 18em;
+  text-wrap: balance;
+}
+
+/* Editorial asymmetric layout: lead | support-stack */
+.stats-band-editorial {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(3rem, 6vw, 5rem);
+  align-items: end;
+  border-top: 1px solid var(--color-hairline-on-dark);
+  padding-top: clamp(2.5rem, 5vw, 4.5rem);
+}
+@media (min-width: 900px) {
+  .stats-band-editorial {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
+    gap: clamp(3rem, 7vw, 6rem);
+    align-items: end;
+  }
+}
+
+/* Lead stat — editorial display */
+.stats-band-lead {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.stats-band-lead-value {
+  display: block;
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 144, 'wght' 360, 'SOFT' 100;
+  font-size: clamp(6rem, 18vw, 16rem);
+  line-height: 0.82;
+  letter-spacing: -0.05em;
+  color: var(--color-cream);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: 'ss01';
+}
+.stats-band-lead-value > span { display: inline-block; }
+.stats-band-lead-label {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-bronze-warm);
+  font-weight: 500;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-bronze);
+  align-self: flex-start;
+}
+.stats-band-lead-sub {
+  margin: 0;
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 80, 'wght' 380, 'SOFT' 50;
+  font-style: italic;
+  font-size: clamp(1.125rem, 1.6vw, 1.5rem);
+  line-height: 1.4;
+  color: var(--color-cream);
+  max-width: 18em;
+  opacity: 0.92;
+}
+
+/* Support stack — three rows */
+.stats-band-support {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.stats-band-support-item {
+  display: grid;
+  grid-template-columns: minmax(5.5rem, auto) 1fr;
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  align-items: baseline;
+  padding: clamp(1.5rem, 2.5vw, 2rem) 0;
+  border-bottom: 1px solid var(--color-hairline-on-dark);
+}
+.stats-band-support-item:last-child { border-bottom: 0; }
+.stats-band-support-item:first-child { padding-top: 0; }
+
+.stats-band-support-value {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 60;
+  font-size: clamp(2rem, 3.6vw, 3.25rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--color-cream);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.stats-band-support-value > span { display: inline-block; }
+.stats-band-support-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  min-width: 0;
+}
+.stats-band-support-label {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-bronze-warm);
+  font-weight: 500;
+}
+.stats-band-support-sub {
+  font-size: 0.9375rem;
+  color: var(--color-cream);
+  opacity: 0.75;
+  line-height: 1.5;
+}
+
+.stats-band-display { display: inline-block; }
+
+/* Reduced motion — kill everything decorative (BRAND §6 / WCAG 2.2 F4) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .grain { display: none; }
+}
+
+/* ------------------------------------------------------------------ */
+/*  GLOW CARD — pointer-following bronze spotlight + masked border bloom */
+/*  Powered by --x/--xp/--y/--yp set on <html> by initGlowTracker().    */
+/*  Pure-CSS port of the React spotlight-card pattern, brand-recolored. */
+/* ------------------------------------------------------------------ */
+
+.glow-card {
+  /* Brand-bronze hue range (HSL ≈ 35) with narrow spread so it stays in
+     bronze even as the cursor traverses the viewport. */
+  --glow-base: 35;
+  --glow-spread: 10;
+  --glow-saturation: 55;
+  --glow-lightness-bg: 62;
+  --glow-lightness-edge: 55;
+  --glow-bg-opacity: 0.10;
+  --glow-edge-opacity: 0.65;
+  --glow-shine-opacity: 0.35;
+  --glow-spotlight-size: 280px;
+  --glow-border-size: 1px;
+  --glow-radius: var(--radius-md, 12px);
+
+  position: relative;
+  isolation: isolate;
+  background-image:
+    radial-gradient(
+      var(--glow-spotlight-size) var(--glow-spotlight-size) at
+      calc(var(--x, 0) * 1px) calc(var(--y, 0) * 1px),
+      hsl(
+        calc(var(--glow-base) + (var(--xp, 0) * var(--glow-spread)))
+        calc(var(--glow-saturation) * 1%)
+        calc(var(--glow-lightness-bg) * 1%)
+        / var(--glow-bg-opacity)
+      ),
+      transparent 70%
+    );
+  background-attachment: fixed;
+}
+
+/* Brighter spotlight on the BORDER ring only (uses dual-mask trick). */
+.glow-card::before,
+.glow-card::after {
+  content: '';
+  position: absolute;
+  inset: calc(var(--glow-border-size) * -1);
+  pointer-events: none;
+  border: var(--glow-border-size) solid transparent;
+  border-radius: inherit;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  -webkit-mask:
+    linear-gradient(transparent, transparent) padding-box,
+    linear-gradient(#000, #000) border-box;
+  -webkit-mask-composite: xor;
+          mask:
+    linear-gradient(transparent, transparent) padding-box,
+    linear-gradient(#000, #000) border-box;
+          mask-composite: exclude;
+  z-index: 2;
+}
+
+.glow-card::before {
+  background-image: radial-gradient(
+    calc(var(--glow-spotlight-size) * 0.75) calc(var(--glow-spotlight-size) * 0.75) at
+    calc(var(--x, 0) * 1px) calc(var(--y, 0) * 1px),
+    hsl(
+      calc(var(--glow-base) + (var(--xp, 0) * var(--glow-spread)))
+      calc(var(--glow-saturation) * 1%)
+      calc(var(--glow-lightness-edge) * 1%)
+      / var(--glow-edge-opacity)
+    ),
+    transparent 70%
+  );
+  filter: brightness(1.4);
+}
+
+.glow-card::after {
+  background-image: radial-gradient(
+    calc(var(--glow-spotlight-size) * 0.5) calc(var(--glow-spotlight-size) * 0.5) at
+    calc(var(--x, 0) * 1px) calc(var(--y, 0) * 1px),
+    hsl(0 0% 100% / var(--glow-shine-opacity)),
+    transparent 70%
+  );
+}
+
+/* On-dark variant — stronger glow */
+.glow-card[data-glow-tone='dark'] {
+  --glow-bg-opacity: 0.18;
+  --glow-edge-opacity: 0.85;
+  --glow-shine-opacity: 0.45;
+}
+
+/* On-light variant — gentler glow so it doesn't wash out cream */
+.glow-card[data-glow-tone='light'] {
+  --glow-bg-opacity: 0.07;
+  --glow-edge-opacity: 0.55;
+  --glow-shine-opacity: 0.25;
+  --glow-lightness-edge: 45;
+}
+
+/* Reduced motion — kill the cursor tracking effect */
+@media (prefers-reduced-motion: reduce) {
+  .glow-card,
+  .glow-card::before,
+  .glow-card::after {
+    background-image: none;
+  }
+}

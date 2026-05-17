@@ -1,0 +1,644 @@
+---
+/*
+ * /en/about/ — Credentials dossier (EN).
+ * Mirror of /fr/a-propos/index.astro.
+ * Beats: Hero → Manifesto → Numbers → Story → Convictions → Mandates → CTA.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import NeonButton from '@components/NeonButton.astro';
+import { contact, whatsappLink } from '@lib/contact';
+
+const stats = [
+  { display: '11', suffix: ' yrs', label: 'on the ground', sub: 'in Kinshasa, without interruption' },
+  { display: '300', suffix: '',    label: 'trained agents', sub: 'in rotation, 24/7' },
+  { display: '24/7', suffix: '',   label: 'vigilance',      sub: 'continuous presence, never paused' },
+  { display: '< 20', suffix: ' min', label: 'response',     sub: 'average intervention time' },
+];
+
+const convictions = [
+  {
+    n: '01',
+    title: 'Calibrate, never oversize.',
+    body: 'Every posture is studied on site. Headcount, rotation, equipment — proportionate to real risk, never to the appearance of the contract.',
+  },
+  {
+    n: '02',
+    title: 'Train before deploying.',
+    body: 'No agent enters a mission without completing our training cycle. The centre runs continuously — that is our first requirement, not a sales argument.',
+  },
+  {
+    n: '03',
+    title: 'Account for things, plainly.',
+    body: '24/7 central coordination, regular activity reports, continuous adjustment. The client does not guess — they see.',
+  },
+];
+
+const mandates = [
+  { label: 'RCCM',         value: contact.legal.rccm },
+  { label: 'IDNAT',        value: contact.legal.idnat },
+  { label: 'Tax ID',       value: contact.legal.taxId },
+  { label: 'Established',  value: String(contact.legal.foundedYear) },
+];
+
+const phoneTel = `tel:${contact.phones.primary.tel}`;
+const phoneDisplay = contact.phones.primary.display;
+const waMessage = 'Hello GSS, I am reaching out from your website. I would like to request a quote for…';
+---
+
+<BaseLayout
+  title="About"
+  description="Guarde Security Services — eleven years of private security in Kinshasa. Calibrate the posture, train the agents, account for things plainly."
+  lang="en"
+  altLocaleHref="/fr/a-propos/"
+>
+  <!-- ─── HERO ────────────────────────────────────────────────── -->
+  <section class="ap-hero" aria-labelledby="ap-heading">
+    <div class="ap-hero-image" aria-hidden="true">
+      <img src="/images/banner1.jpg" alt="" loading="eager" fetchpriority="high" decoding="async" />
+      <div class="ap-hero-overlay"></div>
+    </div>
+    <div class="ap-hero-content">
+      <p class="ap-eyebrow ap-eyebrow-on-dark" data-reveal>About</p>
+      <h1 id="ap-heading" class="ap-hero-title" data-reveal data-reveal-delay="120">
+        Eleven years, without interruption.
+      </h1>
+      <p class="ap-hero-intro" data-reveal data-reveal-delay="240">
+        Guarde Security Services has been protecting industrial sites, residences,
+        embassies and construction sites in Kinshasa since 2014. No fanfare,
+        no intermittence — just a calibrated presence and a chain of command
+        that answers.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── MANIFESTO ──────────────────────────────────────────── -->
+  <section class="ap-section ap-manifest" aria-labelledby="ap-manifest-heading">
+    <div class="ap-manifest-frame">
+      <p class="ap-eyebrow" data-reveal>Manifesto</p>
+      <p id="ap-manifest-heading" class="ap-manifest-text" data-reveal data-reveal-delay="120">
+        Security is neither a uniform nor a slogan. It is a discipline —
+        practised with rigour, evaluated every month, corrected every week.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── NUMBERS ────────────────────────────────────────────── -->
+  <section class="ap-section ap-stats" aria-labelledby="ap-stats-heading">
+    <div class="ap-stats-frame">
+      <div class="ap-stats-head">
+        <p class="ap-eyebrow" data-reveal>By the numbers</p>
+        <h2 id="ap-stats-heading" class="ap-section-heading" data-reveal data-reveal-delay="100">
+          Orders of magnitude.
+        </h2>
+      </div>
+      <ul class="ap-stats-grid">
+        {stats.map((s, i) => (
+          <li
+            class="ap-stat"
+            data-reveal
+            data-reveal-delay={String(150 + i * 100)}
+            style={`--reveal-delay: ${150 + i * 100}ms;`}
+          >
+            <span class="ap-stat-value">
+              {s.display}<span class="ap-stat-suffix">{s.suffix}</span>
+            </span>
+            <span class="ap-stat-label">{s.label}</span>
+            <span class="ap-stat-sub">{s.sub}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ─── STORY ──────────────────────────────────────────────── -->
+  <section class="ap-section ap-story" aria-labelledby="ap-story-heading">
+    <div class="ap-story-frame">
+      <div class="ap-story-media" data-reveal>
+        <img src="/images/careers-graphique.jpg" alt="GSS training centre — session in progress" loading="lazy" decoding="async" />
+        <div class="ap-story-media-tone" aria-hidden="true"></div>
+      </div>
+      <div class="ap-story-text">
+        <p class="ap-eyebrow" data-reveal>Story</p>
+        <h2 id="ap-story-heading" class="ap-section-heading" data-reveal data-reveal-delay="100">
+          From Kinshasa, by operators.
+        </h2>
+        <div class="ap-story-body" data-reveal data-reveal-delay="200">
+          <p>
+            The house was founded in 2014 from a simple observation: private
+            security in Kinshasa deserved more than a headcount lined up in
+            uniform. It needed a method, a training centre, a central coordination.
+          </p>
+          <p>
+            Eleven years on, GSS protects industries, construction sites, VIP
+            residences and embassies daily, and operates its own training centre —
+            an internal school that trains our agents and, on request, those
+            of other houses.
+          </p>
+          <p>
+            Headquarters at <strong>{contact.addresses.hq.detail}</strong>,
+            {contact.addresses.hq.street}, Gombe.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CONVICTIONS (dark band) ─────────────────────────────── -->
+  <section class="ap-section ap-convictions" aria-labelledby="ap-convictions-heading">
+    <div class="ap-convictions-frame">
+      <div class="ap-convictions-head">
+        <p class="ap-eyebrow ap-eyebrow-on-dark" data-reveal>Convictions</p>
+        <h2 id="ap-convictions-heading" class="ap-section-heading ap-section-heading-on-dark" data-reveal data-reveal-delay="100">
+          Three principles, on every mission.
+        </h2>
+      </div>
+      <ol class="ap-convictions-list">
+        {convictions.map((c, i) => (
+          <li
+            class="ap-conviction"
+            data-reveal
+            data-reveal-delay={String(150 + i * 120)}
+            style={`--reveal-delay: ${150 + i * 120}ms;`}
+          >
+            <span class="ap-conviction-num">{c.n}</span>
+            <h3 class="ap-conviction-title">{c.title}</h3>
+            <p class="ap-conviction-body">{c.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ─── MANDATES ───────────────────────────────────────────── -->
+  <section class="ap-section ap-mandates" aria-labelledby="ap-mandates-heading">
+    <div class="ap-mandates-frame">
+      <div class="ap-mandates-head">
+        <p class="ap-eyebrow" data-reveal>Institutional credentials</p>
+        <h2 id="ap-mandates-heading" class="ap-section-heading" data-reveal data-reveal-delay="100">
+          Registered, in good standing, verifiable.
+        </h2>
+        <p class="ap-mandates-sub" data-reveal data-reveal-delay="200">
+          The references useful to procurement, compliance, and diplomatic
+          security desks. Available on request for official documentation.
+        </p>
+      </div>
+      <dl class="ap-mandates-grid">
+        {mandates.map((m, i) => (
+          <div
+            class="ap-mandate"
+            data-reveal
+            data-reveal-delay={String(200 + i * 80)}
+            style={`--reveal-delay: ${200 + i * 80}ms;`}
+          >
+            <dt class="ap-mandate-label">{m.label}</dt>
+            <dd class="ap-mandate-value">{m.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- ─── CTA ────────────────────────────────────────────────── -->
+  <section class="ap-cta" aria-labelledby="ap-cta-heading">
+    <div class="ap-cta-frame">
+      <div class="ap-cta-text" data-reveal>
+        <p class="ap-eyebrow ap-eyebrow-on-dark">Conversation</p>
+        <h2 id="ap-cta-heading" class="ap-cta-heading">
+          Better than a brochure: a conversation.
+        </h2>
+        <p class="ap-cta-sub">
+          Tell us about your site and your context. We come back within
+          24 hours with an honest read of what is justified — and what is not.
+        </p>
+      </div>
+      <div class="ap-cta-actions" data-reveal data-reveal-delay="200">
+        <NeonButton variant="solid" size="lg" href="/en/contact/">
+          Request a quote
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </NeonButton>
+        <NeonButton
+          variant="default"
+          size="lg"
+          href={whatsappLink(waMessage)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          WhatsApp
+        </NeonButton>
+      </div>
+      <p class="ap-cta-phone" data-reveal data-reveal-delay="320">
+        Or call us —
+        <a href={phoneTel}>{phoneDisplay}</a>
+        <span aria-hidden="true">·</span>
+        <span>{contact.hours.en}</span>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ─── HERO ─────────────────────────────────────────────────── */
+  .ap-hero {
+    position: relative;
+    min-height: clamp(34rem, 78vh, 46rem);
+    display: flex;
+    align-items: flex-end;
+    color: var(--color-cream);
+    overflow: hidden;
+    padding: clamp(8rem, 16vw, 14rem) clamp(1.5rem, 5vw, 4rem) clamp(4rem, 8vw, 7rem);
+    isolation: isolate;
+  }
+  .ap-hero-image { position: absolute; inset: 0; z-index: -1; }
+  .ap-hero-image img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center 35%;
+    filter: saturate(0.88);
+    animation: ap-ken-burns 26s ease-out 0.4s forwards;
+  }
+  @keyframes ap-ken-burns {
+    from { transform: scale(1.02); }
+    to   { transform: scale(1.08); }
+  }
+  .ap-hero-overlay {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, oklch(8% 0.03 250 / 0.30) 0%, oklch(8% 0.03 250 / 0.55) 55%, oklch(8% 0.03 250 / 0.92) 100%),
+      radial-gradient(80% 50% at 30% 90%, oklch(40% 0.06 70 / 0.20), transparent 70%);
+  }
+  .ap-hero-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+  }
+  .ap-hero-title {
+    margin: 1rem 0 1.5rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2.75rem, 7vw, 6rem);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--color-cream);
+    max-width: 14em;
+    text-wrap: balance;
+  }
+  .ap-hero-intro {
+    margin: 0;
+    font-size: clamp(1.0625rem, 1.5vw, 1.3125rem);
+    line-height: 1.6;
+    color: var(--color-cream);
+    max-width: 38em;
+    opacity: 0.92;
+  }
+
+  /* ─── SHARED CHROME ────────────────────────────────────────── */
+  .ap-section {
+    padding: clamp(5rem, 11vw, 10rem) clamp(1.5rem, 5vw, 4rem);
+  }
+  .ap-eyebrow {
+    margin: 0 0 1rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .ap-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-deep);
+  }
+  .ap-eyebrow-on-dark { color: var(--color-bronze-warm); }
+  .ap-eyebrow-on-dark::before { background: var(--color-bronze-warm); }
+  .ap-section-heading {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
+    font-size: clamp(1.75rem, 3.4vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    max-width: 18em;
+    text-wrap: balance;
+  }
+  .ap-section-heading-on-dark { color: var(--color-cream); }
+
+  /* ─── MANIFESTO ────────────────────────────────────────────── */
+  .ap-manifest {
+    background: var(--color-cream);
+    padding-block: clamp(4rem, 9vw, 8rem);
+  }
+  .ap-manifest-frame { max-width: 920px; margin-inline: auto; }
+  .ap-manifest-text {
+    margin: 0.75rem 0 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 420, 'SOFT' 40;
+    font-size: clamp(1.5rem, 2.8vw, 2.5rem);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
+  /* ─── NUMBERS ──────────────────────────────────────────────── */
+  .ap-stats { background: var(--color-cream-2); }
+  .ap-stats-frame { max-width: 1280px; margin-inline: auto; }
+  .ap-stats-head { max-width: 36rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+  .ap-stats-grid {
+    list-style: none; margin: 0; padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--color-hairline-on-light);
+  }
+  @media (min-width: 1024px) { .ap-stats-grid { grid-template-columns: repeat(4, 1fr); } }
+  .ap-stat {
+    padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1rem, 2vw, 1.75rem) clamp(1.5rem, 3vw, 2.25rem) 0;
+    border-bottom: 1px solid var(--color-hairline-on-light);
+    border-right: 1px solid var(--color-hairline-on-light);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  @media (min-width: 1024px) {
+    .ap-stat { border-bottom: none; }
+    .ap-stat:last-child { border-right: none; }
+  }
+  @media (max-width: 1023px) {
+    .ap-stat:nth-child(2n) { border-right: none; }
+    .ap-stat:nth-last-child(-n+2) { border-bottom: none; }
+  }
+  .ap-stat-value {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    color: var(--color-ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .ap-stat-suffix {
+    font-size: 0.55em;
+    color: var(--color-bronze);
+    margin-left: 0.1em;
+  }
+  .ap-stat-label {
+    margin-top: 0.5rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+  }
+  .ap-stat-sub {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--color-mute-on-light);
+  }
+
+  /* ─── STORY (split) ────────────────────────────────────────── */
+  .ap-story { background: var(--color-cream); }
+  .ap-story-frame {
+    max-width: 1280px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .ap-story-frame { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 5rem; }
+  }
+  .ap-story-media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--color-cream-2);
+  }
+  .ap-story-media img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: saturate(0.92);
+  }
+  .ap-story-media-tone {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 60%, oklch(8% 0.03 250 / 0.25) 100%);
+    pointer-events: none;
+  }
+  .ap-story-text { display: flex; flex-direction: column; }
+  .ap-story-body {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    color: var(--color-ink);
+    max-width: 36em;
+  }
+  .ap-story-body p { margin: 0; }
+  .ap-story-body strong { color: var(--color-ink); font-weight: 500; }
+
+  /* ─── CONVICTIONS (dark band) ──────────────────────────────── */
+  .ap-convictions {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .ap-convictions::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(60% 60% at 90% 10%, oklch(40% 0.06 70 / 0.22), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .ap-convictions-frame { max-width: 1280px; margin-inline: auto; }
+  .ap-convictions-head { max-width: 44rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+  .ap-convictions-list {
+    list-style: none; margin: 0; padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border-top: 1px solid oklch(100% 0 0 / 0.10);
+  }
+  @media (min-width: 1024px) { .ap-convictions-list { grid-template-columns: repeat(3, 1fr); } }
+  .ap-conviction {
+    padding: clamp(1.75rem, 3vw, 2.5rem) clamp(1.25rem, 2vw, 1.75rem) clamp(1.75rem, 3vw, 2.5rem) 0;
+    border-bottom: 1px solid oklch(100% 0 0 / 0.10);
+    border-right: 1px solid oklch(100% 0 0 / 0.10);
+  }
+  @media (min-width: 1024px) {
+    .ap-conviction { border-bottom: none; }
+    .ap-conviction:last-child { border-right: none; }
+  }
+  .ap-conviction-num {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 460;
+    font-size: 0.875rem;
+    color: var(--color-bronze-warm);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+  }
+  .ap-conviction-title {
+    margin: 1rem 0 0.875rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 48, 'wght' 460;
+    font-size: clamp(1.375rem, 2vw, 1.75rem);
+    line-height: 1.15;
+    color: var(--color-cream);
+    letter-spacing: -0.015em;
+    max-width: 16em;
+    text-wrap: balance;
+  }
+  .ap-conviction-body {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--color-cream);
+    opacity: 0.78;
+    max-width: 28em;
+  }
+
+  /* ─── MANDATES ─────────────────────────────────────────────── */
+  .ap-mandates { background: var(--color-cream); }
+  .ap-mandates-frame { max-width: 1280px; margin-inline: auto; }
+  .ap-mandates-head { max-width: 44rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .ap-mandates-sub {
+    margin: 1rem 0 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-mute-on-light);
+    max-width: 36em;
+  }
+  .ap-mandates-grid {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--color-hairline-on-light);
+  }
+  @media (min-width: 1024px) { .ap-mandates-grid { grid-template-columns: repeat(4, 1fr); } }
+  .ap-mandate {
+    padding: clamp(1.25rem, 2vw, 1.75rem) clamp(1rem, 2vw, 1.75rem) clamp(1.25rem, 2vw, 1.75rem) 0;
+    border-bottom: 1px solid var(--color-hairline-on-light);
+    border-right: 1px solid var(--color-hairline-on-light);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  @media (min-width: 1024px) {
+    .ap-mandate { border-bottom: none; }
+    .ap-mandate:last-child { border-right: none; }
+  }
+  @media (max-width: 1023px) {
+    .ap-mandate:nth-child(2n) { border-right: none; }
+    .ap-mandate:nth-last-child(-n+2) { border-bottom: none; }
+  }
+  .ap-mandate-label {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+  }
+  .ap-mandate-value {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 460;
+    font-size: clamp(1.0625rem, 1.6vw, 1.375rem);
+    line-height: 1.2;
+    color: var(--color-ink);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.01em;
+    word-break: break-word;
+  }
+
+  /* ─── CTA (dark) ───────────────────────────────────────────── */
+  .ap-cta {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    padding: clamp(5rem, 12vw, 11rem) clamp(1.5rem, 5vw, 4rem);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .ap-cta::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(60% 50% at 50% 100%, oklch(40% 0.06 70 / 0.22), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .ap-cta-frame {
+    position: relative;
+    max-width: 1280px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    align-items: end;
+  }
+  @media (min-width: 1024px) {
+    .ap-cta-frame { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 5rem; }
+  }
+  .ap-cta-heading {
+    margin: 1rem 0 1.25rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-cream);
+    max-width: 14em;
+    text-wrap: balance;
+  }
+  .ap-cta-sub {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-cream);
+    opacity: 0.80;
+    max-width: 36em;
+  }
+  .ap-cta-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .ap-cta-phone {
+    grid-column: 1 / -1;
+    margin: 1rem 0 0;
+    font-size: 0.9375rem;
+    color: var(--color-cream);
+    opacity: 0.75;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.625rem;
+  }
+  .ap-cta-phone a {
+    color: var(--color-cream);
+    font-variant-numeric: tabular-nums;
+    text-decoration: underline;
+    text-decoration-color: var(--color-bronze-warm);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    transition: color var(--duration-normal) var(--ease-out-expo);
+  }
+  .ap-cta-phone a:hover { color: var(--color-bronze-warm); }
+  .ap-cta-phone span[aria-hidden] { color: var(--color-bronze-warm); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ap-hero-image img { animation: none; }
+  }
+</style>

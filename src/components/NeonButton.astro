@@ -1,0 +1,171 @@
+---
+/*
+ * NeonButton — pill-shape button with a hover-revealed bronze-gold neon line.
+ * Pure-CSS port of the React neon-button pattern (cva variants → data attrs).
+ * Works on any background; brand-colored for GSS via --color-bronze tokens.
+ */
+
+interface Props {
+  variant?: 'default' | 'solid' | 'ghost';
+  size?: 'sm' | 'default' | 'lg';
+  neon?: boolean;
+  href?: string;
+  type?: 'button' | 'submit';
+  target?: '_blank' | '_self';
+  rel?: string;
+  ariaLabel?: string;
+  class?: string;
+}
+
+const {
+  variant = 'default',
+  size = 'default',
+  neon = true,
+  href,
+  type = 'button',
+  target,
+  rel,
+  ariaLabel,
+  class: className = '',
+} = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+const tagAttrs = href ? { href, target, rel } : { type };
+---
+
+<Tag
+  class:list={['neon-btn', className]}
+  data-variant={variant}
+  data-size={size}
+  data-neon={neon ? '' : undefined}
+  aria-label={ariaLabel}
+  {...tagAttrs}
+>
+  <span class="neon-btn-line neon-btn-line-top" aria-hidden="true"></span>
+  <span class="neon-btn-label"><slot /></span>
+  <span class="neon-btn-line neon-btn-line-bottom" aria-hidden="true"></span>
+</Tag>
+
+<style>
+  .neon-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid;
+    border-radius: 9999px;
+    font-family: var(--font-body);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      background-color var(--duration-normal) var(--ease-out-expo),
+      border-color var(--duration-normal) var(--ease-out-expo),
+      color var(--duration-normal) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .neon-btn:active { transform: scale(0.98); }
+
+  .neon-btn-label {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    line-height: 1;
+  }
+
+  /* Sizes */
+  .neon-btn[data-size='sm'] {
+    padding: 0.25rem 1rem;
+    font-size: 0.8125rem;
+  }
+  .neon-btn[data-size='default'] {
+    padding: 0.5rem 1.75rem;
+    font-size: 0.9375rem;
+  }
+  .neon-btn[data-size='lg'] {
+    padding: 0.75rem 2.5rem;
+    font-size: 1rem;
+  }
+
+  /* Variant: default — subtle bronze tint; color inherits so it works on
+     both light and dark backgrounds. */
+  .neon-btn[data-variant='default'] {
+    background: oklch(48% 0.05 70 / 0.06);
+    border-color: oklch(60% 0.06 70 / 0.30);
+    color: inherit;
+  }
+  .neon-btn[data-variant='default']:hover {
+    background: oklch(48% 0.05 70 / 0);
+    border-color: oklch(60% 0.06 70 / 0.55);
+  }
+
+  /* Inline icon support — chevrons / arrows beside label.
+     :global() so the rule reaches SVGs passed in via <slot/>. */
+  .neon-btn :global(svg) {
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+  }
+  .neon-btn[data-size='sm'] :global(svg) { width: 0.875rem; height: 0.875rem; }
+  .neon-btn[data-size='lg'] :global(svg) { width: 1.125rem; height: 1.125rem; }
+  .neon-btn:hover :global(svg) { transform: translateX(0.2rem); }
+
+  /* Variant: solid — bronze fill */
+  .neon-btn[data-variant='solid'] {
+    background: var(--color-bronze);
+    color: var(--color-cream);
+    border-color: transparent;
+  }
+  .neon-btn[data-variant='solid']:hover {
+    background: var(--color-bronze-deep);
+    border-color: oklch(100% 0 0 / 0.4);
+  }
+
+  /* Variant: ghost — transparent, bronze on hover */
+  .neon-btn[data-variant='ghost'] {
+    background: transparent;
+    border-color: transparent;
+    color: inherit;
+  }
+  .neon-btn[data-variant='ghost']:hover {
+    background: oklch(100% 0 0 / 0.06);
+    border-color: oklch(60% 0.06 70 / 0.45);
+  }
+
+  /* Neon lines (hidden by default; revealed when [data-neon] is present) */
+  .neon-btn-line {
+    position: absolute;
+    height: 1px;
+    width: 75%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-bronze-gold),
+      transparent
+    );
+    transition: opacity 500ms var(--ease-out-expo);
+    pointer-events: none;
+    display: none;
+  }
+  .neon-btn-line-top { top: 0; }
+  .neon-btn-line-bottom { bottom: -1px; }
+
+  .neon-btn[data-neon] .neon-btn-line { display: block; }
+  .neon-btn[data-neon]:hover .neon-btn-line-top { opacity: 1; }
+  .neon-btn[data-neon]:hover .neon-btn-line-bottom { opacity: 0.3; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .neon-btn-line { transition: none; }
+  }
+</style>

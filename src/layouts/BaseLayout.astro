@@ -1,0 +1,114 @@
+---
+/*
+ * BaseLayout — every page is wrapped here.
+ * - Self-hosted variable fonts via app.css
+ * - View Transitions (decision B9)
+ * - Skip link first-focusable (WCAG 2.2)
+ * - Grain overlay (BRAND §8.2)
+ * - Per-page <head> via SEO props
+ *
+ * Source of truth: design/BRAND.md
+ */
+
+import { ClientRouter } from 'astro:transitions';
+import '@styles/app.css';
+import Header from '@components/Header.astro';
+import Footer from '@components/Footer.astro';
+import MobileActionBar from '@components/MobileActionBar.astro';
+import MotionRoot from '@components/MotionRoot.astro';
+import { ui, t } from '@lib/i18n';
+import { localBusinessSchema } from '@lib/jsonld';
+
+interface Props {
+  title: string;
+  description: string;
+  lang?: 'fr' | 'en';
+  /** Path of the current page in the OTHER locale, for hreflang. */
+  altLocaleHref?: string;
+  /** Optional og:image absolute URL. Defaults to /og-default.jpg (TODO: design). */
+  ogImage?: string;
+  /** Optional per-page JSON-LD schema(s) appended after the global LocalBusiness. */
+  jsonLd?: object | object[];
+}
+
+const {
+  title,
+  description,
+  lang = 'fr',
+  altLocaleHref,
+  ogImage = '/og-default.jpg',
+  jsonLd,
+} = Astro.props;
+
+const altLocale = lang === 'fr' ? 'en' : 'fr';
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
+const currentPath = Astro.url.pathname;
+const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com';
+
+// Global LocalBusiness + page-specific schemas
+const orgSchema = localBusinessSchema(lang, siteUrl);
+const extraSchemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+---
+
+<!doctype html>
+<html lang={lang} dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title} · GSS Congo</title>
+    <meta name="description" content={description} />
+
+    <link rel="canonical" href={canonicalURL} />
+
+    {altLocaleHref && (
+      <link rel="alternate" hreflang={altLocale} href={altLocaleHref} />
+    )}
+    <link rel="alternate" hreflang="x-default" href={canonicalURL.replace(`/${lang}/`, '/fr/')} />
+
+    {/* Open Graph */}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={`${title} · GSS Congo`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site).toString()} />
+    <meta property="og:locale" content={lang === 'fr' ? 'fr_CD' : 'en_CD'} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+
+    {/* Favicon — official brand mark */}
+    <link rel="icon" type="image/png" href="/images/logo.png" />
+    <link rel="apple-touch-icon" href="/images/logo.png" />
+
+    {/* Theme colour matches ink for PWA / browser chrome */}
+    <meta name="theme-color" content="#0E2E4A" />
+
+    {/* View Transitions — Astro native (decision B9) */}
+    <ClientRouter />
+
+    {/* JSON-LD: global organisation + per-page schemas */}
+    <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
+    {extraSchemas.map((schema) => (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))}
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">{t(ui.a11y.skipToContent, lang)}</a>
+
+    <MotionRoot />
+
+    <div class="grain" aria-hidden="true"></div>
+
+    <Header locale={lang} currentPath={currentPath} />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer locale={lang} />
+
+    <MobileActionBar locale={lang} />
+  </body>
+</html>

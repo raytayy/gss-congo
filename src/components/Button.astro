@@ -1,0 +1,133 @@
+---
+/*
+ * Button — primary | ghost (light) | ghost-on-dark.
+ * Renders as <a> when href is set, else <button>.
+ * Includes optional arrow that translates on hover (BRAND §5.2).
+ */
+
+interface Props {
+  variant?: 'primary' | 'ghost' | 'ghost-on-dark';
+  size?: 'sm' | 'md' | 'lg';
+  href?: string;
+  type?: 'button' | 'submit';
+  arrow?: boolean;
+  external?: boolean;
+  disabled?: boolean;
+  class?: string;
+  ariaLabel?: string;
+}
+
+const {
+  variant = 'primary',
+  size = 'md',
+  href,
+  type = 'button',
+  arrow = false,
+  external = false,
+  disabled = false,
+  class: className,
+  ariaLabel,
+} = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+const linkProps = href
+  ? {
+      href,
+      ...(external && { target: '_blank', rel: 'noopener noreferrer' }),
+    }
+  : { type, disabled };
+---
+
+<Tag
+  class:list={['btn', `btn-${variant}`, `btn-${size}`, className]}
+  aria-label={ariaLabel}
+  {...linkProps}
+>
+  <span class="btn-label"><slot /></span>
+  {arrow && (
+    <span class="btn-arrow" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </span>
+  )}
+</Tag>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    text-decoration: none;
+    line-height: 1;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color var(--duration-normal) var(--ease-out-expo),
+      color var(--duration-normal) var(--ease-out-expo),
+      border-color var(--duration-normal) var(--ease-out-expo),
+      transform var(--duration-fast) var(--ease-out-expo);
+  }
+  .btn:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-arrow {
+    display: inline-grid;
+    place-items: center;
+    width: 1em;
+    height: 1em;
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+  }
+  .btn-arrow svg {
+    width: 100%;
+    height: 100%;
+  }
+  .btn:hover:not(:disabled) .btn-arrow {
+    transform: translateX(0.25rem);
+  }
+
+  /* Sizes */
+  .btn-sm { padding: 0.5rem 1rem; font-size: 0.875rem; }
+  .btn-md { padding: 0.875rem 1.5rem; font-size: 1rem; }
+  .btn-lg { padding: 1.125rem 2rem; font-size: 1.0625rem; }
+
+  /* Primary — bronze fill */
+  .btn-primary {
+    background: var(--color-bronze);
+    color: var(--color-cream);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--color-bronze-deep);
+  }
+
+  /* Ghost (on light) — ink hairline, fills on hover */
+  .btn-ghost {
+    background: transparent;
+    color: var(--color-ink);
+    border-color: var(--color-ink);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background: var(--color-ink);
+    color: var(--color-cream);
+  }
+
+  /* Ghost on dark — cream text, bronze hairline */
+  .btn-ghost-on-dark {
+    background: transparent;
+    color: var(--color-cream);
+    border-color: var(--color-bronze-warm);
+  }
+  .btn-ghost-on-dark:hover:not(:disabled) {
+    background: var(--color-bronze);
+    color: var(--color-ink);
+    border-color: var(--color-bronze);
+  }
+</style>

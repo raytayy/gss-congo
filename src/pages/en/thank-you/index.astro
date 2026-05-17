@@ -1,0 +1,123 @@
+---
+/*
+ * /en/thank-you/ — Quote-form submission confirmation.
+ * Web3Forms redirects here after a successful submission.
+ * Mirror of src/pages/fr/merci/index.astro.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import NeonButton from '@components/NeonButton.astro';
+import { contact, whatsappLink } from '@lib/contact';
+---
+
+<BaseLayout
+  title="Thank you"
+  description="Your request has been received. A team member will get back to you within 24 business hours."
+  lang="en"
+  altLocaleHref="/fr/merci/"
+>
+  <section class="mc" aria-labelledby="mc-heading">
+    <div class="mc-frame">
+      <p class="mc-eyebrow" data-reveal>Confirmation</p>
+      <h1 id="mc-heading" class="mc-title" data-reveal data-reveal-delay="120">
+        Request received.
+      </h1>
+      <p class="mc-sub" data-reveal data-reveal-delay="240">
+        A team member will get back to you within 24 business hours with a
+        proposal sized to your context. For urgent needs, reach us directly.
+      </p>
+
+      <div class="mc-actions" data-reveal data-reveal-delay="360">
+        <NeonButton variant="solid" size="lg" href={whatsappLink()}>
+          WhatsApp
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </NeonButton>
+        <a class="mc-call" href={`tel:${contact.phones.primary.tel}`}>
+          Call {contact.phones.primary.display}
+        </a>
+      </div>
+
+      <p class="mc-back" data-reveal data-reveal-delay="480">
+        <a href="/en/">Back to home</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .mc {
+    min-height: 70vh;
+    background: var(--color-cream);
+    color: var(--color-ink);
+    padding: clamp(6rem, 14vw, 12rem) clamp(1.5rem, 5vw, 4rem);
+    display: grid;
+    place-items: center;
+  }
+  .mc-frame { max-width: 40rem; text-align: left; }
+  .mc-eyebrow {
+    margin: 0 0 1rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .mc-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-deep);
+  }
+  .mc-title {
+    margin: 0 0 1.5rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+  }
+  .mc-sub {
+    margin: 0 0 2.5rem;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-mute-on-light);
+    max-width: 36em;
+  }
+  .mc-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  .mc-call {
+    color: var(--color-ink);
+    font-variant-numeric: tabular-nums;
+    text-decoration: underline;
+    text-decoration-color: var(--color-bronze);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    transition: color var(--duration-normal) var(--ease-out-expo);
+  }
+  .mc-call:hover { color: var(--color-bronze-deep); }
+  .mc-back {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: var(--color-mute-on-light);
+  }
+  .mc-back a {
+    color: var(--color-bronze-deep);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-hairline-on-light);
+    padding-bottom: 0.15rem;
+    transition: border-color var(--duration-normal) var(--ease-out-expo);
+  }
+  .mc-back a:hover { border-bottom-color: var(--color-bronze); }
+</style>

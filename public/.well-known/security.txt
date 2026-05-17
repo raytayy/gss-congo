@@ -1,0 +1,11 @@
+# GSS Congo — security.txt (RFC 9116)
+# Reach out if you have identified a vulnerability on this site.
+
+Contact: mailto:contact@gss-congo.com
+Expires: 2027-05-06T23:59:59.000Z
+Preferred-Languages: fr, en
+Canonical: https://gss-congo.com/.well-known/security.txt
+
+# Scope: this website (gss-congo.com) and its subdomains.
+# Out of scope: third-party embeds (Google Maps, Instagram, Facebook).
+# We acknowledge reports within 7 business days.

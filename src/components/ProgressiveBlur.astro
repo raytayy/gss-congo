@@ -1,0 +1,66 @@
+---
+/*
+ * ProgressiveBlur — multi-layer mask + backdrop-filter for fade-out edges.
+ * Pure-CSS port of the React `progressive-blur` component.
+ * Stacks N layers, each masked to a thin slice along the chosen axis and
+ * blurred at increasing intensity → smooth blur ramp toward the edge.
+ */
+
+interface Props {
+  direction?: 'top' | 'right' | 'bottom' | 'left';
+  blurLayers?: number;
+  blurIntensity?: number;
+  class?: string;
+}
+
+const {
+  direction = 'right',
+  blurLayers = 8,
+  blurIntensity = 1,
+  class: className = '',
+} = Astro.props;
+
+const angles = { top: 0, right: 90, bottom: 180, left: 270 };
+const angle = angles[direction];
+
+const layers = Math.max(blurLayers, 2);
+const segmentSize = 1 / (blurLayers + 1);
+
+const layersData = Array.from({ length: layers }).map((_, index) => {
+  const stops = [
+    index * segmentSize,
+    (index + 1) * segmentSize,
+    (index + 2) * segmentSize,
+    (index + 3) * segmentSize,
+  ].map(
+    (pos, posIndex) =>
+      `rgba(255, 255, 255, ${posIndex === 1 || posIndex === 2 ? 1 : 0}) ${(pos * 100).toFixed(2)}%`
+  );
+  const gradient = `linear-gradient(${angle}deg, ${stops.join(', ')})`;
+  return {
+    style: `mask-image: ${gradient}; -webkit-mask-image: ${gradient}; backdrop-filter: blur(${(index * blurIntensity).toFixed(2)}px); -webkit-backdrop-filter: blur(${(index * blurIntensity).toFixed(2)}px);`,
+  };
+});
+---
+
+<div class:list={['progressive-blur', className]}>
+  {layersData.map((layer) => (
+    <div class="progressive-blur-layer" style={layer.style}></div>
+  ))}
+</div>
+
+<style>
+  .progressive-blur {
+    position: relative;
+    pointer-events: none;
+  }
+  .progressive-blur-layer {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .progressive-blur-layer { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  }
+</style>

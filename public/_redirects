@@ -1,0 +1,17 @@
+# GSS Congo — Cloudflare Pages redirects
+# Reference: docs/research/redirect-map.md
+# Format: [old-path] [new-path] [http-status]
+# Defaults to 301 (permanent). Use 302 only for temporary, 410 for gone.
+
+# --- Locale entry point ---
+/                                  /fr/                                  301
+
+# --- Legacy HTML from old gss-congo.com (TO COMPLETE after live audit) ---
+# /index.html                      /fr/                                  301
+# /services.html                   /fr/services/                         301
+# /about.html                      /fr/a-propos/                         301
+# /contact.html                    /fr/contact/                          301
+# /formation.html                  /fr/centre-de-formation/              301
+
+# --- Catch-all fallback (last) ---
+/*.html                            /fr/                                  301

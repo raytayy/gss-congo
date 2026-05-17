@@ -1,0 +1,167 @@
+---
+/*
+ * TrustBand — sectoral marquee fallback (impeccable craft, 2026-05-04).
+ * When real client logos arrive (clarification #11), pass via the `logos` prop;
+ * otherwise an infinite horizontal marquee scrolls the sectors served.
+ * Pauses on hover/focus and under prefers-reduced-motion.
+ */
+
+import type { Locale } from '@lib/i18n';
+
+interface ClientLogo {
+  name: string;
+  src?: string;
+}
+
+interface Props {
+  locale: Locale;
+  logos?: ClientLogo[];
+}
+
+const { locale, logos } = Astro.props;
+
+const sectorsFr = ['Industries', 'Ambassades', 'ONG', 'Hôtellerie', 'BTP', 'Résidences VIP', 'Diplomatie'];
+const sectorsEn = ['Industries', 'Embassies', 'NGOs', 'Hospitality', 'Construction', 'VIP residences', 'Diplomacy'];
+const sectors = locale === 'fr' ? sectorsFr : sectorsEn;
+
+const eyebrowLabel = locale === 'fr' ? 'Confiance' : 'Trust';
+const heading = locale === 'fr' ? 'Ils nous font confiance.' : 'They trust us.';
+const subline = locale === 'fr'
+  ? 'Industriels, ambassades, ONG, hôtels, chantiers et résidences que nous protégeons à travers Kinshasa.'
+  : 'Industrial sites, embassies, NGOs, hotels, construction sites and residences we protect across Kinshasa.';
+
+// Two repetitions of the sector list provide seamless loop (animation translates -50%).
+const repeats = 2;
+---
+
+<section class="trust-band" aria-labelledby="trust-heading">
+  <div class="trust-header">
+    <p class="eyebrow-numbered">
+      <span>03 / 09</span>
+      <span>{eyebrowLabel}</span>
+    </p>
+    <h2 id="trust-heading" class="display-medium trust-heading">{heading}</h2>
+    <p class="trust-subline">{subline}</p>
+  </div>
+
+  {logos && logos.length > 0 ? (
+    <ul class="trust-logos" aria-label={locale === 'fr' ? 'Clients référents' : 'Reference clients'}>
+      {logos.map((logo) => (
+        <li class="trust-logo-item">
+          {logo.src ? (
+            <img src={logo.src} alt={logo.name} loading="lazy" decoding="async" />
+          ) : (
+            <span class="trust-logo-text">{logo.name}</span>
+          )}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <div class="marquee" aria-label={locale === 'fr' ? 'Secteurs servis' : 'Sectors served'}>
+      <div class="marquee-track" aria-hidden="true">
+        {Array.from({ length: repeats }).map(() =>
+          sectors.map((sector) => (
+            <>
+              <span class="marquee-item">{sector}</span>
+              <span class="marquee-sep" aria-hidden="true">·</span>
+            </>
+          ))
+        )}
+      </div>
+      {/* Screen-reader friendly static list */}
+      <ul class="visually-hidden">
+        {sectors.map((sector) => <li>{sector}</li>)}
+      </ul>
+    </div>
+  )}
+</section>
+
+<style>
+  .trust-band {
+    padding-block: clamp(5rem, 9vw, 8rem);
+    background: var(--color-cream-2);
+    border-block: 1px solid var(--color-hairline-on-light);
+    overflow: hidden;
+  }
+
+  .trust-header {
+    max-width: 1280px;
+    margin: 0 auto clamp(3rem, 5vw, 4.5rem);
+    padding-inline: clamp(1.5rem, 5vw, 4rem);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 1024px) {
+    .trust-header {
+      grid-template-columns: auto 1fr;
+      align-items: end;
+      gap: clamp(2rem, 5vw, 5rem);
+    }
+  }
+  .trust-heading {
+    margin: 0;
+    color: var(--color-ink);
+    grid-column: 1;
+  }
+  .trust-subline {
+    margin: 0;
+    color: var(--color-mute-on-light);
+    font-size: 1rem;
+    max-width: 38em;
+    line-height: 1.55;
+  }
+  @media (min-width: 1024px) {
+    .trust-subline { padding-bottom: 0.5em; }
+  }
+
+  /* Logo grid (only when logos prop is set) */
+  .trust-logos {
+    list-style: none;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 clamp(1.5rem, 5vw, 4rem);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 2.5rem 3rem;
+    align-items: center;
+  }
+  .trust-logo-item {
+    display: grid;
+    place-items: center;
+    height: 50px;
+    filter: grayscale(100%) brightness(0.4);
+    opacity: 0.85;
+    transition: opacity var(--duration-normal) var(--ease-out-expo),
+      filter var(--duration-normal) var(--ease-out-expo);
+  }
+  .trust-logo-item:hover {
+    opacity: 1;
+    filter: grayscale(0%) brightness(1);
+  }
+  .trust-logo-item img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  .trust-logo-text {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 500;
+    color: var(--color-mute-on-light);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 0.9375rem;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

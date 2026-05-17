@@ -1,0 +1,141 @@
+---
+/*
+ * /fr/politique-confidentialite/ — Privacy policy (FR).
+ * Mirror in src/pages/en/privacy-policy/index.astro.
+ */
+import LegalShell from '@components/LegalShell.astro';
+import { contact } from '@lib/contact';
+---
+
+<LegalShell
+  title="Politique de confidentialité"
+  eyebrow="Confidentialité"
+  description="Comment GSS Congo collecte, utilise et protège vos données personnelles."
+  lang="fr"
+  altLocaleHref="/en/privacy-policy/"
+  lastUpdated="2026-05-06"
+>
+  <h2>Préambule</h2>
+  <p>
+    Guarde Security Services (GSS) attache une importance particulière au
+    respect de la vie privée des personnes qui visitent son site, soumettent
+    une demande de devis, ou postulent à un poste. La présente politique
+    décrit les données collectées, leur usage, leur durée de conservation,
+    et les droits dont vous disposez.
+  </p>
+
+  <h2>Responsable de traitement</h2>
+  <p>
+    Guarde Security Services SARL — {contact.addresses.hq.detail},
+    {contact.addresses.hq.street}, {contact.addresses.hq.city}, RDC.
+    Contact : <a href={`mailto:${contact.email}`}>{contact.email}</a>.
+  </p>
+
+  <h2>Données collectées</h2>
+  <p>
+    Nous collectons uniquement les données que vous nous transmettez
+    volontairement, principalement via le formulaire de contact :
+  </p>
+  <ul>
+    <li>Nom complet</li>
+    <li>Adresse email</li>
+    <li>Numéro de téléphone (optionnel)</li>
+    <li>Nom de l'entreprise (optionnel)</li>
+    <li>Service souhaité</li>
+    <li>Description de votre besoin</li>
+  </ul>
+  <p>
+    Le site collecte également des données de mesure d'audience anonymisées
+    via Cloudflare Web Analytics (sans cookie, sans identifiant utilisateur).
+  </p>
+
+  <h2>Finalités du traitement</h2>
+  <ul>
+    <li>Répondre à votre demande de devis ou d'information.</li>
+    <li>Établir un contrat de prestation si vous décidez de travailler avec nous.</li>
+    <li>Améliorer la qualité de notre site et de nos services.</li>
+  </ul>
+  <p>
+    Aucune donnée n'est utilisée à des fins de prospection commerciale non
+    sollicitée, ni cédée à des tiers à des fins marketing.
+  </p>
+
+  <h2>Base légale</h2>
+  <p>
+    Le traitement des données du formulaire repose sur votre consentement
+    (envoi volontaire) et, le cas échéant, sur l'exécution de mesures
+    précontractuelles prises à votre demande.
+  </p>
+
+  <h2>Durée de conservation</h2>
+  <ul>
+    <li>
+      <strong>Demandes de devis sans suite</strong> : 24 mois après le dernier
+      échange, puis suppression.
+    </li>
+    <li>
+      <strong>Données contractuelles</strong> : durée du contrat + 5 ans pour
+      satisfaire aux obligations comptables et légales.
+    </li>
+    <li>
+      <strong>Candidatures</strong> : 24 mois après réception, puis suppression
+      sauf demande de conservation prolongée.
+    </li>
+    <li>
+      <strong>Mesure d'audience</strong> : agrégée et anonymisée, conservation
+      conforme à la politique Cloudflare.
+    </li>
+  </ul>
+
+  <h2>Destinataires</h2>
+  <p>
+    Vos données sont accessibles uniquement aux collaborateurs GSS dont la
+    fonction le justifie (commercial, opérationnel, RH). Aucune donnée n'est
+    transmise à des tiers en dehors :
+  </p>
+  <ul>
+    <li>
+      Web3Forms (passerelle de transmission du formulaire — les données
+      transitent puis sont reçues sur l'email GSS, sans stockage côté
+      Web3Forms au-delà de la livraison).
+    </li>
+    <li>
+      Cloudflare (hébergement, mesure d'audience anonymisée).
+    </li>
+  </ul>
+
+  <h2>Sécurité</h2>
+  <p>
+    Le site est servi en HTTPS strict. Les données du formulaire transitent
+    de manière chiffrée. L'accès interne aux emails reçus est restreint aux
+    collaborateurs autorisés.
+  </p>
+
+  <h2>Vos droits</h2>
+  <p>Conformément aux principes généraux de protection des données, vous disposez :</p>
+  <ul>
+    <li>D'un droit d'accès à vos données.</li>
+    <li>D'un droit de rectification si elles sont inexactes.</li>
+    <li>D'un droit d'effacement (sous réserve des obligations légales de conservation).</li>
+    <li>D'un droit d'opposition au traitement.</li>
+    <li>D'un droit à la portabilité.</li>
+  </ul>
+  <p>
+    Pour exercer ces droits, écrivez à <a href={`mailto:${contact.email}`}>{contact.email}</a>
+    en précisant l'objet de votre demande. Nous répondons sous un délai
+    raisonnable, en principe sous 30 jours.
+  </p>
+
+  <h2>Cookies</h2>
+  <p>
+    Voir la <a href="/fr/politique-cookies/">politique de cookies</a> pour le
+    détail des traceurs utilisés.
+  </p>
+
+  <h2>Modification</h2>
+  <p>
+    La présente politique peut être mise à jour. La date en haut de page
+    indique la dernière révision. Les modifications substantielles sont
+    annoncées sur le site.
+  </p>
+</LegalShell>

@@ -1,0 +1,104 @@
+---
+/*
+ * /fr/mentions-legales/ — Mentions légales (FR).
+ * Mirror in src/pages/en/legal-notice/index.astro.
+ */
+import LegalShell from '@components/LegalShell.astro';
+import { contact } from '@lib/contact';
+---
+
+<LegalShell
+  title="Mentions légales"
+  eyebrow="Légal"
+  description="Mentions légales du site gss-congo.com. Éditeur, hébergement, propriété intellectuelle, responsabilité."
+  lang="fr"
+  altLocaleHref="/en/legal-notice/"
+  lastUpdated="2026-05-06"
+>
+  <h2>Éditeur du site</h2>
+  <p>
+    Le site <strong>gss-congo.com</strong> est édité par <strong>Guarde Security
+    Services SARL</strong> (GSS), société de droit congolais.
+  </p>
+  <dl>
+    <dt>RCCM</dt><dd>{contact.legal.rccm}</dd>
+    <dt>IDNAT</dt><dd>{contact.legal.idnat}</dd>
+    <dt>N° impôt</dt><dd>{contact.legal.taxId}</dd>
+    <dt>Fondée</dt><dd>{contact.legal.foundedYear}</dd>
+  </dl>
+
+  <h2>Siège social</h2>
+  <p>
+    {contact.addresses.hq.detail}<br />
+    {contact.addresses.hq.street}<br />
+    {contact.addresses.hq.city}, République Démocratique du Congo
+  </p>
+  <p>
+    Téléphone : <a href={`tel:${contact.phones.primary.tel}`}>{contact.phones.primary.display}</a><br />
+    Email : <a href={`mailto:${contact.email}`}>{contact.email}</a>
+  </p>
+
+  <h2>Direction de la publication</h2>
+  <p>
+    Direction générale GSS Congo. La direction de la publication peut être
+    contactée à l'adresse <a href={`mailto:${contact.email}`}>{contact.email}</a>.
+  </p>
+
+  <h2>Hébergement</h2>
+  <p>
+    Le site est hébergé par <strong>Cloudflare, Inc.</strong>, 101 Townsend Street,
+    San Francisco, CA 94107, États-Unis. Diffusion via le réseau global Cloudflare
+    Pages, points de présence en Afrique centrale et de l'Ouest.
+  </p>
+
+  <h2>Conception et développement</h2>
+  <p>
+    Conception graphique, développement et intégration : <strong>telic. studio</strong>.
+  </p>
+
+  <h2>Propriété intellectuelle</h2>
+  <p>
+    L'ensemble des contenus présents sur ce site (textes, images, photographies,
+    logo, marque, vidéos, code source) est la propriété de Guarde Security Services
+    ou de ses partenaires. Toute reproduction, représentation, modification,
+    publication ou adaptation, totale ou partielle, par quelque moyen que ce soit,
+    sans autorisation écrite préalable, est strictement interdite.
+  </p>
+  <p>
+    La marque <strong>GSS · Guarde Security Services</strong> et son logo sont
+    déposés. Les autres marques citées appartiennent à leurs propriétaires respectifs.
+  </p>
+
+  <h2>Responsabilité</h2>
+  <p>
+    Les informations diffusées sur ce site sont fournies à titre indicatif. GSS
+    s'efforce d'en assurer l'exactitude et la mise à jour, mais ne peut garantir
+    l'exhaustivité ni l'absence d'erreur. L'utilisateur est seul responsable de
+    l'usage qu'il fait de ces informations.
+  </p>
+  <p>
+    GSS décline toute responsabilité pour les dommages directs ou indirects pouvant
+    résulter de l'accès au site ou de l'utilisation de son contenu.
+  </p>
+
+  <h2>Liens externes</h2>
+  <p>
+    Le site peut contenir des liens vers des sites tiers (réseaux sociaux,
+    cartographie, etc.). GSS n'exerce aucun contrôle sur le contenu de ces sites
+    et décline toute responsabilité quant à leur contenu et à leur disponibilité.
+  </p>
+
+  <h2>Données personnelles & cookies</h2>
+  <p>
+    Le traitement des données personnelles transmises via le formulaire de contact
+    est décrit dans la <a href="/fr/politique-confidentialite/">politique de confidentialité</a>.
+    L'usage des cookies est précisé dans la <a href="/fr/politique-cookies/">politique de cookies</a>.
+  </p>
+
+  <h2>Droit applicable</h2>
+  <p>
+    Le présent site et son utilisation sont régis par le droit congolais. Tout
+    litige relatif à l'interprétation ou à l'exécution des présentes mentions
+    légales relève de la compétence exclusive des tribunaux de Kinshasa.
+  </p>
+</LegalShell>
