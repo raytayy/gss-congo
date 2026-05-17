@@ -86,8 +86,10 @@ const contactHref = `/${locale}/contact/`;
     </button>
   </div>
 
-  {/* Mobile panel — full-screen when toggled */}
-  <div class="mobile-panel" id="mobile-panel" data-mobile-panel hidden>
+  {/* Mobile panel — full-screen when toggled. Visibility driven by the
+      .is-open class set by the inline script below (not the `hidden`
+      attribute, which fought with the author display rule on mobile). */}
+  <div class="mobile-panel" id="mobile-panel" data-mobile-panel>
     <div class="mobile-panel-bar">
       <Logo size="md" variant="on-light" href={`/${locale}/`} />
       <button
@@ -141,12 +143,12 @@ const contactHref = `/${locale}/contact/`;
 
     function openPanel(toggle, panel) {
       toggle.setAttribute('aria-expanded', 'true');
-      panel.removeAttribute('hidden');
+      panel.classList.add('is-open');
       document.body.style.overflow = 'hidden';
     }
     function closePanel(toggle, panel) {
       toggle.setAttribute('aria-expanded', 'false');
-      panel.setAttribute('hidden', '');
+      panel.classList.remove('is-open');
       document.body.style.overflow = '';
     }
 
@@ -328,16 +330,26 @@ const contactHref = `/${locale}/contact/`;
 
   .mobile-panel {
     position: fixed;
-    inset: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: var(--color-cream);
     padding: 0 1.5rem 2rem;
     overflow-y: auto;
-    z-index: 110;
-    display: flex;
+    overscroll-behavior: contain;
+    z-index: 1000;
+    display: none;
     flex-direction: column;
   }
+  .mobile-panel.is-open {
+    display: flex;
+  }
   @media (min-width: 1024px) {
-    .mobile-panel { display: none !important; }
+    .mobile-panel,
+    .mobile-panel.is-open { display: none !important; }
   }
 
   /* Panel header — logo (left) + close button (right) */
