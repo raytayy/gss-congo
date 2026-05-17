@@ -25,6 +25,7 @@ export const ui = {
     formation: { fr: 'Formation', en: 'Training' },
     careers: { fr: 'Carrières', en: 'Careers' },
     news: { fr: 'Actualités', en: 'News' },
+    faq: { fr: 'FAQ', en: 'FAQ' },
     contact: { fr: 'Contact', en: 'Contact' },
   },
   cta: {

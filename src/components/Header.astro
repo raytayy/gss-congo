@@ -26,6 +26,7 @@ const navItems = [
   { label: t(ui.nav.formation, locale), href: `/${locale}/${locale === 'fr' ? 'centre-de-formation' : 'training-centre'}/` },
   { label: t(ui.nav.careers, locale), href: `/${locale}/${locale === 'fr' ? 'carrieres' : 'careers'}/` },
   { label: t(ui.nav.news, locale), href: `/${locale}/${locale === 'fr' ? 'actualites' : 'news'}/` },
+  { label: t(ui.nav.faq, locale), href: `/${locale}/faq/` },
 ];
 
 const contactHref = `/${locale}/contact/`;
@@ -125,53 +126,73 @@ const contactHref = `/${locale}/contact/`;
 </header>
 
 <script is:inline>
-  // is:inline + astro:page-load: rebinds after every view transition.
-  // Without it, the toggle button stops working once you navigate away
-  // and come back (the new DOM has no listeners attached).
-  function setupHeader() {
-    const toggle = document.querySelector('[data-mobile-toggle]');
-    const panel = document.querySelector('[data-mobile-panel]');
-    const closeBtn = document.querySelector('[data-mobile-close]');
-    const header = document.querySelector('.site-header');
+  // Event-delegation init guarded by window.__gssHeaderBound so it runs
+  // exactly once per document lifetime. Previous attempts re-bound
+  // listeners on every astro:page-load AND on initial load — the result
+  // was N listeners on the same toggle, so a tap fired open+close back
+  // to back and the panel flashed for one frame instead of staying open.
+  //
+  // With delegation we listen on `document` (which survives view
+  // transitions) and resolve the toggle/panel at event time, so
+  // swapped DOM during navigation is fine.
+  (function () {
+    if (window.__gssHeaderBound) return;
+    window.__gssHeaderBound = true;
 
-    if (toggle && panel) {
-      const open = () => {
-        toggle.setAttribute('aria-expanded', 'true');
-        panel.removeAttribute('hidden');
-        document.body.style.overflow = 'hidden';
-      };
-      const close = () => {
-        toggle.setAttribute('aria-expanded', 'false');
-        panel.setAttribute('hidden', '');
-        document.body.style.overflow = '';
-      };
-      toggle.addEventListener('click', () => {
-        const expanded = toggle.getAttribute('aria-expanded') === 'true';
-        if (expanded) close(); else open();
-      });
-      if (closeBtn) closeBtn.addEventListener('click', close);
-      // Tapping a nav link should also close the panel.
-      panel.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
-      // ESC closes the panel.
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') close();
-      });
+    function openPanel(toggle, panel) {
+      toggle.setAttribute('aria-expanded', 'true');
+      panel.removeAttribute('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+    function closePanel(toggle, panel) {
+      toggle.setAttribute('aria-expanded', 'false');
+      panel.setAttribute('hidden', '');
+      document.body.style.overflow = '';
     }
 
-    if (header) {
-      const update = () => {
-        header.dataset.scrollState = window.scrollY > 24 ? 'scrolled' : 'top';
-      };
-      update();
-      window.addEventListener('scroll', update, { passive: true });
+    document.addEventListener('click', function (e) {
+      var target = e.target;
+      if (!target || !(target instanceof Element)) return;
+
+      var toggle = document.querySelector('[data-mobile-toggle]');
+      var panel = document.querySelector('[data-mobile-panel]');
+      if (!toggle || !panel) return;
+
+      if (target.closest('[data-mobile-toggle]')) {
+        var expanded = toggle.getAttribute('aria-expanded') === 'true';
+        if (expanded) closePanel(toggle, panel);
+        else openPanel(toggle, panel);
+        return;
+      }
+      if (target.closest('[data-mobile-close]')) {
+        closePanel(toggle, panel);
+        return;
+      }
+      if (target.closest('[data-mobile-panel] a')) {
+        // Tap on a nav link inside the panel — close before navigating.
+        closePanel(toggle, panel);
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      var toggle = document.querySelector('[data-mobile-toggle]');
+      var panel = document.querySelector('[data-mobile-panel]');
+      if (toggle && panel && toggle.getAttribute('aria-expanded') === 'true') {
+        closePanel(toggle, panel);
+      }
+    });
+
+    function updateScrollState() {
+      var header = document.querySelector('.site-header');
+      if (!header) return;
+      header.dataset.scrollState = window.scrollY > 24 ? 'scrolled' : 'top';
     }
-  }
-  // Initial page load: call directly. The script sits below </header>,
-  // so the toggle DOM is already parsed. Mobile especially needs this —
-  // astro:page-load can fire before the listener is registered.
-  setupHeader();
-  // Subsequent view-transition navigations: rebind on the new DOM.
-  document.addEventListener('astro:page-load', setupHeader);
+    updateScrollState();
+    window.addEventListener('scroll', updateScrollState, { passive: true });
+    // The header DOM is swapped on view-transition — reset the data-attr.
+    document.addEventListener('astro:page-load', updateScrollState);
+  })();
 </script>
 
 <style>
