@@ -91,6 +91,7 @@ const pathSegments: Record<string, LocalisedString> = {
   actualites: { fr: 'actualites', en: 'news' },
   news: { fr: 'actualites', en: 'news' },
   contact: { fr: 'contact', en: 'contact' },
+  faq: { fr: 'faq', en: 'faq' },
   inscription: { fr: 'inscription', en: 'enrol' },
   enrol: { fr: 'inscription', en: 'enrol' },
   'mentions-legales': {

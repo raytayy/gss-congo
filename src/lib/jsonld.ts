@@ -17,7 +17,7 @@
 import { contact } from './contact';
 import { services, type Service, getServiceUrl } from './services';
 import type { Article } from './news';
-import { faqItems } from './faq';
+import { faqItems, careersFaqItems, type FaqItem } from './faq';
 
 export type Locale = 'fr' | 'en';
 
@@ -161,12 +161,12 @@ export function articleSchema(article: Article, locale: Locale, siteUrl: string,
  * rendered accordion. Covered by Premium contract §12.1 row
  * "Schema.org étendu : LocalBusiness + Service + FAQ + Review".
  */
-export function faqPageSchema(locale: Locale) {
+export function faqPageSchema(locale: Locale, items: FaqItem[] = faqItems) {
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     inLanguage: bcp47(locale),
-    mainEntity: faqItems.map((item) => ({
+    mainEntity: items.map((item) => ({
       '@type': 'Question',
       name: item.q[locale],
       acceptedAnswer: {
@@ -175,6 +175,11 @@ export function faqPageSchema(locale: Locale) {
       },
     })),
   };
+}
+
+/** Convenience: schema for the dedicated /faq/ page covering both categories. */
+export function combinedFaqPageSchema(locale: Locale) {
+  return faqPageSchema(locale, [...faqItems, ...careersFaqItems]);
 }
 
 // ─── WEBSITE ───────────────────────────────────────────────────

@@ -1,0 +1,320 @@
+---
+/*
+ * /fr/faq/ — FAQ (FR).
+ *
+ * Single FAQ page covering two categories with anchor sections:
+ *   - #services : general / services questions (faqItems)
+ *   - #carrieres : recruit-funnel questions (careersFaqItems)
+ *
+ * Both sets live in src/lib/faq.ts. JSON-LD covers both via
+ * combinedFaqPageSchema().
+ *
+ * Mirror in src/pages/en/faq/index.astro.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import NeonButton from '@components/NeonButton.astro';
+import { faqItems, careersFaqItems } from '@lib/faq';
+import { combinedFaqPageSchema } from '@lib/jsonld';
+import { contact } from '@lib/contact';
+
+const sections = [
+  {
+    id: 'services',
+    eyebrow: 'Services',
+    heading: 'Sécurité, opérations, contrat.',
+    items: faqItems,
+  },
+  {
+    id: 'carrieres',
+    eyebrow: 'Carrières',
+    heading: 'Postuler, formation, cohortes.',
+    items: careersFaqItems,
+  },
+];
+---
+
+<BaseLayout
+  title="FAQ"
+  description="Foire aux questions GSS Congo : services, délais d'intervention, déploiement, facturation, carrières, formation, salaires."
+  lang="fr"
+  altLocaleHref="/en/faq/"
+  jsonLd={combinedFaqPageSchema('fr')}
+>
+  <!-- ─── HERO ────────────────────────────────────────────────── -->
+  <section class="faq-hero" aria-labelledby="faq-hero-heading">
+    <div class="faq-hero-frame">
+      <p class="faq-eyebrow" data-reveal>Foire aux questions</p>
+      <h1 id="faq-hero-heading" class="faq-hero-title" data-reveal data-reveal-delay="120">
+        Les questions qui reviennent.
+      </h1>
+      <p class="faq-hero-sub" data-reveal data-reveal-delay="240">
+        Deux familles : ce que les clients demandent avant l'échange,
+        et ce que les candidats demandent avant de postuler.
+      </p>
+      <nav class="faq-anchors" aria-label="Sections de la FAQ" data-reveal data-reveal-delay="360">
+        {sections.map((s) => (
+          <a class="faq-anchor" href={`#${s.id}`}>{s.eyebrow}</a>
+        ))}
+      </nav>
+    </div>
+  </section>
+
+  <!-- ─── SECTIONS ────────────────────────────────────────────── -->
+  {sections.map((s) => (
+    <section class="faq-section" id={s.id} aria-labelledby={`faq-${s.id}-heading`}>
+      <div class="faq-section-frame">
+        <header class="faq-section-head">
+          <p class="faq-eyebrow" data-reveal>{s.eyebrow}</p>
+          <h2 id={`faq-${s.id}-heading`} class="faq-section-heading" data-reveal data-reveal-delay="100">
+            {s.heading}
+          </h2>
+        </header>
+        <div class="faq-list">
+          {s.items.map((item, i) => (
+            <details class="faq-item" data-reveal data-reveal-delay={String(120 + i * 70)}>
+              <summary class="faq-q">
+                <span>{item.q.fr}</span>
+                <span class="faq-icon" aria-hidden="true">+</span>
+              </summary>
+              <p class="faq-a">{item.a.fr}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <!-- ─── CTA tail ────────────────────────────────────────────── -->
+  <section class="faq-cta" aria-labelledby="faq-cta-heading">
+    <div class="faq-cta-frame">
+      <p class="faq-eyebrow faq-eyebrow-on-dark" data-reveal>Pas trouvé ?</p>
+      <h2 id="faq-cta-heading" class="faq-cta-heading" data-reveal data-reveal-delay="100">
+        Posez-nous la question directement.
+      </h2>
+      <p class="faq-cta-sub" data-reveal data-reveal-delay="200">
+        Devis, posture, calendrier de cohorte — on vous répond sous 24 h.
+      </p>
+      <div class="faq-cta-actions" data-reveal data-reveal-delay="280">
+        <NeonButton variant="solid" size="lg" href="/fr/contact/">
+          Demander un devis
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </NeonButton>
+        <a class="faq-cta-phone" href={`tel:${contact.phones.primary.tel}`}>
+          {contact.phones.primary.display}
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ─── HERO ─────────────────────────────────────────────────── */
+  .faq-hero {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    padding: clamp(7rem, 14vw, 12rem) clamp(1.5rem, 5vw, 4rem) clamp(3rem, 6vw, 5rem);
+  }
+  .faq-hero-frame { max-width: 880px; margin-inline: auto; }
+  .faq-hero-title {
+    margin: 1rem 0 1.25rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    color: var(--color-ink);
+    max-width: 14em;
+    text-wrap: balance;
+  }
+  .faq-hero-sub {
+    margin: 0 0 clamp(1.5rem, 3vw, 2rem);
+    font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+    line-height: 1.55;
+    color: var(--color-mute-on-light);
+    max-width: 40em;
+  }
+  .faq-anchors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+  }
+  .faq-anchor {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1rem;
+    font-size: 0.875rem;
+    color: var(--color-ink);
+    background: var(--color-cream-2);
+    border: 1px solid var(--color-hairline-on-light);
+    border-radius: 999px;
+    text-decoration: none;
+    transition:
+      border-color var(--duration-normal) var(--ease-out-expo),
+      color var(--duration-normal) var(--ease-out-expo);
+  }
+  .faq-anchor::before {
+    content: '#';
+    color: var(--color-bronze);
+    font-weight: 500;
+  }
+  .faq-anchor:hover {
+    border-color: var(--color-bronze);
+    color: var(--color-bronze-deep);
+  }
+
+  /* ─── SHARED CHROME ────────────────────────────────────────── */
+  .faq-eyebrow {
+    margin: 0 0 1rem;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-bronze-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .faq-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--color-bronze-deep);
+  }
+  .faq-eyebrow-on-dark { color: var(--color-bronze-warm); }
+  .faq-eyebrow-on-dark::before { background: var(--color-bronze-warm); }
+
+  /* ─── SECTIONS ─────────────────────────────────────────────── */
+  .faq-section {
+    padding: clamp(4rem, 9vw, 8rem) clamp(1.5rem, 5vw, 4rem);
+    scroll-margin-top: 4rem;
+  }
+  .faq-section:nth-of-type(odd)  { background: var(--color-cream); }
+  .faq-section:nth-of-type(even) { background: var(--color-cream-2); }
+  .faq-section-frame { max-width: 880px; margin-inline: auto; }
+  .faq-section-head { margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .faq-section-heading {
+    margin: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
+    font-size: clamp(1.75rem, 3.4vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    max-width: 18em;
+    text-wrap: balance;
+  }
+
+  /* ─── ACCORDION ────────────────────────────────────────────── */
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--color-hairline-on-light);
+  }
+  .faq-item { border-bottom: 1px solid var(--color-hairline-on-light); }
+  .faq-q {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'wght' 460;
+    font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+    line-height: 1.3;
+    color: var(--color-ink);
+    letter-spacing: -0.01em;
+  }
+  .faq-q::-webkit-details-marker { display: none; }
+  .faq-icon {
+    flex-shrink: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: 1px solid var(--color-hairline-on-light);
+    background: var(--color-cream);
+    color: var(--color-bronze-deep);
+    font-size: 1rem;
+    line-height: 1;
+    transition:
+      transform var(--duration-normal) var(--ease-out-expo),
+      background-color var(--duration-normal) var(--ease-out-expo);
+  }
+  .faq-item[open] .faq-icon {
+    transform: rotate(45deg);
+    background: var(--color-bronze);
+    color: var(--color-cream);
+    border-color: var(--color-bronze);
+  }
+  .faq-a {
+    margin: 0 0 1.25rem;
+    padding-right: 2.75rem;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--color-mute-on-light);
+    max-width: 56em;
+  }
+
+  /* ─── CTA (dark) ───────────────────────────────────────────── */
+  .faq-cta {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    padding: clamp(5rem, 12vw, 11rem) clamp(1.5rem, 5vw, 4rem);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .faq-cta::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(60% 50% at 50% 100%, oklch(40% 0.06 70 / 0.22), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .faq-cta-frame { max-width: 880px; margin-inline: auto; }
+  .faq-cta-heading {
+    margin: 1rem 0 1.25rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-cream);
+    max-width: 16em;
+    text-wrap: balance;
+  }
+  .faq-cta-sub {
+    margin: 0 0 clamp(1.5rem, 3vw, 2rem);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--color-cream);
+    opacity: 0.85;
+    max-width: 36em;
+  }
+  .faq-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    align-items: center;
+  }
+  .faq-cta-phone {
+    color: var(--color-cream);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.9375rem;
+    text-decoration: underline;
+    text-decoration-color: var(--color-bronze-warm);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    transition: color var(--duration-normal) var(--ease-out-expo);
+  }
+  .faq-cta-phone:hover { color: var(--color-bronze-warm); }
+</style>

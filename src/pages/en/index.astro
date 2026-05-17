@@ -12,10 +12,9 @@ import Manifesto from '@components/Manifesto.astro';
 import SocialActivity from '@components/SocialActivity.astro';
 import Testimonials from '@components/Testimonials.astro';
 import CareersBand from '@components/CareersBand.astro';
-import Faq from '@components/Faq.astro';
 import NeonButton from '@components/NeonButton.astro';
 import { contact, whatsappLink } from '@lib/contact';
-import { faqPageSchema, webSiteSchema } from '@lib/jsonld';
+import { webSiteSchema } from '@lib/jsonld';
 
 const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
 
@@ -32,7 +31,7 @@ const stats = [
   description="Guarde Security Services. Private security in Kinshasa since 2014. Guarding, residential and industrial security, training."
   lang="en"
   altLocaleHref="/fr/"
-  jsonLd={[webSiteSchema('en', siteUrl), faqPageSchema('en')]}
+  jsonLd={webSiteSchema('en', siteUrl)}
 >
   <Hero locale="en" />
 
@@ -52,8 +51,6 @@ const stats = [
   <SocialActivity locale="en" />
 
   <Testimonials locale="en" />
-
-  <Faq locale="en" />
 
   <CareersBand locale="en" />
 

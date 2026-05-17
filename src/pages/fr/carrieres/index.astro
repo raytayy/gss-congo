@@ -80,25 +80,6 @@ const statusLabel: Record<RoleStatus, string> = {
   waitlist: 'Liste d’attente',
 };
 
-const faqs = [
-  {
-    q: 'Quand ouvre la prochaine cohorte ?',
-    a: 'Nos promotions ouvrent par cycles, en lien avec le centre de formation. Envoyez votre dossier — nous vous indiquons la prochaine fenêtre sous 7 jours ouvrés.',
-  },
-  {
-    q: 'Faut-il une expérience préalable ?',
-    a: 'Non. Notre centre de formation prépare des candidats sans expérience préalable. L’intégrité et la rigueur priment sur l’historique.',
-  },
-  {
-    q: 'La formation est-elle payante ?',
-    a: 'La formation interne, dispensée avant déploiement, est prise en charge par GSS pour les candidats retenus en cohorte.',
-  },
-  {
-    q: 'Quel est le salaire de départ ?',
-    a: 'Le salaire varie selon le poste, la zone et la rotation. Il est communiqué à l’entretien — au-dessus du minimum sectoriel du gardiennage en RDC.',
-  },
-];
-
 const phoneTel = `tel:${contact.phones.primary.tel}`;
 const phoneDisplay = contact.phones.primary.display;
 const careersWaMessage = 'Bonjour GSS, je vous contacte depuis votre site internet. Je souhaite postuler — voici mon profil…';
@@ -177,29 +158,6 @@ const careersWaMessage = 'Bonjour GSS, je vous contacte depuis votre site intern
     </div>
   </section>
 
-  <!-- ─── FAQ ─────────────────────────────────────────────────── -->
-  <section class="cr-section cr-faq" aria-labelledby="cr-faq-heading">
-    <div class="cr-faq-frame">
-      <div class="cr-faq-head">
-        <p class="cr-eyebrow" data-reveal>FAQ</p>
-        <h2 id="cr-faq-heading" class="cr-section-heading" data-reveal data-reveal-delay="100">
-          Ce que les candidats demandent.
-        </h2>
-      </div>
-      <div class="cr-faq-list">
-        {faqs.map((f, i) => (
-          <details class="cr-faq-item" data-reveal data-reveal-delay={String(120 + i * 80)}>
-            <summary class="cr-faq-q">
-              <span>{f.q}</span>
-              <span class="cr-faq-icon" aria-hidden="true">+</span>
-            </summary>
-            <p class="cr-faq-a">{f.a}</p>
-          </details>
-        ))}
-      </div>
-    </div>
-  </section>
-
   <!-- ─── PROFIL — compact inline row ─────────────────────────── -->
   <section class="cr-section cr-profile" aria-labelledby="cr-profile-heading">
     <div class="cr-profile-frame">
@@ -209,6 +167,12 @@ const careersWaMessage = 'Bonjour GSS, je vous contacte depuis votre site intern
       </h2>
       <p class="cr-profile-sub" data-reveal data-reveal-delay="200">
         Pas négociables. Vérification d’antécédents systématique à l’entrée.
+      </p>
+      <p class="cr-profile-link" data-reveal data-reveal-delay="280">
+        <a href="/fr/faq/#carrieres">
+          Questions sur les cohortes, la formation ou le salaire ?
+          <span aria-hidden="true">→</span>
+        </a>
       </p>
     </div>
   </section>
@@ -605,66 +569,6 @@ const careersWaMessage = 'Bonjour GSS, je vous contacte depuis votre site intern
     gap: 0.75rem;
   }
 
-  /* ─── FAQ ──────────────────────────────────────────────────── */
-  .cr-faq { background: var(--color-cream-2); }
-  .cr-faq-frame { max-width: 880px; margin-inline: auto; }
-  .cr-faq-head { margin-bottom: clamp(2rem, 4vw, 3rem); }
-  .cr-faq-list {
-    display: flex;
-    flex-direction: column;
-    border-top: 1px solid var(--color-hairline-on-light);
-  }
-  .cr-faq-item {
-    border-bottom: 1px solid var(--color-hairline-on-light);
-  }
-  .cr-faq-q {
-    list-style: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1.25rem 0;
-    font-family: var(--font-display);
-    font-variation-settings: 'opsz' 32, 'wght' 460;
-    font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
-    line-height: 1.3;
-    color: var(--color-ink);
-    letter-spacing: -0.01em;
-  }
-  .cr-faq-q::-webkit-details-marker { display: none; }
-  .cr-faq-icon {
-    flex-shrink: 0;
-    width: 1.75rem;
-    height: 1.75rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 999px;
-    border: 1px solid var(--color-hairline-on-light);
-    background: var(--color-cream);
-    color: var(--color-bronze-deep);
-    font-size: 1rem;
-    line-height: 1;
-    transition:
-      transform var(--duration-normal) var(--ease-out-expo),
-      background-color var(--duration-normal) var(--ease-out-expo);
-  }
-  .cr-faq-item[open] .cr-faq-icon {
-    transform: rotate(45deg);
-    background: var(--color-bronze);
-    color: var(--color-cream);
-    border-color: var(--color-bronze);
-  }
-  .cr-faq-a {
-    margin: 0 0 1.25rem;
-    padding-right: 2.75rem;
-    font-size: 0.9375rem;
-    line-height: 1.65;
-    color: var(--color-mute-on-light);
-    max-width: 56em;
-  }
-
   /* ─── PROFIL — compact ─────────────────────────────────────── */
   .cr-profile { background: var(--color-cream); }
   .cr-profile-frame { max-width: 1080px; margin-inline: auto; }
@@ -685,6 +589,28 @@ const careersWaMessage = 'Bonjour GSS, je vous contacte depuis votre site intern
     line-height: 1.55;
     color: var(--color-mute-on-light);
     max-width: 36em;
+  }
+  .cr-profile-link {
+    margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
+    font-size: 0.9375rem;
+  }
+  .cr-profile-link a {
+    color: var(--color-bronze-deep);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--color-hairline-on-light);
+    padding-bottom: 0.15rem;
+    transition:
+      color var(--duration-normal) var(--ease-out-expo),
+      border-color var(--duration-normal) var(--ease-out-expo),
+      gap var(--duration-normal) var(--ease-out-expo);
+  }
+  .cr-profile-link a:hover {
+    color: var(--color-bronze);
+    border-color: var(--color-bronze);
+    gap: 0.75rem;
   }
 
   /* ─── CTA (dark) — form ────────────────────────────────────── */

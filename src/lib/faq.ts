@@ -1,7 +1,13 @@
 /**
  * GSS Congo — FAQ items.
- * Single source of truth for the Faq.astro component AND the FAQPage
- * schema.org JSON-LD emitted on pages that mount the Faq component.
+ *
+ * Two categories:
+ *   - faqItems          : general / services questions (response time, billing…)
+ *   - careersFaqItems   : recruit-funnel questions (cohorts, salary, training…)
+ *
+ * Both are rendered on the dedicated /faq/ page with section anchors
+ * (#services, #careers). faqItems is also reused by the Faq.astro
+ * component on the contact page and by faqPageSchema() JSON-LD.
  */
 
 export interface FaqItem {
@@ -58,6 +64,49 @@ export const faqItems: FaqItem[] = [
     a: {
       fr: 'Mensualité contractuelle, calibrée au dispositif (effectifs, postures, équipements). Aucun frais caché. Audit financier disponible sur demande pour les contrats institutionnels.',
       en: 'Contractual monthly fee, calibrated to the posture (headcount, equipment, rotations). No hidden costs. Financial audit available on request for institutional contracts.',
+    },
+  },
+];
+
+export const careersFaqItems: FaqItem[] = [
+  {
+    q: {
+      fr: 'Quand ouvre la prochaine cohorte ?',
+      en: 'When does the next cohort open?',
+    },
+    a: {
+      fr: 'Nos promotions ouvrent par cycles, en lien avec le centre de formation. Envoyez votre dossier — nous vous indiquons la prochaine fenêtre sous 7 jours ouvrés.',
+      en: 'Our cohorts open in cycles, in lock-step with the training centre. Send your application — we get back to you within 7 working days with the next window.',
+    },
+  },
+  {
+    q: {
+      fr: 'Faut-il une expérience préalable ?',
+      en: 'Do I need prior experience?',
+    },
+    a: {
+      fr: 'Non. Notre centre de formation prépare des candidats sans expérience préalable. L’intégrité et la rigueur priment sur l’historique.',
+      en: 'No. Our training centre prepares candidates with no prior experience. Integrity and rigour matter more than résumé length.',
+    },
+  },
+  {
+    q: {
+      fr: 'La formation est-elle payante ?',
+      en: 'Is the training paid?',
+    },
+    a: {
+      fr: 'La formation interne, dispensée avant déploiement, est prise en charge par GSS pour les candidats retenus en cohorte.',
+      en: 'In-house training, delivered before deployment, is covered by GSS for candidates selected into a cohort.',
+    },
+  },
+  {
+    q: {
+      fr: 'Quel est le salaire de départ ?',
+      en: 'What is the starting salary?',
+    },
+    a: {
+      fr: 'Le salaire varie selon le poste, la zone et la rotation. Il est communiqué à l’entretien — au-dessus du minimum sectoriel du gardiennage en RDC.',
+      en: 'Salary depends on the role, zone and rotation. It is shared at interview — above the DRC guarding sector minimum.',
     },
   },
 ];
