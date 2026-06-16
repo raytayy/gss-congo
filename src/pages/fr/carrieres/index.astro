@@ -15,9 +15,19 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import NeonButton from '@components/NeonButton.astro';
 import { contact, whatsappLink } from '@lib/contact';
+import { breadcrumbSchema } from '@lib/jsonld';
 
 const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
 const isConfigured = accessKey.length > 10;
+
+const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
+const breadcrumbs = breadcrumbSchema(
+  [
+    { name: 'Accueil', path: '/fr/' },
+    { name: 'Carrières', path: '/fr/carrieres/' },
+  ],
+  siteUrl,
+);
 
 type RoleStatus = 'open' | 'next' | 'waitlist';
 
@@ -90,6 +100,7 @@ const careersWaMessage = 'Bonjour GSS, je vous contacte depuis votre site intern
   description="Postes ouverts chez GSS Congo : agents de prévention, chefs de poste, maîtres-chiens, chauffeurs d’escorte, sécurité d’élite, supervision."
   lang="fr"
   altLocaleHref="/en/careers/"
+  jsonLd={breadcrumbs}
 >
   <!-- ─── HERO ────────────────────────────────────────────────── -->
   <section class="cr-hero" aria-labelledby="cr-heading">

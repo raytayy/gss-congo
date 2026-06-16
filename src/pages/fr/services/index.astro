@@ -9,6 +9,16 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import NeonButton from '@components/NeonButton.astro';
 import { services, getServiceUrl } from '@lib/services';
+import { breadcrumbSchema } from '@lib/jsonld';
+
+const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
+const breadcrumbs = breadcrumbSchema(
+  [
+    { name: 'Accueil', path: '/fr/' },
+    { name: 'Services', path: '/fr/services/' },
+  ],
+  siteUrl,
+);
 
 // Layout spans for the asymmetric mosaic
 //   Row 1: lead (8) + portrait (4)
@@ -28,10 +38,11 @@ const layout: Array<'lead' | 'portrait' | 'square' | 'banner'> = [
 ---
 
 <BaseLayout
-  title="Nos services"
+  title="Services de sécurité privée à Kinshasa"
   description="Neuf métiers de la sécurité privée à Kinshasa. Gardiennage, résidentiel, industriel, élite, escorte, parking, fumigation, vidéo surveillance, installation caméras."
   lang="fr"
   altLocaleHref="/en/services/"
+  jsonLd={breadcrumbs}
 >
   <section class="svc-hub-hero" aria-labelledby="svc-hub-heading">
     <div class="svc-hub-frame">

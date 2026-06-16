@@ -7,9 +7,19 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import NeonButton from '@components/NeonButton.astro';
 import { contact, whatsappLink } from '@lib/contact';
+import { breadcrumbSchema } from '@lib/jsonld';
 
 const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
 const isConfigured = accessKey.length > 10;
+
+const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
+const breadcrumbs = breadcrumbSchema(
+  [
+    { name: 'Home', path: '/en/' },
+    { name: 'Careers', path: '/en/careers/' },
+  ],
+  siteUrl,
+);
 
 type RoleStatus = 'open' | 'next' | 'waitlist';
 
@@ -82,6 +92,7 @@ const careersWaMessage = 'Hello GSS, I am reaching out from your website. I woul
   description="Open positions at GSS Congo: prevention agents, post chiefs, K9 handlers, escort drivers, elite security, supervision."
   lang="en"
   altLocaleHref="/fr/carrieres/"
+  jsonLd={breadcrumbs}
 >
   <!-- ─── HERO ────────────────────────────────────────────────── -->
   <section class="cr-hero" aria-labelledby="cr-heading">

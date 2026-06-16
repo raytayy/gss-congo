@@ -12,6 +12,16 @@ import NeonButton from '@components/NeonButton.astro';
 import SocialFeedLive from '@components/SocialFeedLive.tsx';
 import { fetchInstagramPosts, fetchFacebookPosts } from '@lib/social-feed';
 import { contact } from '@lib/contact';
+import { breadcrumbSchema } from '@lib/jsonld';
+
+const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
+const breadcrumbs = breadcrumbSchema(
+  [
+    { name: 'Home', path: '/en/' },
+    { name: 'News', path: '/en/news/' },
+  ],
+  siteUrl,
+);
 
 const [igPosts, fbPosts] = await Promise.all([
   fetchInstagramPosts(6),
@@ -30,6 +40,7 @@ const fbUrl = contact.social.facebook;
   description="Follow GSS Congo's daily activity in real time — patrols, training, deployments. Instagram and Facebook feed, live."
   lang="en"
   altLocaleHref="/fr/actualites/"
+  jsonLd={breadcrumbs}
 >
   <!-- ─── HERO ────────────────────────────────────────────────── -->
   <section class="ac-hero" aria-labelledby="ac-heading">
