@@ -119,8 +119,14 @@ const waMessage = 'Hello GSS, I am reaching out from your website. I would like 
         </form>
       </div>
 
-      <!-- Right: sticky direct panel -->
-      <aside class="ct-direct" aria-label="Direct channels">
+      <!-- Right: sticky direct panel — drops down on reveal, parallaxes with scroll -->
+      <aside
+        class="ct-direct"
+        aria-label="Direct channels"
+        data-reveal
+        data-reveal-delay="240"
+        style="--reveal-distance: -48px;"
+      >
         <p class="ct-eyebrow ct-eyebrow-on-dark">Faster route</p>
         <h2 class="ct-direct-title">For urgent needs.</h2>
         <p class="ct-direct-sub">We're reachable around the clock.</p>
@@ -379,7 +385,26 @@ const waMessage = 'Hello GSS, I am reaching out from your website. I would like 
     z-index: -1;
   }
   @media (min-width: 1024px) {
-    .ct-direct { position: sticky; top: 6rem; }
+    .ct-direct {
+      position: sticky;
+      top: 6rem;
+      transition:
+        opacity 1100ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 1100ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @supports (animation-timeline: view()) {
+      .ct-direct {
+        animation: ct-direct-drift linear both;
+        animation-timeline: view();
+        animation-range: cover 0% cover 90%;
+      }
+    }
+    @keyframes ct-direct-drift {
+      0%   { translate: 0 -16px; }
+      30%  { translate: 0 0; }
+      70%  { translate: 0 0; }
+      100% { translate: 0 14px; }
+    }
   }
   .ct-direct .ct-eyebrow { margin-bottom: 0.875rem; }
   .ct-direct-title {
@@ -514,5 +539,11 @@ const waMessage = 'Hello GSS, I am reaching out from your website. I would like 
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.01em;
     word-break: break-word;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    @supports (animation-timeline: view()) {
+      .ct-direct { animation: none; }
+    }
   }
 </style>

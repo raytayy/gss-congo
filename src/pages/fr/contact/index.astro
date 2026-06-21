@@ -127,8 +127,14 @@ const isConfigured = accessKey.length > 10;
         </form>
       </div>
 
-      <!-- Right: sticky direct panel -->
-      <aside class="ct-direct" aria-label="Voies directes">
+      <!-- Right: sticky direct panel — drops down on reveal, parallaxes with scroll -->
+      <aside
+        class="ct-direct"
+        aria-label="Voies directes"
+        data-reveal
+        data-reveal-delay="240"
+        style="--reveal-distance: -48px;"
+      >
         <p class="ct-eyebrow ct-eyebrow-on-dark">Plus rapide</p>
         <h2 class="ct-direct-title">Pour les besoins urgents.</h2>
         <p class="ct-direct-sub">Nous sommes joignables 24 heures sur 24.</p>
@@ -387,7 +393,36 @@ const isConfigured = accessKey.length > 10;
     z-index: -1;
   }
   @media (min-width: 1024px) {
-    .ct-direct { position: sticky; top: 6rem; }
+    .ct-direct {
+      position: sticky;
+      top: 6rem;
+      /* Hand-tuned reveal so the drop reads clearly. */
+      transition:
+        opacity 1100ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 1100ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    /* Scroll-driven micro-parallax: the inner content drifts a few px
+       as the user scrolls past the section, reinforcing the "drop slide"
+       feel beyond the one-shot entrance. Falls back gracefully where
+       animation-timeline is unsupported. */
+    @supports (animation-timeline: view()) {
+      .ct-direct {
+        animation: ct-direct-drift linear both;
+        animation-timeline: view();
+        animation-range: cover 0% cover 90%;
+      }
+    }
+    @keyframes ct-direct-drift {
+      0%   { translate: 0 -16px; }
+      30%  { translate: 0 0; }
+      70%  { translate: 0 0; }
+      100% { translate: 0 14px; }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    @supports (animation-timeline: view()) {
+      .ct-direct { animation: none; }
+    }
   }
   .ct-direct .ct-eyebrow { margin-bottom: 0.875rem; }
   .ct-direct-title {
