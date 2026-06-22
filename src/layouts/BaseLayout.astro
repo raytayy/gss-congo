@@ -187,5 +187,35 @@ const extraSchemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     <MobileActionBar locale={lang} />
 
     <CookieBanner locale={lang} />
+
+    {/* Web3Forms redirect rewrite — the redirect input is baked at
+        build time as https://gss-congo.com/<locale>/merci/, but until
+        DNS cuts over to the production host (and on Vercel previews
+        in the meantime), that URL doesn't resolve. Rewrite it on
+        submit using window.location.origin so the redirect lands on
+        the same host the user is browsing. */}
+    <script is:inline>
+      (function () {
+        function rewriteRedirects() {
+          document.querySelectorAll('form[action*="web3forms.com"]').forEach(function (form) {
+            if (form.dataset.redirectRewritten === '1') return;
+            form.dataset.redirectRewritten = '1';
+            form.addEventListener('submit', function () {
+              var input = form.querySelector('input[name="redirect"]');
+              if (!input) return;
+              try {
+                var u = new URL(input.value);
+                input.value = window.location.origin + u.pathname + u.search + u.hash;
+              } catch (e) {
+                var path = input.value.startsWith('/') ? input.value : '/' + input.value;
+                input.value = window.location.origin + path;
+              }
+            });
+          });
+        }
+        rewriteRedirects();
+        document.addEventListener('astro:page-load', rewriteRedirects);
+      })();
+    </script>
   </body>
 </html>
