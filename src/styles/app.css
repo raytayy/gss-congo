@@ -708,3 +708,16 @@ html.js [data-reveal='mask']:not([data-revealed='true']) {
     background-image: none;
   }
 }
+
+/* ─── Native <select> option panels ───────────────────────────────
+   When a <select> sits on a dark band (carrieres apply form,
+   candidate-space form), the parent's cream text colour cascades
+   into the dropdown panel's <option> elements while the native
+   panel background defaults to white — invisible text. Force
+   ink-on-cream so options are readable regardless of parent context.
+   Chrome/Edge/Firefox honour this; Safari macOS uses native menu
+   styling and may ignore but its defaults are already legible. */
+select option {
+  color: var(--color-ink);
+  background-color: var(--color-cream);
+}
