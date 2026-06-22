@@ -456,7 +456,11 @@ const copy = locale === 'fr'
     from { transform: scale(1.02); }
     to   { transform: scale(1.08); }
   }
-  @media (max-width: 767px) {
+  /* Below desktop (≤1023px), skip the video entirely — serve the
+     static poster with ken-burns motion. Saves the 8–11 MB hero
+     video download + autoplay battery cost on phones AND tablets,
+     keeps the cinematic feel via CSS animation on the poster. */
+  @media (max-width: 1023px) {
     .hero-plate { display: none; }
     .hero-plate-mobile { display: block; }
   }
