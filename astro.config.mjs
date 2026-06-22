@@ -12,6 +12,11 @@ const SITE = 'https://gss-congo.com';
 export default defineConfig({
   site: SITE,
 
+  // Apache on GoDaddy resolves /path/ → /path/index.html cleanly when every
+  // internal link ends with a slash. Forcing trailing slashes also keeps the
+  // sitemap, hreflang, and canonical URLs aligned with the actual served URLs.
+  trailingSlash: 'always',
+
   // i18n: French is the default locale, English is a mirror at /en/
   // Locked decision D2 in docs/decisions/01-decisions-log.md
   i18n: {

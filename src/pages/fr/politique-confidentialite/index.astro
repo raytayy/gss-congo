@@ -2,9 +2,22 @@
 /*
  * /fr/politique-confidentialite/ — Privacy policy (FR).
  * Mirror in src/pages/en/privacy-policy/index.astro.
+ *
+ * Breadcrumb schema is emitted inline because LegalShell does not forward
+ * a jsonLd prop to BaseLayout.
  */
 import LegalShell from '@components/LegalShell.astro';
 import { contact } from '@lib/contact';
+import { breadcrumbSchema } from '@lib/jsonld';
+
+const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
+const breadcrumbs = breadcrumbSchema(
+  [
+    { name: 'Accueil', path: '/fr/' },
+    { name: 'Politique de confidentialité', path: '/fr/politique-confidentialite/' },
+  ],
+  siteUrl,
+);
 ---
 
 <LegalShell
@@ -15,6 +28,7 @@ import { contact } from '@lib/contact';
   altLocaleHref="/en/privacy-policy/"
   lastUpdated="2026-05-06"
 >
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbs)} />
   <h2>Préambule</h2>
   <p>
     Guarde Security Services (GSS) attache une importance particulière au

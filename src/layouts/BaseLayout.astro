@@ -31,7 +31,7 @@ interface Props {
   lang?: 'fr' | 'en';
   /** Path of the current page in the OTHER locale, for hreflang. */
   altLocaleHref?: string;
-  /** Optional og:image absolute URL. Defaults to /og-default.jpg (TODO: design). */
+  /** Optional og:image absolute URL. Defaults to /og-default.jpg. */
   ogImage?: string;
   /** Optional per-page JSON-LD schema(s) appended after the global LocalBusiness. */
   jsonLd?: object | object[];
@@ -51,6 +51,16 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
 const currentPath = Astro.url.pathname;
 const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com';
 
+// hreflang URLs — all absolute. x-default points at the FR equivalent of the
+// current page (derived by swapping the locale segment) so Google routes
+// language-undeclared visitors to the default locale.
+const altLocaleURL = altLocaleHref
+  ? new URL(altLocaleHref, Astro.site).toString()
+  : null;
+const xDefaultURL = lang === 'fr'
+  ? canonicalURL
+  : (altLocaleURL ?? canonicalURL.replace(`/${lang}/`, '/fr/'));
+
 // Global LocalBusiness + page-specific schemas
 const orgSchema = localBusinessSchema(lang, siteUrl);
 const extraSchemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
@@ -61,7 +71,6 @@ const extraSchemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="generator" content={Astro.generator} />
 
     <title>{title} · GSS Congo</title>
     <meta name="description" content={description} />
@@ -70,12 +79,12 @@ const extraSchemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
     {/* Self-reference first — Google's hreflang clustering requires that
         every page lists its own version. Then the alternate locale, then
-        x-default which points at the FR canonical. */}
+        x-default which points at the FR canonical. All URLs absolute. */}
     <link rel="alternate" hreflang={lang} href={canonicalURL} />
-    {altLocaleHref && (
-      <link rel="alternate" hreflang={altLocale} href={new URL(altLocaleHref, Astro.site).toString()} />
+    {altLocaleURL && (
+      <link rel="alternate" hreflang={altLocale} href={altLocaleURL} />
     )}
-    <link rel="alternate" hreflang="x-default" href={canonicalURL.replace(`/${lang}/`, '/fr/')} />
+    <link rel="alternate" hreflang="x-default" href={xDefaultURL} />
 
     {/* Open Graph + Twitter — single source of truth for share previews. */}
     <meta property="og:type" content="website" />
@@ -98,6 +107,9 @@ const extraSchemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     {/* Favicon — official brand mark */}
     <link rel="icon" type="image/png" href="/images/logo.png" />
     <link rel="apple-touch-icon" href="/images/logo.png" />
+
+    {/* PWA manifest — written by the asset agent. */}
+    <link rel="manifest" href="/site.webmanifest" />
 
     {/* Theme colour matches ink for PWA / browser chrome */}
     <meta name="theme-color" content="#0E2E4A" />

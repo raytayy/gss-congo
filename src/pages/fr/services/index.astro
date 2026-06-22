@@ -9,7 +9,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import NeonButton from '@components/NeonButton.astro';
 import { services, getServiceUrl } from '@lib/services';
-import { breadcrumbSchema } from '@lib/jsonld';
+import { breadcrumbSchema, collectionPageSchema } from '@lib/jsonld';
 
 const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
 const breadcrumbs = breadcrumbSchema(
@@ -19,6 +19,14 @@ const breadcrumbs = breadcrumbSchema(
   ],
   siteUrl,
 );
+const collection = collectionPageSchema(
+  'fr',
+  siteUrl,
+  '/fr/services/',
+  'Nos services de sécurité',
+  'Gardiennage, sécurité résidentielle et industrielle, escorte, vidéosurveillance, formation : tous les services de GSS Congo à Kinshasa.',
+);
+const jsonLd = [breadcrumbs, collection];
 
 // Layout spans for the asymmetric mosaic
 //   Row 1: lead (8) + portrait (4)
@@ -38,11 +46,11 @@ const layout: Array<'lead' | 'portrait' | 'square' | 'banner'> = [
 ---
 
 <BaseLayout
-  title="Services de sécurité privée à Kinshasa"
-  description="Neuf métiers de la sécurité privée à Kinshasa. Gardiennage, résidentiel, industriel, élite, escorte, parking, fumigation, vidéo surveillance, installation caméras."
+  title="Nos services de sécurité"
+  description="Gardiennage, sécurité résidentielle et industrielle, escorte, vidéosurveillance, formation : tous les services de GSS Congo à Kinshasa."
   lang="fr"
   altLocaleHref="/en/services/"
-  jsonLd={breadcrumbs}
+  jsonLd={jsonLd}
 >
   <section class="svc-hub-hero" aria-labelledby="svc-hub-heading">
     <div class="svc-hub-hero-image" aria-hidden="true">

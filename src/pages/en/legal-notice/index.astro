@@ -1,9 +1,22 @@
 ---
 /*
  * /en/legal-notice/ — Legal notice (EN). Mirror of /fr/mentions-legales/.
+ *
+ * Breadcrumb schema is emitted inline because LegalShell does not forward
+ * a jsonLd prop to BaseLayout.
  */
 import LegalShell from '@components/LegalShell.astro';
 import { contact } from '@lib/contact';
+import { breadcrumbSchema } from '@lib/jsonld';
+
+const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
+const breadcrumbs = breadcrumbSchema(
+  [
+    { name: 'Home', path: '/en/' },
+    { name: 'Legal notice', path: '/en/legal-notice/' },
+  ],
+  siteUrl,
+);
 ---
 
 <LegalShell
@@ -14,6 +27,7 @@ import { contact } from '@lib/contact';
   altLocaleHref="/fr/mentions-legales/"
   lastUpdated="2026-05-06"
 >
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbs)} />
   <h2>Publisher</h2>
   <p>
     The site <strong>gss-congo.com</strong> is published by <strong>Guarde Security

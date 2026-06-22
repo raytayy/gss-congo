@@ -18,16 +18,36 @@ import NeonButton from '@components/NeonButton.astro';
 import Faq from '@components/Faq.astro';
 import { contact, whatsappLink } from '@lib/contact';
 import { services } from '@lib/services';
+import { breadcrumbSchema, contactPageSchema } from '@lib/jsonld';
 
 const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
 const isConfigured = accessKey.length > 10;
+
+const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
+const jsonLd = [
+  breadcrumbSchema(
+    [
+      { name: 'Accueil', path: '/fr/' },
+      { name: 'Contact', path: '/fr/contact/' },
+    ],
+    siteUrl,
+  ),
+  contactPageSchema(
+    'fr',
+    siteUrl,
+    '/fr/contact/',
+    'Contact & devis sécurité Kinshasa — GSS Congo',
+    'Demandez un devis sécurité à Kinshasa : gardiennage, résidentiel, industriel, vidéo. WhatsApp +243 99 666 6699, réponse sous 24h ouvrées.',
+  ),
+];
 ---
 
 <BaseLayout
-  title="Contact"
-  description="Demandez un devis détaillé pour un dispositif de sécurité sur mesure à Kinshasa. Réponse sous 24 heures."
+  title="Contact & devis sécurité Kinshasa — GSS Congo"
+  description="Demandez un devis sécurité à Kinshasa : gardiennage, résidentiel, industriel, vidéo. WhatsApp +243 99 666 6699, réponse sous 24h ouvrées."
   lang="fr"
   altLocaleHref="/en/contact/"
+  jsonLd={jsonLd}
 >
   <!-- ─── HERO ────────────────────────────────────────────────── -->
   <section class="ct-hero" aria-labelledby="ct-heading">

@@ -27,8 +27,18 @@ const siblings = [...articles.slice(articleIndex + 1), ...articles.slice(0, arti
 // SEO: NewsArticle + Breadcrumb structured data
 const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com';
 const pagePath = getArticleUrl(article, 'en');
+
+// Article section — heuristic mapping by slug, since news.ts has no category
+// field. Falls back to "News" so the schema is always populated.
+const articleSectionMap: Record<string, string> = {
+  'eleven-years-private-security-kinshasa': 'Security',
+  'securing-embassy-protocol-requirements': 'Security',
+  'becoming-gss-agent-training-path': 'Training',
+};
+const articleSectionEn = articleSectionMap[article.slug.en] ?? 'News';
+
 const jsonLd = [
-  articleSchema(article, 'en', siteUrl, pagePath),
+  { ...articleSchema(article, 'en', siteUrl, pagePath), articleSection: articleSectionEn },
   breadcrumbSchema(
     [
       { name: 'Home', path: '/en/' },
@@ -94,7 +104,7 @@ const jsonLd = [
           >
             <a class="ad-related-link" href={getArticleUrl(s, 'en')}>
               <div class="ad-related-media">
-                <img src={s.image} alt="" loading="lazy" decoding="async" />
+                <img src={s.image} alt={s.title.en} loading="lazy" decoding="async" />
                 <div class="ad-related-tone" aria-hidden="true"></div>
               </div>
               <div class="ad-related-body">

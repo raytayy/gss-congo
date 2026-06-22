@@ -298,6 +298,137 @@ export function educationalOrgSchema(locale: Locale, siteUrl: string) {
   };
 }
 
+// ─── COLLECTION / ABOUT / CONTACT / GALLERY / COURSE ───────────
+
+/**
+ * CollectionPage — for index pages that list a collection of items
+ * (services index, news index, gallery index, etc.). The page itself
+ * acts as a discovery hub for the items rendered below it; the actual
+ * item schemas (Service, NewsArticle, ImageObject…) are emitted by
+ * each listed item where appropriate.
+ */
+export function collectionPageSchema(
+  locale: Locale,
+  siteUrl: string,
+  pagePath: string,
+  name: string,
+  description: string,
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': abs(siteUrl, pagePath) + '#webpage',
+    url: abs(siteUrl, pagePath),
+    name,
+    description,
+    inLanguage: bcp47(locale),
+    isPartOf: { '@id': abs(siteUrl, '/#website') },
+    about: { '@id': ORG_ID },
+  };
+}
+
+/**
+ * Course — for individual training programmes under the training
+ * centre. No `hasCourseInstance` until the client confirms a cohort
+ * schedule; emitting fake dates would invalidate Rich Results.
+ *
+ * `provider` defaults to a reference to the organisation. Callers may
+ * pass a custom provider name (e.g. the in-house training centre) to
+ * override.
+ */
+export function courseSchema(
+  locale: Locale,
+  siteUrl: string,
+  name: string,
+  description: string,
+  courseCode: string,
+  provider?: string,
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    '@id': abs(siteUrl, `/#course-${courseCode}`),
+    name,
+    description,
+    courseCode,
+    provider: provider
+      ? {
+          '@type': 'Organization',
+          name: provider,
+          sameAs: abs(siteUrl, '/'),
+        }
+      : { '@id': ORG_ID },
+    inLanguage: bcp47(locale),
+  };
+}
+
+/** AboutPage — for /a-propos/ and /en/about/. */
+export function aboutPageSchema(
+  locale: Locale,
+  siteUrl: string,
+  pagePath: string,
+  name: string,
+  description: string,
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    '@id': abs(siteUrl, pagePath) + '#webpage',
+    url: abs(siteUrl, pagePath),
+    name,
+    description,
+    inLanguage: bcp47(locale),
+    isPartOf: { '@id': abs(siteUrl, '/#website') },
+    mainEntity: { '@id': ORG_ID },
+  };
+}
+
+/** ContactPage — for /contact/ in both locales. */
+export function contactPageSchema(
+  locale: Locale,
+  siteUrl: string,
+  pagePath: string,
+  name: string,
+  description: string,
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    '@id': abs(siteUrl, pagePath) + '#webpage',
+    url: abs(siteUrl, pagePath),
+    name,
+    description,
+    inLanguage: bcp47(locale),
+    isPartOf: { '@id': abs(siteUrl, '/#website') },
+    about: { '@id': ORG_ID },
+  };
+}
+
+/**
+ * ImageGallery — for /galerie/ and /en/gallery/. The individual
+ * ImageObject entries are rendered alongside each gallery item; this
+ * top-level schema only declares the gallery itself and its size.
+ */
+export function imageGallerySchema(
+  locale: Locale,
+  siteUrl: string,
+  pagePath: string,
+  name: string,
+  numberOfItems: number,
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ImageGallery',
+    '@id': abs(siteUrl, pagePath) + '#webpage',
+    url: abs(siteUrl, pagePath),
+    name,
+    numberOfItems,
+    inLanguage: bcp47(locale),
+    isPartOf: { '@id': abs(siteUrl, '/#website') },
+    about: { '@id': ORG_ID },
+  };
+}
+
 // ─── BREADCRUMBS ───────────────────────────────────────────────
 
 export interface BreadcrumbItem {

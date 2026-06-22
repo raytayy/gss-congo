@@ -6,21 +6,93 @@
 
 import BaseLayout from '@layouts/BaseLayout.astro';
 import NeonButton from '@components/NeonButton.astro';
-import { educationalOrgSchema } from '@lib/jsonld';
+import { educationalOrgSchema, breadcrumbSchema, courseSchema } from '@lib/jsonld';
 import { contact } from '@lib/contact';
 
 const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
 const trainingAddr = contact.addresses.training;
 const trainingMapEmbed =
   'https://www.google.com/maps?q=5151+avenue+Kasavubu+Kalamu+Kinshasa&z=16&output=embed';
+
+// Five training programmes (cursus) visible on the page — mirror those
+// declared in educationalOrgSchema(). One Course schema per programme.
+const cursus = [
+  {
+    courseCode: 'GSS-FORMATION-AGENT',
+    name: 'Prevention and security agent',
+    description: 'Common core. Legal framework, access control, posture, radio communication, conflict management.',
+  },
+  {
+    courseCode: 'GSS-FORMATION-INCENDIE',
+    name: 'Fire safety & first aid',
+    description: 'SSIAP-style modules: fire prevention, evacuation, extinguisher handling, life-saving gestures.',
+  },
+  {
+    courseCode: 'GSS-FORMATION-K9',
+    name: 'Canine handler & K9',
+    description: 'Paired work with a response dog: training, commands, behavioural reading, supervised deterrence.',
+  },
+  {
+    courseCode: 'GSS-FORMATION-CONDUITE',
+    name: 'Defensive driving & escort',
+    description: 'Route study, anticipation, driving under pressure, convoy coordination, posture in incidents.',
+  },
+  {
+    courseCode: 'GSS-FORMATION-PROTOCOLE',
+    name: 'Protocol & elite security',
+    description: 'Civilian dress, diplomatic etiquette, discreet earpiece, room reading, VIP movements.',
+  },
+];
+
+// Visible FAQ items (also emitted as FAQPage schema below).
+const faqItems = [
+  {
+    q: 'How long is the training?',
+    a: 'The "Prevention and security agent" common core runs about eight weeks, followed by specialty modules (fire, K9, defensive driving, protocol) depending on the programme chosen.',
+  },
+  {
+    q: 'Do I need a prior qualification?',
+    a: 'No specific qualification is required. We check spoken French proficiency, baseline physical condition, and the absence of a history incompatible with the role.',
+  },
+  {
+    q: 'Does the centre train agents from other companies?',
+    a: 'Yes, on request. The centre hosts trainees from other security companies, embassies and private operators for sessions calibrated to their needs.',
+  },
+  {
+    q: 'Is there certification at the end of training?',
+    a: 'Each programme ends with a practical and theoretical evaluation. Agents receive an internal GSS certificate recognised by our clients and partners.',
+  },
+];
+
+const jsonLd = [
+  educationalOrgSchema('en', siteUrl),
+  breadcrumbSchema(
+    [
+      { name: 'Home', path: '/en/' },
+      { name: 'Training centre', path: '/en/training-centre/' },
+    ],
+    siteUrl,
+  ),
+  ...cursus.map((c) => courseSchema('en', siteUrl, c.name, c.description, c.courseCode)),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: 'en-CD',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  },
+];
 ---
 
 <BaseLayout
-  title="Security agent training centre"
-  description="The GSS training centre trains our agents and, on request, those of other houses. Legal framework, fire safety, K9, defensive driving, protocol."
+  title="Security training centre in Kinshasa — GSS Congo"
+  description="GSS Congo security agent training centre in Kinshasa. Five programmes: legal framework, fire safety, K9, defensive driving, VIP protocol."
   lang="en"
   altLocaleHref="/fr/centre-de-formation/"
-  jsonLd={educationalOrgSchema('en', siteUrl)}
+  jsonLd={jsonLd}
 >
   <!-- ─── HERO ────────────────────────────────────────────────── -->
   <section class="cf-hero" aria-labelledby="cf-heading">
@@ -151,6 +223,31 @@ const trainingMapEmbed =
           allowfullscreen
         ></iframe>
       </div>
+    </div>
+  </section>
+
+  <!-- ─── FAQ — visible block ──────────────────────────────────── -->
+  <section class="cf-faq" aria-labelledby="cf-faq-heading">
+    <div class="cf-faq-frame">
+      <p class="cf-eyebrow" data-reveal>Frequently asked</p>
+      <h2 id="cf-faq-heading" class="cf-section-heading" data-reveal data-reveal-delay="120">
+        Your questions about the training.
+      </h2>
+      <ul class="cf-faq-list">
+        {faqItems.map((item, i) => (
+          <li
+            class="cf-faq-item"
+            data-reveal
+            data-reveal-delay={String(200 + i * 80)}
+            style={`--reveal-delay: ${200 + i * 80}ms;`}
+          >
+            <details class="cf-faq-details">
+              <summary class="cf-faq-question">{item.q}</summary>
+              <p class="cf-faq-answer">{item.a}</p>
+            </details>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 
@@ -419,5 +516,57 @@ const trainingMapEmbed =
     flex-wrap: wrap;
     gap: 1rem;
     align-items: center;
+  }
+
+  /* ─── FAQ ──────────────────────────────────────────────────── */
+  .cf-faq {
+    background: var(--color-cream-2);
+    color: var(--color-ink);
+    padding: clamp(5rem, 11vw, 10rem) clamp(1.5rem, 5vw, 4rem);
+    border-top: 1px solid var(--color-hairline-on-light);
+  }
+  .cf-faq-frame {
+    max-width: 920px;
+    margin-inline: auto;
+  }
+  .cf-faq-list {
+    list-style: none;
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    padding: 0;
+    border-top: 1px solid var(--color-hairline-on-light);
+  }
+  .cf-faq-item {
+    border-bottom: 1px solid var(--color-hairline-on-light);
+  }
+  .cf-faq-details { padding: 1.25rem 0; }
+  .cf-faq-question {
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 48, 'wght' 460;
+    font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+    line-height: 1.3;
+    color: var(--color-ink);
+    list-style: none;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .cf-faq-question::-webkit-details-marker { display: none; }
+  .cf-faq-question::after {
+    content: '+';
+    font-family: var(--font-body);
+    color: var(--color-bronze-deep);
+    font-size: 1.25rem;
+    line-height: 1;
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+  }
+  .cf-faq-details[open] .cf-faq-question::after { content: '−'; }
+  .cf-faq-answer {
+    margin: 0.875rem 0 0;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--color-mute-on-light);
+    max-width: 56em;
   }
 </style>

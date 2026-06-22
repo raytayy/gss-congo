@@ -18,8 +18,10 @@ export type LocalisedString = Record<Locale, string>;
 export interface Service {
   /** URL-safe slug per locale. Used in route generation. */
   slug: LocalisedString;
-  /** Display name. Short — fits in 1-2 words on a tile. */
+  /** Display name. Short — fits in 1-2 words on a tile, used as H1 on the detail page. */
   name: LocalisedString;
+  /** SEO `<title>` — keyword-led, location-anchored, ≤ 60 chars. Falls back to `name` if absent. */
+  seoTitle?: LocalisedString;
   /** One-line description for tiles. ≤ 90 chars. */
   blurb: LocalisedString;
   /** SEO meta description (130-160 chars). Falls back to blurb if absent. */
@@ -44,6 +46,10 @@ export const services: Service[] = [
   {
     slug: { fr: 'gardiennage-intervention', en: 'guarding-and-intervention' },
     name: { fr: 'Gardiennage & Intervention', en: 'Guarding & Intervention' },
+    seoTitle: {
+      fr: 'Gardiennage & Intervention à Kinshasa',
+      en: 'Guarding & Intervention in Kinshasa',
+    },
     blurb: {
       fr: 'Présence statique et mobile, équipes en intervention sous 20 minutes.',
       en: 'Static and mobile presence, response teams within 20 minutes.',
@@ -84,13 +90,17 @@ export const services: Service[] = [
   {
     slug: { fr: 'securite-residentielle', en: 'residential-security' },
     name: { fr: 'Sécurité Résidentielle', en: 'Residential Security' },
+    seoTitle: {
+      fr: 'Sécurité résidentielle à Kinshasa',
+      en: 'Residential Security in Kinshasa',
+    },
     blurb: {
       fr: 'Discrétion et constance pour résidences privées et VIP.',
       en: 'Discretion and consistency for private residences and VIPs.',
     },
     metaDescription: {
-      fr: "Protection de résidences privées et VIP à Kinshasa. Gardiens dédiés, contrôle d'accès, levée de doute, discrétion et constance dans la durée.",
-      en: 'Protection of private and VIP residences in Kinshasa. Dedicated guards, access control, doubt verification, discretion and long-term consistency.',
+      fr: "Protection de résidences privées et VIP à Kinshasa. Gardiens dédiés, contrôle d'accès, levée de doute, discrétion et constance.",
+      en: 'Protection of private and VIP residences in Kinshasa. Dedicated guards, access control, doubt verification, discretion and consistency.',
     },
     intro: {
       fr: 'Protéger un foyer ne se fait pas avec les mêmes gestes que protéger une usine. Profil bas, présence rassurante, agents formés à la confidentialité.',
@@ -124,13 +134,17 @@ export const services: Service[] = [
   {
     slug: { fr: 'securite-industrielle', en: 'industrial-security' },
     name: { fr: 'Sécurité Industrielle', en: 'Industrial Security' },
+    seoTitle: {
+      fr: 'Sécurité industrielle à Kinshasa',
+      en: 'Industrial Security in Kinshasa',
+    },
     blurb: {
       fr: 'Sites industriels, chantiers, entrepôts. Posture proportionnée au risque.',
       en: 'Industrial sites, construction, warehouses. Posture sized to risk.',
     },
     metaDescription: {
-      fr: "Sécurité industrielle pour sites, entrepôts et chantiers BTP à Kinshasa. Gardiennage, contrôle d'accès véhicules, supervision périmétrique 24/7.",
-      en: 'Industrial security for sites, warehouses and construction in Kinshasa. Guarding, vehicle access control, 24/7 perimeter supervision.',
+      fr: "Sécurité industrielle pour sites, entrepôts et chantiers BTP à Kinshasa. Gardiennage, contrôle d'accès, supervision périmétrique 24/7.",
+      en: 'Industrial security for sites, warehouses and construction sites in Kinshasa. Guarding, access control, 24/7 perimeter supervision.',
     },
     intro: {
       fr: 'Chaque site industriel a sa propre carte des risques. Nous l\'établissons avec vous, puis nous déployons un dispositif calibré : ni surdimensionné, ni insuffisant.',
@@ -164,6 +178,10 @@ export const services: Service[] = [
   {
     slug: { fr: 'securite-elite', en: 'elite-security' },
     name: { fr: 'Sécurité d\'Élite', en: 'Elite Security' },
+    seoTitle: {
+      fr: "Sécurité d'élite & VIP à Kinshasa",
+      en: 'Elite & VIP Security in Kinshasa',
+    },
     blurb: {
       fr: 'Costume-cravate, profil bas, présence sans intimidation.',
       en: 'Suited, low-profile, presence without intimidation.',
@@ -202,6 +220,10 @@ export const services: Service[] = [
   {
     slug: { fr: 'escorte-facilitation', en: 'escort-and-facilitation' },
     name: { fr: 'Escorte & Facilitation', en: 'Escort & Facilitation' },
+    seoTitle: {
+      fr: 'Escorte & facilitation à Kinshasa',
+      en: 'Escort & Facilitation in Kinshasa',
+    },
     blurb: {
       fr: 'Trajets, accueils protocolaires, déplacements sensibles.',
       en: 'Transfers, protocol receptions, sensitive movements.',
@@ -240,6 +262,10 @@ export const services: Service[] = [
   {
     slug: { fr: 'securite-parking', en: 'parking-security' },
     name: { fr: 'Sécurité Parking', en: 'Parking Security' },
+    seoTitle: {
+      fr: 'Sécurité parking à Kinshasa',
+      en: 'Parking Security in Kinshasa',
+    },
     blurb: {
       fr: 'Gestion d\'accès, surveillance et fluidité des parkings privés.',
       en: 'Access control, surveillance and flow for private car parks.',
@@ -278,6 +304,10 @@ export const services: Service[] = [
   {
     slug: { fr: 'desinsectisation-fumigation', en: 'pest-control-and-fumigation' },
     name: { fr: 'Désinsectisation / Fumigation', en: 'Pest Control / Fumigation' },
+    seoTitle: {
+      fr: 'Désinsectisation & fumigation à Kinshasa',
+      en: 'Pest Control & Fumigation in Kinshasa',
+    },
     blurb: {
       fr: 'Traitement professionnel des locaux, conformité hygiène.',
       en: 'Professional facility treatment, hygiene compliance.',
@@ -316,6 +346,10 @@ export const services: Service[] = [
   {
     slug: { fr: 'video-surveillance', en: 'video-surveillance' },
     name: { fr: 'Vidéo Surveillance', en: 'Video Surveillance' },
+    seoTitle: {
+      fr: 'Vidéosurveillance 24/7 à Kinshasa',
+      en: '24/7 Video Surveillance in Kinshasa',
+    },
     blurb: {
       fr: 'Supervision continue, archivage sécurisé, levée de doute 24/7.',
       en: 'Continuous supervision, secure archiving, 24/7 verification.',
@@ -354,6 +388,10 @@ export const services: Service[] = [
   {
     slug: { fr: 'installation-cameras', en: 'camera-installation' },
     name: { fr: 'Installation Caméras', en: 'Camera Installation' },
+    seoTitle: {
+      fr: 'Installation de caméras IP à Kinshasa',
+      en: 'IP Camera Installation in Kinshasa',
+    },
     blurb: {
       fr: 'Étude, déploiement et maintenance de systèmes caméra IP.',
       en: 'Survey, deployment and maintenance of IP camera systems.',

@@ -17,6 +17,26 @@ const { locale } = Astro.props;
 const priority = services.filter((s) => s.priority).slice(0, 3);
 const [lead, ...support] = priority;
 
+// Brief-provided alt strings, keyed by service FR slug — describes what each
+// homepage pillar image actually shows. Used to replace the previous alt=""
+// which broke WCAG 2.2 AA and starved Google Image Search.
+const pillarAlts: Record<string, { fr: string; en: string }> = {
+  'gardiennage-intervention': {
+    fr: 'Agent de gardiennage GSS en patrouille mobile à Kinshasa',
+    en: 'GSS security agent on mobile patrol in Kinshasa',
+  },
+  'securite-residentielle': {
+    fr: "Gardien GSS à l'entrée d'une résidence privée à Kinshasa",
+    en: 'GSS guard at the entrance of a private residence in Kinshasa',
+  },
+  'securite-industrielle': {
+    fr: "Agent GSS en supervision d'un site industriel à Kinshasa",
+    en: 'GSS agent supervising an industrial site in Kinshasa',
+  },
+};
+
+const altFor = (s: typeof lead): string => pillarAlts[s.slug.fr]?.[locale] ?? '';
+
 const eyebrow = locale === 'fr' ? 'Nos métiers' : 'What we do';
 const heading = locale === 'fr'
   ? '3 métiers fondateurs.'
@@ -24,7 +44,9 @@ const heading = locale === 'fr'
 const sub = locale === 'fr'
   ? '11 ans à les pratiquer à Kinshasa, calibrés site par site.'
   : '11 years practising them in Kinshasa, calibrated site by site.';
-const more = locale === 'fr' ? 'Tous les services' : 'All services';
+const more = locale === 'fr'
+  ? 'Tous nos services de sécurité à Kinshasa'
+  : 'All our security services in Kinshasa';
 const moreHref = `/${locale}/services/`;
 ---
 
@@ -41,7 +63,7 @@ const moreHref = `/${locale}/services/`;
         <a class="pillar-link pillar-lead-link" href={getServiceUrl(lead, locale)}>
           <span class="pillar-lead-index" aria-hidden="true">/ 01</span>
           <div class="pillar-lead-media">
-            <img src={lead.image} alt="" loading="lazy" decoding="async" width="960" height="720" />
+            <img src={lead.image} alt={altFor(lead)} loading="lazy" decoding="async" width="960" height="720" />
             <div class="pillar-image-tone" aria-hidden="true"></div>
           </div>
           <div class="pillar-lead-body">
@@ -61,7 +83,7 @@ const moreHref = `/${locale}/services/`;
           <li class="pillar pillar-support" data-reveal data-reveal-delay={String(220 + i * 100)}>
             <a class="pillar-link pillar-support-link" href={getServiceUrl(s, locale)}>
               <div class="pillar-support-media">
-                <img src={s.image} alt="" loading="lazy" decoding="async" width="640" height="480" />
+                <img src={s.image} alt={altFor(s)} loading="lazy" decoding="async" width="640" height="480" />
                 <div class="pillar-image-tone" aria-hidden="true"></div>
               </div>
               <div class="pillar-support-body">

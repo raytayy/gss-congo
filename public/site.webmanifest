@@ -1,0 +1,28 @@
+{
+  "name": "GSS Congo — Guarde Security Services",
+  "short_name": "GSS Congo",
+  "description": "Sécurité privée à Kinshasa depuis 2014.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0E2E4A",
+  "theme_color": "#0E2E4A",
+  "lang": "fr",
+  "dir": "ltr",
+  "categories": ["business", "security"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/logo.png",
+      "sizes": "200x220",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

@@ -9,7 +9,8 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import NeonButton from '@components/NeonButton.astro';
 import { services, getServiceUrl } from '@lib/services';
 import { contact, whatsappLink } from '@lib/contact';
-import { serviceSchema, breadcrumbSchema } from '@lib/jsonld';
+import { serviceSchema, breadcrumbSchema, faqPageSchema } from '@lib/jsonld';
+import type { FaqItem } from '@lib/faq';
 import type { GetStaticPaths } from 'astro';
 
 export const getStaticPaths = (() => {
@@ -54,7 +55,122 @@ const phoneTel = `tel:${contact.phones.primary.tel}`;
 const phoneDisplay = contact.phones.primary.display;
 const waMessage = 'Hello GSS, I am reaching out from your website. I would like to request a quote for…';
 
-// SEO: Service + Breadcrumb structured data
+// Per-service FAQ (top 3 priority services). The visible HTML and the
+// faqPageSchema mainEntity must be identical — Google penalises mismatches.
+// Keyed by EN slug.
+const serviceFaqs: Record<string, FaqItem[]> = {
+  'guarding-and-intervention': [
+    {
+      q: {
+        fr: 'En combien de temps vos équipes interviennent-elles à Kinshasa ?',
+        en: 'How quickly do your teams respond in Kinshasa?',
+      },
+      a: {
+        fr: "L'objectif opérationnel de GSS Congo est une intervention sous 20 minutes sur Kinshasa, 24h/24, grâce au maillage des sites et à un dispatching radio centralisé.",
+        en: "GSS Congo's operational target is a response under 20 minutes in Kinshasa, 24/7, thanks to a network of sites and centralised radio dispatching.",
+      },
+    },
+    {
+      q: {
+        fr: 'Vos agents de gardiennage sont-ils armés ?',
+        en: 'Are your guards armed?',
+      },
+      a: {
+        fr: 'La doctrine de GSS Congo respecte le cadre légal congolais. Le détail des dotations est précisé site par site selon le contexte du contrat et l\'analyse de risque.',
+        en: "GSS Congo's doctrine follows the Congolese legal framework. The detail of equipment is set site by site according to the contract and the risk assessment.",
+      },
+    },
+    {
+      q: {
+        fr: 'Pouvez-vous gérer un site 24h/24, 7j/7 ?',
+        en: 'Can you cover a site 24/7?',
+      },
+      a: {
+        fr: 'Oui. La couverture 24/7 est la posture par défaut de GSS Congo pour le gardiennage statique, avec rotations d\'équipes et supervision continue.',
+        en: "Yes. 24/7 coverage is GSS Congo's default posture for static guarding, with team rotations and continuous supervision.",
+      },
+    },
+    {
+      q: {
+        fr: 'Travaillez-vous en dehors de Kinshasa ?',
+        en: 'Do you work outside Kinshasa?',
+      },
+      a: {
+        fr: 'La couverture principale est Kinshasa et les régions avoisinantes. Pour d\'autres villes, GSS étudie chaque demande au cas par cas — contactez-nous via le formulaire de devis.',
+        en: 'Primary coverage is Kinshasa and surrounding regions. For other cities, GSS studies each request case by case — contact us via the quote form.',
+      },
+    },
+  ],
+  'residential-security': [
+    {
+      q: {
+        fr: 'Quels quartiers de Kinshasa couvrez-vous ?',
+        en: 'Which Kinshasa neighbourhoods do you cover?',
+      },
+      a: {
+        fr: 'Nous intervenons sur toute la commune de la Gombe et les principaux quartiers résidentiels de Kinshasa (Ma Campagne, Mont-Fleury, Binza, Limete-résidentiel, Macampagne). Demandez une étude pour les quartiers périphériques.',
+        en: 'We cover the entire Gombe commune and the main residential neighbourhoods of Kinshasa (Ma Campagne, Mont-Fleury, Binza, Limete-residential, Macampagne). Ask for a study for outlying areas.',
+      },
+    },
+    {
+      q: {
+        fr: 'Combien de gardiens dédiez-vous à une résidence ?',
+        en: 'How many guards do you assign to a residence?',
+      },
+      a: {
+        fr: "Selon le périmètre, la posture varie d'un gardien aux heures convenues à un dispositif 24/7 en trois rotations. Le dimensionnement sort de l'audit de site initial.",
+        en: 'Depending on the perimeter, the posture ranges from a single guard at scheduled hours to a 24/7 deployment across three rotations. Sizing comes from the initial site audit.',
+      },
+    },
+    {
+      q: {
+        fr: 'Vos agents sont-ils formés à la confidentialité ?',
+        en: 'Are your agents trained in confidentiality?',
+      },
+      a: {
+        fr: 'Oui. La discrétion fait partie du tronc commun de formation à notre centre interne : protocole familial, gestion des livraisons, posture face aux visiteurs et au personnel de maison.',
+        en: 'Yes. Discretion is part of the core curriculum at our in-house training centre: family protocol, delivery handling, posture with visitors and household staff.',
+      },
+    },
+  ],
+  'video-surveillance': [
+    {
+      q: {
+        fr: 'Quel est le délai de levée de doute en cas d\'alerte ?',
+        en: 'What is the doubt-verification time when an alert fires?',
+      },
+      a: {
+        fr: 'Notre centre de supervision lève le doute en moins de 90 secondes en moyenne, puis dispatche immédiatement l\'équipe d\'intervention si la situation le justifie.',
+        en: 'Our supervision centre verifies an alert in under 90 seconds on average, then immediately dispatches the response team if the situation requires it.',
+      },
+    },
+    {
+      q: {
+        fr: 'Combien de temps les enregistrements sont-ils conservés ?',
+        en: 'How long are recordings retained?',
+      },
+      a: {
+        fr: 'Archivage sécurisé sur 30 jours minimum, extensible sur demande contractuelle. Les flux sont chiffrés et stockés sur NVR redondé.',
+        en: 'Secure archiving for 30 days minimum, extendable on contractual request. Streams are encrypted and stored on a redundant NVR.',
+      },
+    },
+    {
+      q: {
+        fr: 'La supervision tourne-t-elle vraiment 24h/24 ?',
+        en: 'Does supervision really run 24/7?',
+      },
+      a: {
+        fr: 'Oui. Le centre de supervision GSS est opéré en continu, avec rotations d\'équipes et coordination directe avec les agents d\'intervention sur Kinshasa.',
+        en: "Yes. GSS's supervision centre runs continuously, with team rotations and direct coordination with the response agents in Kinshasa.",
+      },
+    },
+  ],
+};
+
+const faqs = serviceFaqs[service.slug.en];
+
+// SEO: Service + Breadcrumb (+ optional FAQ) structured data — ALL 9 services
+// emit Service schema; top 3 also emit FAQPage matching the visible block below.
 const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com';
 const jsonLd = [
   serviceSchema(service, 'en', siteUrl),
@@ -66,11 +182,12 @@ const jsonLd = [
     ],
     siteUrl,
   ),
+  ...(faqs ? [faqPageSchema('en', faqs)] : []),
 ];
 ---
 
 <BaseLayout
-  title={service.name.en}
+  title={service.seoTitle?.en ?? service.name.en}
   description={service.metaDescription?.en ?? service.blurb.en}
   lang="en"
   altLocaleHref={altLocaleHref}
@@ -80,7 +197,15 @@ const jsonLd = [
   <!-- ─── HERO ────────────────────────────────────────────────── -->
   <section class="svc-hero" aria-labelledby="svc-heading">
     <div class="svc-hero-image" aria-hidden="true">
-      <img src={service.image} alt="" loading="eager" fetchpriority="high" decoding="async" />
+      <img
+        src={service.image}
+        alt=""
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        width="2400"
+        height="1600"
+      />
       <div class="svc-hero-overlay"></div>
     </div>
     <div class="svc-hero-content">
@@ -162,6 +287,42 @@ const jsonLd = [
         <p id="svc-audience-heading" class="svc-audience-text" data-reveal data-reveal-delay="120">
           {service.audience.en}
         </p>
+      </div>
+    </section>
+  )}
+
+  <!-- ─── FAQ (top 3 services only) ──────────────────────────── -->
+  {faqs && (
+    <section class="svc-section svc-faq" aria-labelledby="svc-faq-heading">
+      <div class="svc-faq-frame">
+        <div class="svc-faq-head">
+          <p class="svc-eyebrow" data-reveal>FAQ</p>
+          <h2 id="svc-faq-heading" class="svc-section-heading" data-reveal data-reveal-delay="100">
+            What clients ask us most.
+          </h2>
+        </div>
+        <ul class="svc-faq-list">
+          {faqs.map((item, i) => (
+            <li
+              class="svc-faq-item"
+              data-reveal
+              data-reveal-delay={String(120 + i * 80)}
+              style={`--reveal-delay: ${120 + i * 80}ms;`}
+            >
+              <details class="svc-faq-details">
+                <summary class="svc-faq-question">
+                  <span class="svc-faq-q-text">{item.q.en}</span>
+                  <span class="svc-faq-q-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                </summary>
+                <p class="svc-faq-answer">{item.a.en}</p>
+              </details>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   )}
@@ -655,8 +816,59 @@ const jsonLd = [
   }
   .svc-related-link:hover .svc-related-cue svg { transform: translateX(0.25rem); }
 
+  /* ─── FAQ ──────────────────────────────────────────────────── */
+  .svc-faq { background: var(--color-cream); }
+  .svc-faq-frame {
+    max-width: 1100px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 4vw, 3rem);
+  }
+  @media (min-width: 1024px) {
+    .svc-faq-frame { grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 4.5rem; }
+  }
+  .svc-faq-head { align-self: start; }
+  .svc-faq-list { list-style: none; margin: 0; padding: 0; display: grid; }
+  .svc-faq-item { border-top: 1px solid var(--color-hairline-on-light); }
+  .svc-faq-item:last-child { border-bottom: 1px solid var(--color-hairline-on-light); }
+  .svc-faq-details { padding: 1.25rem 0; }
+  .svc-faq-question {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 1.5rem;
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 48, 'wght' 460, 'SOFT' 30;
+    font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+    line-height: 1.3;
+    color: var(--color-ink);
+    letter-spacing: -0.01em;
+  }
+  .svc-faq-question::-webkit-details-marker { display: none; }
+  .svc-faq-q-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    display: inline-grid;
+    place-items: center;
+    color: var(--color-bronze-deep);
+    transition: transform var(--duration-normal) var(--ease-out-expo);
+  }
+  .svc-faq-q-icon svg { width: 100%; height: 100%; }
+  .svc-faq-details[open] .svc-faq-q-icon { transform: rotate(180deg); }
+  .svc-faq-answer {
+    margin: 1rem 0 0;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-mute-on-light);
+    max-width: 38em;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .svc-hero-image img { animation: none; }
     .svc-related-link, .svc-related-media img { transition: none; }
+    .svc-faq-q-icon { transition: none; }
   }
 </style>

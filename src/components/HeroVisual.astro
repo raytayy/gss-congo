@@ -1,18 +1,13 @@
 ---
 /*
- * HeroVisual — composed atmospheric hero placeholder.
- * Pure CSS + inline SVG. Zero network dependency. ~2 KB.
+ * HeroVisual — composed atmospheric hero plate.
+ * Renders the supplied photograph with a filmic grain + vignette and a
+ * slow ken-burns motion on the whole composition.
  *
  * Layers (back to front):
- *   1. Deep navy gradient sky with warm "horizon" glow
- *   2. Distant haze (soft horizontal band)
- *   3. Distant Kinshasa-style skyline silhouette (SVG)
- *   4. Foreground building silhouette (SVG)
- *   5. Subtle filmic grain
- *   6. Vignette
- *
- * Animation: slow ken-burns on the whole composition.
- * Replace this component with a real <Image> when GSS delivers photography.
+ *   1. Photograph (object-fit: cover)
+ *   2. Subtle filmic grain
+ *   3. Vignette
  */
 
 interface Props {

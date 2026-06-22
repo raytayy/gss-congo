@@ -214,12 +214,12 @@ Defined in code under `src/components/`. Conventions:
 | Yes | No |
 |---|---|
 | *« Vigilance permanente, depuis Kinshasa. »* | *« Solutions de sécurité innovantes. »* |
-| *« Onze ans de présence. »* | *« Leader de la sécurité au Congo. »* |
+| *« 11 ans de présence. »* | *« Leader de la sécurité au Congo. »* |
 | *« Une autorité calme. »* | *« Soyez en sécurité avec nous ! »* |
 | *« Nos agents ne sont pas recrutés, ils sont formés. »* | *« Nos professionnels qualifiés à votre service. »* |
 
 **Banned words**: *innovative · leading · cutting-edge · premier · solutions · synergy · expertise*.
-**Welcome words**: *présence · rigueur · vigilance · discrétion · métier · onze ans*.
+**Welcome words**: *présence · rigueur · vigilance · discrétion · métier · 11 ans*.
 **Em dashes are banned** (per impeccable shared design law). Use commas, colons, semicolons, periods, parentheses.
 
 ---

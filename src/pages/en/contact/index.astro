@@ -9,17 +9,37 @@ import NeonButton from '@components/NeonButton.astro';
 import Faq from '@components/Faq.astro';
 import { contact, whatsappLink } from '@lib/contact';
 import { services } from '@lib/services';
+import { breadcrumbSchema, contactPageSchema } from '@lib/jsonld';
 
 const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
 const isConfigured = accessKey.length > 10;
 const waMessage = 'Hello GSS, I am reaching out from your website. I would like to request a quote for…';
+
+const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
+const jsonLd = [
+  breadcrumbSchema(
+    [
+      { name: 'Home', path: '/en/' },
+      { name: 'Contact', path: '/en/contact/' },
+    ],
+    siteUrl,
+  ),
+  contactPageSchema(
+    'en',
+    siteUrl,
+    '/en/contact/',
+    'Contact & security quote Kinshasa — GSS Congo',
+    'Request a security quote in Kinshasa: guarding, residential, industrial, video. WhatsApp +243 99 666 6699, response within 24 business hours.',
+  ),
+];
 ---
 
 <BaseLayout
-  title="Contact"
-  description="Request a detailed quote for a bespoke security posture in Kinshasa. Response within 24 hours."
+  title="Contact & security quote Kinshasa — GSS Congo"
+  description="Request a security quote in Kinshasa: guarding, residential, industrial, video. WhatsApp +243 99 666 6699, response within 24 business hours."
   lang="en"
   altLocaleHref="/fr/contact/"
+  jsonLd={jsonLd}
 >
   <!-- ─── HERO ────────────────────────────────────────────────── -->
   <section class="ct-hero" aria-labelledby="ct-heading">

@@ -9,6 +9,25 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import NeonButton from '@components/NeonButton.astro';
 import { contact, whatsappLink } from '@lib/contact';
+import { breadcrumbSchema, aboutPageSchema } from '@lib/jsonld';
+
+const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
+const jsonLd = [
+  breadcrumbSchema(
+    [
+      { name: 'Accueil', path: '/fr/' },
+      { name: 'À propos', path: '/fr/a-propos/' },
+    ],
+    siteUrl,
+  ),
+  aboutPageSchema(
+    'fr',
+    siteUrl,
+    '/fr/a-propos/',
+    'À propos de GSS Congo — 11 ans de sécurité à Kinshasa',
+    'Guarde Security Services, créée en 2014 à Kinshasa. 300 agents, RCCM CD/KIN/RCCM/14-B-5645, couverture 24/7 sur Kinshasa et régions avoisinantes.',
+  ),
+];
 
 const stats = [
   { display: '11', suffix: ' ans', label: 'sur le terrain', sub: 'à Kinshasa, sans interruption' },
@@ -47,10 +66,11 @@ const phoneDisplay = contact.phones.primary.display;
 ---
 
 <BaseLayout
-  title="À propos"
-  description="Guarde Security Services — 11 ans de sécurité privée à Kinshasa. Calibrer le dispositif, former les agents, rendre des comptes en clair."
+  title="À propos de GSS Congo — 11 ans de sécurité à Kinshasa"
+  description="Guarde Security Services, créée en 2014 à Kinshasa. 300 agents, RCCM CD/KIN/RCCM/14-B-5645, couverture 24/7 sur Kinshasa et régions avoisinantes."
   lang="fr"
   altLocaleHref="/en/about/"
+  jsonLd={jsonLd}
 >
   <!-- ─── HERO ────────────────────────────────────────────────── -->
   <section class="ap-hero" aria-labelledby="ap-heading">

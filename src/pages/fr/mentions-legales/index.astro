@@ -2,9 +2,23 @@
 /*
  * /fr/mentions-legales/ — Mentions légales (FR).
  * Mirror in src/pages/en/legal-notice/index.astro.
+ *
+ * Breadcrumb schema is emitted inline via <script type="application/ld+json">
+ * in the slot body because LegalShell does not forward a jsonLd prop to
+ * BaseLayout. Crawlers consume JSON-LD anywhere in the document.
  */
 import LegalShell from '@components/LegalShell.astro';
 import { contact } from '@lib/contact';
+import { breadcrumbSchema } from '@lib/jsonld';
+
+const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
+const breadcrumbs = breadcrumbSchema(
+  [
+    { name: 'Accueil', path: '/fr/' },
+    { name: 'Mentions légales', path: '/fr/mentions-legales/' },
+  ],
+  siteUrl,
+);
 ---
 
 <LegalShell
@@ -15,6 +29,7 @@ import { contact } from '@lib/contact';
   altLocaleHref="/en/legal-notice/"
   lastUpdated="2026-05-06"
 >
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbs)} />
   <h2>Éditeur du site</h2>
   <p>
     Le site <strong>gss-congo.com</strong> est édité par <strong>Guarde Security

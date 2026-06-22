@@ -11,6 +11,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import NeonButton from '@components/NeonButton.astro';
 import { contact, whatsappLink } from '@lib/contact';
+import { breadcrumbSchema, imageGallerySchema } from '@lib/jsonld';
 
 type Span = 'lead' | 'portrait' | 'square' | 'wide';
 type Category = 'gardiennage' | 'formation' | 'sites' | 'supervision' | 'atmosphere';
@@ -29,7 +30,7 @@ const photos: Media[] = [
   { src: '/images/banner1.jpg',                     caption: '11 ans de présence à Kinshasa, sans interruption.',            span: 'lead',     category: 'atmosphere' },
   { src: '/images/careers-graphique.jpg',           caption: 'Le centre de formation, en activité.',                         span: 'portrait', category: 'formation' },
   { src: '/images/services/gardiennage.jpg',        caption: 'Gardiennage. La présence, la posture.',                        span: 'square',   category: 'gardiennage' },
-  { src: '/videos/hero-placeholder.mp4',            caption: 'Patrouille périmétrique, vue de nuit.',                        span: 'wide',     category: 'gardiennage', type: 'video', poster: '/images/hero-fallback.jpg' },
+  { src: '/videos/gallery-night-patrol.mp4',        caption: 'Patrouille périmétrique, vue de nuit.',                        span: 'wide',     category: 'gardiennage', type: 'video', poster: '/images/hero-fallback.jpg' },
   { src: '/images/services/residentielle.jpg',      caption: 'Sécurité résidentielle. Discrétion absolue.',                  span: 'square',   category: 'sites' },
   { src: '/images/services/industrielle.jpg',       caption: 'Sécurité industrielle. Au plus près du flux.',                 span: 'square',   category: 'sites' },
   { src: '/images/services/elite.jpg',              caption: 'Sécurité d’élite. Tenue civile, protocole.',                   span: 'square',   category: 'gardiennage' },
@@ -52,13 +53,35 @@ const filters: Array<{ key: Category | 'all'; label: string }> = [
 
 const phoneTel = `tel:${contact.phones.primary.tel}`;
 const phoneDisplay = contact.phones.primary.display;
+
+const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
+const galleryImages = photos
+  .filter((p) => p.type !== 'video')
+  .map((p) => ({ url: p.src, caption: p.caption }));
+const jsonLd = [
+  breadcrumbSchema(
+    [
+      { name: 'Accueil', path: '/fr/' },
+      { name: 'Galerie', path: '/fr/galerie/' },
+    ],
+    siteUrl,
+  ),
+  imageGallerySchema(
+    'fr',
+    siteUrl,
+    '/fr/galerie/',
+    'Galerie — équipes et opérations GSS Congo',
+    galleryImages.length,
+  ),
+];
 ---
 
 <BaseLayout
-  title="Galerie"
-  description="Galerie photographique GSS Congo — agents en mission, centre de formation, sites industriels et résidentiels à Kinshasa."
+  title="Galerie — équipes et opérations GSS Congo"
+  description="Photos et vidéos des équipes, véhicules, formations et opérations de GSS Congo à Kinshasa. Aperçu concret du métier d'agent de sécurité."
   lang="fr"
   altLocaleHref="/en/gallery/"
+  jsonLd={jsonLd}
 >
   <!-- ─── HERO ────────────────────────────────────────────────── -->
   <section class="gl-hero" aria-labelledby="gl-heading">

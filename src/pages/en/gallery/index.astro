@@ -6,6 +6,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import NeonButton from '@components/NeonButton.astro';
 import { contact, whatsappLink } from '@lib/contact';
+import { breadcrumbSchema, imageGallerySchema } from '@lib/jsonld';
 
 type Span = 'lead' | 'portrait' | 'square' | 'wide';
 type Category = 'field' | 'training' | 'sites' | 'supervision' | 'atmosphere';
@@ -24,7 +25,7 @@ const photos: Media[] = [
   { src: '/images/banner1.jpg',                     caption: '11 years on the ground in Kinshasa, without interruption.',     span: 'lead',     category: 'atmosphere' },
   { src: '/images/careers-graphique.jpg',           caption: 'The training centre, in session.',                              span: 'portrait', category: 'training' },
   { src: '/images/services/gardiennage.jpg',        caption: 'Guarding. Presence, posture.',                                  span: 'square',   category: 'field' },
-  { src: '/videos/hero-placeholder.mp4',            caption: 'Perimeter patrol, night view.',                                 span: 'wide',     category: 'field', type: 'video', poster: '/images/hero-fallback.jpg' },
+  { src: '/videos/gallery-night-patrol.mp4',        caption: 'Perimeter patrol, night view.',                                 span: 'wide',     category: 'field', type: 'video', poster: '/images/hero-fallback.jpg' },
   { src: '/images/services/residentielle.jpg',      caption: 'Residential security. Absolute discretion.',                    span: 'square',   category: 'sites' },
   { src: '/images/services/industrielle.jpg',       caption: 'Industrial security. Close to the flow.',                       span: 'square',   category: 'sites' },
   { src: '/images/services/elite.jpg',              caption: 'Elite security. Civilian dress, protocol.',                     span: 'square',   category: 'field' },
@@ -48,13 +49,35 @@ const filters: Array<{ key: Category | 'all'; label: string }> = [
 const phoneTel = `tel:${contact.phones.primary.tel}`;
 const phoneDisplay = contact.phones.primary.display;
 const waMessage = 'Hello GSS, I am reaching out from your website. I would like to schedule a visit…';
+
+const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
+const galleryImages = photos
+  .filter((p) => p.type !== 'video')
+  .map((p) => ({ url: p.src, caption: p.caption }));
+const jsonLd = [
+  breadcrumbSchema(
+    [
+      { name: 'Home', path: '/en/' },
+      { name: 'Gallery', path: '/en/gallery/' },
+    ],
+    siteUrl,
+  ),
+  imageGallerySchema(
+    'en',
+    siteUrl,
+    '/en/gallery/',
+    'Gallery — GSS Congo teams and operations',
+    galleryImages.length,
+  ),
+];
 ---
 
 <BaseLayout
-  title="Gallery"
-  description="GSS Congo photo gallery — agents on duty, the training centre, industrial and residential sites in Kinshasa."
+  title="Gallery — GSS Congo teams and operations"
+  description="Photos and videos of GSS Congo teams, vehicles, training and operations in Kinshasa. A concrete look at private security work on the ground."
   lang="en"
   altLocaleHref="/fr/galerie/"
+  jsonLd={jsonLd}
 >
   <!-- ─── HERO ────────────────────────────────────────────────── -->
   <section class="gl-hero" aria-labelledby="gl-heading">

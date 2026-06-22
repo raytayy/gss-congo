@@ -6,7 +6,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import NeonButton from '@components/NeonButton.astro';
 import { services, getServiceUrl } from '@lib/services';
-import { breadcrumbSchema } from '@lib/jsonld';
+import { breadcrumbSchema, collectionPageSchema } from '@lib/jsonld';
 
 const layout: Array<'lead' | 'portrait' | 'square' | 'banner'> = [
   'lead', 'portrait', 'square', 'square', 'square', 'square', 'square', 'square', 'banner',
@@ -20,14 +20,22 @@ const breadcrumbs = breadcrumbSchema(
   ],
   siteUrl,
 );
+const collection = collectionPageSchema(
+  'en',
+  siteUrl,
+  '/en/services/',
+  'Our security services',
+  'Guarding, residential and industrial security, escort, video surveillance, training: every GSS Congo private-security service in Kinshasa.',
+);
+const jsonLd = [breadcrumbs, collection];
 ---
 
 <BaseLayout
-  title="Private security services in Kinshasa"
-  description="Nine private-security disciplines in Kinshasa. Guarding, residential, industrial, elite, escort, parking, fumigation, video surveillance, camera installation."
+  title="Our security services"
+  description="Guarding, residential and industrial security, escort, video surveillance, training: every GSS Congo private-security service in Kinshasa."
   lang="en"
   altLocaleHref="/fr/services/"
-  jsonLd={breadcrumbs}
+  jsonLd={jsonLd}
 >
   <section class="svc-hub-hero" aria-labelledby="svc-hub-heading">
     <div class="svc-hub-hero-image" aria-hidden="true">

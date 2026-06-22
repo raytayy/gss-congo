@@ -23,14 +23,23 @@ const heading = locale === 'fr'
 const sub = locale === 'fr'
   ? 'Le Centre de formation GSS recrute, forme et accompagne. Profil sérieux, perspective stable.'
   : 'The GSS training centre recruits, trains and supports. Serious profile, stable trajectory.';
-const ctaLabel = locale === 'fr' ? 'Voir les postes' : 'See open roles';
+// Anchor text replaces "Voir les postes" / "See open roles" — keyword-led
+// per SEO brief task I (recrutement agent de sécurité Kinshasa).
+const ctaLabel = locale === 'fr'
+  ? 'Voir les offres de recrutement à Kinshasa'
+  : 'See security agent jobs in Kinshasa';
 const ctaHref = `/${locale}/${locale === 'fr' ? 'carrieres' : 'careers'}/`;
+// Brief alt 08-image-alt-text.md → describes the graphic showing GSS staffing
+// numbers. Replaces previous alt="" (broke WCAG 2.2 AA).
+const bgAlt = locale === 'fr'
+  ? "Graphique de l'effectif GSS Congo — 300 agents formés depuis 2014 à Kinshasa"
+  : 'Chart of GSS Congo workforce — 300 trained agents since 2014 in Kinshasa';
 ---
 
 <section class="careers" aria-labelledby="careers-heading">
-  <div class="careers-bg" aria-hidden="true">
-    <img src={backgroundSrc} alt="" loading="lazy" decoding="async" />
-    <div class="careers-tone"></div>
+  <div class="careers-bg">
+    <img src={backgroundSrc} alt={bgAlt} loading="lazy" decoding="async" />
+    <div class="careers-tone" aria-hidden="true"></div>
   </div>
 
   <div class="careers-frame">

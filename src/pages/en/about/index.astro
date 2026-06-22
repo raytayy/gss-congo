@@ -8,6 +8,25 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import NeonButton from '@components/NeonButton.astro';
 import { contact, whatsappLink } from '@lib/contact';
+import { breadcrumbSchema, aboutPageSchema } from '@lib/jsonld';
+
+const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
+const jsonLd = [
+  breadcrumbSchema(
+    [
+      { name: 'Home', path: '/en/' },
+      { name: 'About', path: '/en/about/' },
+    ],
+    siteUrl,
+  ),
+  aboutPageSchema(
+    'en',
+    siteUrl,
+    '/en/about/',
+    'About GSS Congo — 11 years of security in Kinshasa',
+    'Guarde Security Services, founded in 2014 in Kinshasa. 300 trained agents, RCCM CD/KIN/RCCM/14-B-5645, 24/7 coverage across Kinshasa and surrounding regions.',
+  ),
+];
 
 const stats = [
   { display: '11', suffix: ' yrs', label: 'on the ground', sub: 'in Kinshasa, without interruption' },
@@ -47,10 +66,11 @@ const waMessage = 'Hello GSS, I am reaching out from your website. I would like 
 ---
 
 <BaseLayout
-  title="About"
-  description="Guarde Security Services — 11 years of private security in Kinshasa. Calibrate the posture, train the agents, account for things plainly."
+  title="About GSS Congo — 11 years of security in Kinshasa"
+  description="Guarde Security Services, founded in 2014 in Kinshasa. 300 trained agents, RCCM CD/KIN/RCCM/14-B-5645, 24/7 coverage across Kinshasa and surrounding regions."
   lang="en"
   altLocaleHref="/fr/a-propos/"
+  jsonLd={jsonLd}
 >
   <!-- ─── HERO ────────────────────────────────────────────────── -->
   <section class="ap-hero" aria-labelledby="ap-heading">
