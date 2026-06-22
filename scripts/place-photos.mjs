@@ -8,10 +8,12 @@ const OUT = 'public/images/';
 // Real GSS photos selected to replace AI/stock and fill empty slots.
 const jobs = [
   // Hero + share (CREATE) ---------------------------------------------------
-  { src: 'GSS (126 of 139).JPG', dest: 'hero-poster.jpg',      w: 1920, h: 1080, pos: 'attention', q: 80 }, // dusk patrol pickup + motorbike
+  // NOTE: hero-poster.jpg is owned by the hero video composition (teammate) — do not regenerate it here.
   { src: 'GSS (113 of 139).JPG', dest: 'og-default.jpg',       w: 1200, h: 630,  pos: 'attention', q: 82 }, // formation saluting
   { src: 'GSS (127 of 139).JPG', dest: 'hero-atmosphere.jpg',  w: 1280, h: 1280, pos: 'centre',    q: 80 }, // fleet line-up
-  { src: 'GSS (113 of 139).JPG', dest: 'banner1.jpg',          w: 1920, h: 1080, pos: 'centre',    q: 80 }, // formation (stats band bg)
+  { src: 'GSS (113 of 139).JPG', dest: 'banner1.jpg',          w: 1920, h: 1080, pos: 'centre',    q: 80 }, // formation (stats band bg + about hero)
+  { src: 'GSS (61 of 100).JPG',  dest: 'services-hero.jpg',    w: 1920, h: 1080, pos: 'centre',    q: 80 }, // long line-up — services hub header
+  { src: 'GSS (72 of 100).JPG',  dest: 'careers-hero.jpg',     w: 1920, h: 1080, pos: 'centre',    q: 80 }, // welcoming mixed team — careers header
 
   // Services (16:10) — replace stock/weak fits, keep gardiennage/video-surveillance/fumigation
   { src: 'GSS (81 of 100).JPG',  dest: 'services/parking.jpg',       w: 1600, h: 1000, pos: 'centre', q: 80 }, // PARKING sign + SUV at entrance

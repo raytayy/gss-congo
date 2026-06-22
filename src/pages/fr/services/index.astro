@@ -45,6 +45,10 @@ const layout: Array<'lead' | 'portrait' | 'square' | 'banner'> = [
   jsonLd={breadcrumbs}
 >
   <section class="svc-hub-hero" aria-labelledby="svc-hub-heading">
+    <div class="svc-hub-hero-image" aria-hidden="true">
+      <img src="/images/services-hero.jpg" alt="" loading="eager" fetchpriority="high" decoding="async" />
+      <div class="svc-hub-hero-overlay"></div>
+    </div>
     <div class="svc-hub-frame">
       <p class="svc-hub-eyebrow" data-reveal>Nos services</p>
       <h1 id="svc-hub-heading" class="svc-hub-heading" data-reveal data-reveal-delay="120">
@@ -124,11 +128,39 @@ const layout: Array<'lead' | 'portrait' | 'square' | 'banner'> = [
 <style>
   /* ─── HERO ───────────────────────────────────────────────────── */
   .svc-hub-hero {
-    background: var(--color-cream);
-    color: var(--color-ink);
-    padding: clamp(7rem, 14vw, 12rem) clamp(1.5rem, 5vw, 4rem) clamp(3rem, 6vw, 5rem);
+    position: relative;
+    min-height: clamp(34rem, 78vh, 46rem);
+    display: flex;
+    align-items: flex-end;
+    color: var(--color-cream);
+    overflow: hidden;
+    padding: clamp(8rem, 16vw, 14rem) clamp(1.5rem, 5vw, 4rem) clamp(3rem, 6vw, 5rem);
+    isolation: isolate;
+  }
+  .svc-hub-hero-image { position: absolute; inset: 0; z-index: -1; }
+  .svc-hub-hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 38%;
+    filter: saturate(0.88);
+    animation: svc-hub-ken-burns 26s ease-out 0.4s forwards;
+  }
+  @keyframes svc-hub-ken-burns {
+    from { transform: scale(1.02); }
+    to   { transform: scale(1.08); }
+  }
+  .svc-hub-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, oklch(8% 0.03 250 / 0.30) 0%, oklch(8% 0.03 250 / 0.55) 55%, oklch(8% 0.03 250 / 0.92) 100%),
+      radial-gradient(80% 50% at 30% 90%, oklch(40% 0.06 70 / 0.20), transparent 70%);
   }
   .svc-hub-frame {
+    position: relative;
+    z-index: 1;
+    width: 100%;
     max-width: 1280px;
     margin-inline: auto;
   }
@@ -138,7 +170,7 @@ const layout: Array<'lead' | 'portrait' | 'square' | 'banner'> = [
     font-size: 0.75rem;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--color-bronze-deep);
+    color: var(--color-bronze-warm);
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
@@ -148,7 +180,7 @@ const layout: Array<'lead' | 'portrait' | 'square' | 'banner'> = [
     display: inline-block;
     width: 2.5rem;
     height: 1px;
-    background: var(--color-bronze-deep);
+    background: var(--color-bronze-warm);
   }
   .svc-hub-heading {
     margin: 0 0 1.5rem;
@@ -157,20 +189,21 @@ const layout: Array<'lead' | 'portrait' | 'square' | 'banner'> = [
     font-size: clamp(2.75rem, 7vw, 6rem);
     line-height: 1;
     letter-spacing: -0.025em;
-    color: var(--color-ink);
+    color: var(--color-cream);
     max-width: 14em;
     text-wrap: balance;
   }
   .svc-hub-heading-accent {
     font-style: italic;
     font-variation-settings: 'opsz' 144, 'wght' 400, 'SOFT' 100;
-    color: var(--color-bronze);
+    color: var(--color-bronze-warm);
   }
   .svc-hub-sub {
     margin: 0;
     font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
     line-height: 1.55;
-    color: var(--color-mute-on-light);
+    color: var(--color-cream);
+    opacity: 0.92;
     max-width: 38em;
   }
 
@@ -443,5 +476,6 @@ const layout: Array<'lead' | 'portrait' | 'square' | 'banner'> = [
       transition: none !important;
     }
     .svc-card-link, .svc-card-media img { transition: none; }
+    .svc-hub-hero-image img { animation: none; }
   }
 </style>
