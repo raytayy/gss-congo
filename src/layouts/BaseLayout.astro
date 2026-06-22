@@ -79,10 +79,12 @@ const extraSchemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
     {/* Self-reference first — Google's hreflang clustering requires that
         every page lists its own version. Then the alternate locale, then
-        x-default which points at the FR canonical. All URLs absolute. */}
-    <link rel="alternate" hreflang={lang} href={canonicalURL} />
+        x-default which points at the FR canonical. All URLs absolute.
+        Tags are BCP-47 with the CD (DRC) region suffix to match the
+        sitemap and JSON-LD inLanguage values. */}
+    <link rel="alternate" hreflang={lang === 'fr' ? 'fr-CD' : 'en-CD'} href={canonicalURL} />
     {altLocaleURL && (
-      <link rel="alternate" hreflang={altLocale} href={altLocaleURL} />
+      <link rel="alternate" hreflang={altLocale === 'fr' ? 'fr-CD' : 'en-CD'} href={altLocaleURL} />
     )}
     <link rel="alternate" hreflang="x-default" href={xDefaultURL} />
 
