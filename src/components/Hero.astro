@@ -17,6 +17,8 @@ interface Props {
   webmSrc?: string;
   /** Poster image — shown until the video decodes; also acts as the LCP element. */
   poster?: string;
+  /** Phone/tablet still image — shown instead of the video below 1024px. */
+  mobileImage?: string;
 }
 
 const {
@@ -24,6 +26,7 @@ const {
   videoSrc = '/videos/hero.mp4',
   webmSrc = '/videos/hero.webm',
   poster = '/images/hero-poster.jpg',
+  mobileImage = '/images/hero-mobile.jpg',
 } = Astro.props;
 
 const copy = locale === 'fr'
@@ -104,12 +107,12 @@ const copy = locale === 'fr'
     </video>
     <img
       class="hero-plate-mobile"
-      src={poster}
+      src={mobileImage}
       alt=""
       fetchpriority="high"
       decoding="async"
-      width="1920"
-      height="1080"
+      width="1280"
+      height="1600"
     />
     <div class="hero-overlay-tone"></div>
     <div class="hero-overlay-vignette"></div>

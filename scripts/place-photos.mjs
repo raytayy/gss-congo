@@ -14,6 +14,7 @@ const jobs = [
   { src: 'GSS (113 of 139).JPG', dest: 'banner1.jpg',          w: 1920, h: 1080, pos: 'centre',    q: 80 }, // formation (stats band bg + about hero)
   { src: 'GSS (61 of 100).JPG',  dest: 'services-hero.jpg',    w: 1920, h: 1080, pos: 'centre',    q: 80 }, // long line-up — services hub header
   { src: 'GSS (72 of 100).JPG',  dest: 'careers-hero.jpg',     w: 1920, h: 1080, pos: 'centre',    q: 80 }, // welcoming mixed team — careers header
+  { src: 'GSS (113 of 139).JPG', dest: 'hero-mobile.jpg',      w: 1280, h: 1600, pos: 'centre',    q: 82 }, // formation saluting — phone/tablet hero still (no video on mobile)
 
   // Services (16:10) — replace stock/weak fits, keep gardiennage/video-surveillance/fumigation
   { src: 'GSS (81 of 100).JPG',  dest: 'services/parking.jpg',       w: 1600, h: 1000, pos: 'centre', q: 80 }, // PARKING sign + SUV at entrance
