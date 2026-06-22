@@ -1,3 +1,11 @@
+# Apache .htaccess — dormant fallback
+#
+# This file is the .htaccess config we would use if hosting on GoDaddy
+# cPanel/Apache. It is intentionally OUT of public/ so it is NOT served.
+# Currently the site runs on Vercel; security headers live in vercel.json.
+# Move back to public/.htaccess if hosting changes to Apache.
+#
+# ---
 # =============================================================================
 # GSS Congo — Apache configuration (GoDaddy cPanel shared hosting)
 # Astro 5 static output. Target: https://gss-congo.com
