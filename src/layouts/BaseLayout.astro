@@ -75,6 +75,10 @@ const extraSchemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     <title>{title} · GSS Congo</title>
     <meta name="description" content={description} />
 
+    {/* Google Search Console — domain ownership verification. Keep
+        permanently; GSC re-checks periodically. */}
+    <meta name="google-site-verification" content="Q27-ecvwOijKyszUvpgwb3CGTK80acOqC-rZKgTiVt0" />
+
     <link rel="canonical" href={canonicalURL} />
 
     {/* Self-reference first — Google's hreflang clustering requires that
