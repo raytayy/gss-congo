@@ -14,8 +14,8 @@ export const contact = {
   phones: {
     /** Primary number — locked by GBP registration 2026-05-17. */
     primary: {
-      display: '+243 999 880 588',
-      tel: '+243999880588',
+      display: '+243 996 666 699',
+      tel: '+243996666699',
       label: 'Standard',
     },
     /** Additional numbers from the legacy site. Status: see CDC §13 #3 — keep
@@ -23,7 +23,6 @@ export const contact = {
     alt: [
       { display: '+243 972 125 400', tel: '+243972125400' },
       { display: '+243 900 049 360', tel: '+243900049360' },
-      { display: '+243 99 666 6699',  tel: '+243996666699' },
     ],
     /** Centre de formation. */
     training: [
@@ -35,8 +34,8 @@ export const contact = {
   whatsapp: {
     /** Bound to the same line as `phones.primary` by default. If GSS has a
        dedicated WhatsApp Business number on a different line, override here. */
-    number: '+243999880588',
-    link: 'https://wa.me/243999880588',
+    number: '+243996666699',
+    link: 'https://wa.me/243996666699',
     presetMessage:
       'Bonjour GSS, je vous contacte depuis votre site internet. Je souhaite obtenir un devis pour…',
   },
@@ -45,11 +44,11 @@ export const contact = {
     hq: {
       /** Includes the commune (Gombe) to match GBP-registered address. */
       street: 'Avenue du 24 novembre, Gombe',
-      detail: 'Infinity Centre, 5ème étage',
+      detail: 'Infinity Center, 5ème étage',
       city: 'Kinshasa',
       country: 'République Démocratique du Congo',
       countryCode: 'CD',
-      mapsUrl: 'https://maps.google.com/?q=Infinity+Centre+Avenue+du+24+novembre+Gombe+Kinshasa',
+      mapsUrl: 'https://maps.google.com/?q=Infinity+Center+Avenue+du+24+novembre+Gombe+Kinshasa',
     },
     training: {
       street: '5151, avenue Kasavubu',

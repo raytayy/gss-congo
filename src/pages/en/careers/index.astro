@@ -82,8 +82,10 @@ const statusLabel: Record<RoleStatus, string> = {
   waitlist: 'Waitlist',
 };
 
-const phoneTel = `tel:${contact.phones.primary.tel}`;
-const phoneDisplay = contact.phones.primary.display;
+// Careers routes through the training centre — show its dedicated line.
+const careersPhone = contact.phones.training[1];
+const phoneTel = `tel:${careersPhone.tel}`;
+const phoneDisplay = careersPhone.display;
 const careersWaMessage = 'Hello GSS, I am reaching out from your website. I would like to apply — here is my profile…';
 ---
 
