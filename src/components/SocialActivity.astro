@@ -1,67 +1,19 @@
 ---
 /*
- * SocialActivity (Nos activités) — links to Instagram + Facebook profiles.
- * No API required: clean platform CTAs that route to the live profiles.
- * Optional highlight grid below pulls from /public/images/social/ when
- * client drops curated photos there. Empty array = grid hidden.
+ * SocialActivity (Nos activités) — profile LINK cards only.
+ * Client request (2026-06): show just the Instagram + Facebook follow
+ * links, no photo embeds and no live feed. Two clean CTA cards route to
+ * the live profiles.
  */
 
 import { contact } from '@lib/contact';
 import type { Locale } from '@lib/i18n';
-import { fetchInstagramPosts, fetchFacebookPosts, formatTimeAgo } from '@lib/social-feed';
 
 interface Props {
   locale: Locale;
 }
 
 const { locale } = Astro.props;
-
-// ─── Option A: curated embed URLs (no API, no tokens) ───────────────────
-// Paste post URLs below. Each URL renders as an official Instagram /
-// Facebook embed iframe. Empty arrays = falls through to API fetch (B),
-// then to CTA cards. Switch back to API mode by emptying these arrays.
-//
-// Instagram URL format: https://www.instagram.com/p/POST_ID/
-//   or                  https://www.instagram.com/reel/POST_ID/
-// Facebook URL format:  https://www.facebook.com/PageName/posts/POST_ID
-//   or                  https://www.facebook.com/photo/?fbid=...&set=...
-const embedUrls = {
-  /** Instagram has no official page embed — only individual post URLs. */
-  instagram: [
-    'https://www.instagram.com/p/C50V8J6Nm3A/',
-    // add more post URLs (up to 6)
-  ] as string[],
-  /** Facebook page plugin URL — shows page header + recent timeline. */
-  facebookPage: 'https://www.facebook.com/gsskinshasa/' as string | null,
-};
-const embedMode =
-  embedUrls.instagram.length > 0 || embedUrls.facebookPage !== null;
-
-// ─── Option C: live API fetch (only runs when embeds aren't provided) ───
-// Build-time, gracefully empty when token env vars are absent.
-const [igPosts, fbPosts] = embedMode
-  ? [[], []] as [Awaited<ReturnType<typeof fetchInstagramPosts>>, Awaited<ReturnType<typeof fetchFacebookPosts>>]
-  : await Promise.all([fetchInstagramPosts(6), fetchFacebookPosts(4)]);
-const liveMode = !embedMode && (igPosts.length > 0 || fbPosts.length > 0);
-
-/** Convert any IG post/reel URL to its official embed URL. */
-function instagramEmbedSrc(url: string): string {
-  return url.replace(/\/?$/, '/').replace(/\/$/, '/embed/');
-}
-/** Build an FB Page plugin iframe URL — shows page header + timeline. */
-function facebookPageSrc(url: string): string {
-  const params = new URLSearchParams({
-    href: url,
-    tabs: 'timeline',
-    width: '500',
-    height: '700',
-    small_header: 'false',
-    adapt_container_width: 'true',
-    hide_cover: 'false',
-    show_facepile: 'true',
-  });
-  return `https://www.facebook.com/plugins/page.php?${params.toString()}`;
-}
 
 interface Platform {
   name: string;
@@ -77,7 +29,7 @@ const platforms: Platform[] = [
     name: 'Instagram',
     handle: '@gsskinshasa',
     url: contact.social.instagram,
-    /** Solid color for shadows/borders. Gradient bg lives in the .ig-mark CSS class. */
+    /** Solid color for shadows/borders. Gradient bg lives in the .social-card-icon CSS. */
     brandColor: '#ee2a7b',
     follow: { fr: 'Suivre sur Instagram', en: 'Follow on Instagram' },
     // Official IG mark — rounded square + camera lens + corner dot
@@ -113,165 +65,34 @@ const externalLabel = locale === 'fr' ? '(nouvel onglet)' : '(opens in new tab)'
       <p class="social-sub">{sub}</p>
     </header>
 
-    {embedMode ? (
-      <div class="social-embeds">
-        {embedUrls.instagram.length > 0 && (
-          <div class="social-embed-block">
-            <header class="social-live-head">
-              <span class="social-live-icon ig-mark" aria-hidden="true" style={`--brand: ${platforms[0].brandColor};`}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={platforms[0].icon} />
+    <ul class="social-cards">
+      {platforms.map((p, i) => (
+        <li class="social-card" data-reveal data-reveal-delay={String(120 + i * 100)}>
+          <a
+            class="social-card-link"
+            href={p.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={`--brand: ${p.brandColor};`}
+            aria-label={`${p.follow[locale]} ${externalLabel}`}
+          >
+            <div class="social-card-head">
+              <span class="social-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={p.icon} />
               </span>
-              <span class="social-live-platform">Instagram · {platforms[0].handle}</span>
-              <a class="social-live-follow" href={platforms[0].url} target="_blank" rel="noopener noreferrer">
-                {platforms[0].follow[locale]}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                  <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </a>
-            </header>
-            <ul class="social-embed-grid social-embed-grid-ig">
-              {embedUrls.instagram.slice(0, 6).map((url, i) => (
-                <li class="social-embed-item" data-reveal data-reveal-delay={String(120 + i * 60)}>
-                  <iframe
-                    src={instagramEmbedSrc(url)}
-                    title={`Instagram post ${i + 1}`}
-                    loading="lazy"
-                    allowtransparency
-                    allowfullscreen
-                    frameborder="0"
-                    scrolling="no"
-                  ></iframe>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {embedUrls.facebookPage && (
-          <div class="social-embed-block">
-            <header class="social-live-head">
-              <span class="social-live-icon fb-mark" aria-hidden="true" style={`--brand: ${platforms[1].brandColor};`}>
-                <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" set:html={platforms[1].icon} />
-              </span>
-              <span class="social-live-platform">Facebook · {platforms[1].handle}</span>
-              <a class="social-live-follow" href={platforms[1].url} target="_blank" rel="noopener noreferrer">
-                {platforms[1].follow[locale]}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                  <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </a>
-            </header>
-
-            {embedUrls.facebookPage && (
-              <div class="social-embed-page" data-reveal>
-                <iframe
-                  src={facebookPageSrc(embedUrls.facebookPage)}
-                  title="Facebook page · GSS Kinshasa"
-                  loading="lazy"
-                  allowtransparency
-                  allowfullscreen
-                  frameborder="0"
-                  scrolling="no"
-                ></iframe>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    ) : liveMode ? (
-      <div class="social-live">
-        {igPosts.length > 0 && (
-          <div class="social-live-block">
-            <header class="social-live-head">
-              <span class="social-live-icon social-live-icon-ig" aria-hidden="true" style={`--brand: ${platforms[0].brandColor};`}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={platforms[0].icon} />
-              </span>
-              <span class="social-live-platform">Instagram · {platforms[0].handle}</span>
-              <a class="social-live-follow" href={platforms[0].url} target="_blank" rel="noopener noreferrer">
-                {platforms[0].follow[locale]}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                  <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </a>
-            </header>
-            <ul class="social-live-grid">
-              {igPosts.map((post, i) => (
-                <li class="social-post" data-reveal data-reveal-delay={String(120 + i * 60)}>
-                  <a class="social-post-link" href={post.permalink} target="_blank" rel="noopener noreferrer" aria-label={post.caption || 'Voir le post Instagram'}>
-                    <img class="social-post-image" src={post.image} alt={post.caption || ''} loading="lazy" decoding="async" />
-                    <div class="social-post-overlay" aria-hidden="true"></div>
-                    <div class="social-post-meta">
-                      {post.caption && <p class="social-post-caption">{post.caption}</p>}
-                      <span class="social-post-stamp">{formatTimeAgo(post.timestamp, locale)}</span>
-                    </div>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {fbPosts.length > 0 && (
-          <div class="social-live-block">
-            <header class="social-live-head">
-              <span class="social-live-icon social-live-icon-fb" aria-hidden="true" style={`--brand: ${platforms[1].brandColor};`}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={platforms[1].icon} />
-              </span>
-              <span class="social-live-platform">Facebook · {platforms[1].handle}</span>
-              <a class="social-live-follow" href={platforms[1].url} target="_blank" rel="noopener noreferrer">
-                {platforms[1].follow[locale]}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                  <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </a>
-            </header>
-            <ul class="social-live-grid social-live-grid-fb">
-              {fbPosts.map((post, i) => (
-                <li class="social-post" data-reveal data-reveal-delay={String(120 + i * 60)}>
-                  <a class="social-post-link" href={post.permalink} target="_blank" rel="noopener noreferrer" aria-label={post.caption || 'Voir le post Facebook'}>
-                    <img class="social-post-image" src={post.image} alt={post.caption || ''} loading="lazy" decoding="async" />
-                    <div class="social-post-overlay" aria-hidden="true"></div>
-                    <div class="social-post-meta">
-                      {post.caption && <p class="social-post-caption">{post.caption}</p>}
-                      <span class="social-post-stamp">{formatTimeAgo(post.timestamp, locale)}</span>
-                    </div>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-    ) : (
-      <ul class="social-cards">
-        {platforms.map((p, i) => (
-          <li class="social-card" data-reveal data-reveal-delay={String(120 + i * 100)}>
-            <a
-              class="social-card-link"
-              href={p.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={`--brand: ${p.brandColor};`}
-              aria-label={`${p.follow[locale]} ${externalLabel}`}
-            >
-              <div class="social-card-head">
-                <span class="social-card-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={p.icon} />
-                </span>
-                <span class="social-card-name">{p.name}</span>
-              </div>
-              <p class="social-card-handle">{p.handle}</p>
-              <span class="social-card-cta">
-                {p.follow[locale]}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                  <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    )}
+              <span class="social-card-name">{p.name}</span>
+            </div>
+            <p class="social-card-handle">{p.handle}</p>
+            <span class="social-card-cta">
+              {p.follow[locale]}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
   </div>
 </section>
 
@@ -446,185 +267,8 @@ const externalLabel = locale === 'fr' ? '(nouvel onglet)' : '(opens in new tab)'
   .social-card-link:hover .social-card-cta { gap: 0.75rem; color: var(--color-cream); }
   .social-card-link:hover .social-card-cta svg { transform: translateX(0.25rem); }
 
-  /* === OPTION A: CURATED EMBEDS === */
-  /* Side-by-side at desktop, stacked at narrow widths. */
-  .social-embeds {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(2rem, 3vw, 2.5rem);
-  }
-  @media (min-width: 1024px) {
-    .social-embeds { grid-template-columns: repeat(2, 1fr); }
-  }
-  .social-embed-block {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(1rem, 1.5vw, 1.25rem);
-    min-width: 0;
-  }
-  /* Shared frame for both IG + FB embed cards — equal sizes. */
-  .social-embed-grid,
-  .social-embed-page {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    background: var(--color-cream);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    border: 1px solid var(--color-hairline-on-dark);
-    height: clamp(28rem, 60vw, 36rem);
-  }
-  .social-embed-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-  .social-embed-item {
-    overflow: hidden;
-    height: 100%;
-  }
-  .social-embed-item iframe,
-  .social-embed-page iframe {
-    width: 100%;
-    height: 100%;
-    border: 0;
-    display: block;
-  }
-
-  /* === LIVE FEED MODE === */
-  .social-live {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(2.5rem, 5vw, 4rem);
-  }
-  .social-live-block { display: flex; flex-direction: column; gap: clamp(1rem, 2vw, 1.5rem); }
-
-  .social-live-head {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-    padding-bottom: clamp(0.75rem, 1.5vw, 1.25rem);
-    border-bottom: 1px solid var(--color-hairline-on-dark);
-  }
-  .social-live-icon {
-    display: inline-grid;
-    place-items: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: var(--radius-sm);
-    background: var(--brand);
-    color: #fff;
-    flex-shrink: 0;
-    box-shadow: 0 0 18px -8px var(--brand);
-  }
-  /* Brand-accurate icon tile backgrounds */
-  .social-live-icon.ig-mark {
+  /* Brand-accurate Instagram icon tile — gradient instead of flat brand color. */
+  .social-card:first-child .social-card-icon {
     background: linear-gradient(135deg, #fdcb52 0%, #ee2a7b 50%, #6228d7 100%);
   }
-  .social-live-icon.fb-mark {
-    background: #1877F2;
-  }
-  .social-live-icon svg { width: 1.125rem; height: 1.125rem; }
-  .social-live-platform {
-    font-family: var(--font-display);
-    font-variation-settings: 'opsz' 32, 'wght' 460;
-    font-size: clamp(1.125rem, 1.4vw, 1.3125rem);
-    color: var(--color-cream);
-    flex: 1;
-    min-width: 0;
-  }
-  .social-live-follow {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-family: var(--font-body);
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-bronze-warm);
-    text-decoration: none;
-    transition: color var(--duration-normal) var(--ease-out-expo),
-      gap var(--duration-normal) var(--ease-out-expo);
-  }
-  .social-live-follow svg { width: 0.875rem; height: 0.875rem; transition: transform var(--duration-normal) var(--ease-out-expo); }
-  .social-live-follow:hover { color: var(--color-cream); gap: 0.6rem; }
-  .social-live-follow:hover svg { transform: translateX(0.2rem); }
-
-  .social-live-grid {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: clamp(0.5rem, 1vw, 0.875rem);
-  }
-  @media (min-width: 720px) {
-    .social-live-grid { grid-template-columns: repeat(3, 1fr); }
-  }
-  @media (min-width: 1024px) {
-    .social-live-grid { grid-template-columns: repeat(6, 1fr); }
-    .social-live-grid-fb { grid-template-columns: repeat(4, 1fr); }
-  }
-
-  .social-post {
-    display: flex;
-    aspect-ratio: 1 / 1;
-  }
-  .social-post-link {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-    border-radius: var(--radius-sm);
-    background: var(--color-ink-2);
-    text-decoration: none;
-    color: var(--color-cream);
-    isolation: isolate;
-  }
-  .social-post-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform var(--duration-slow) var(--ease-out-expo),
-      filter var(--duration-slow) var(--ease-out-expo);
-    filter: saturate(0.95);
-  }
-  .social-post-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, transparent 50%, oklch(0% 0 0 / 0.78) 100%);
-    opacity: 0;
-    transition: opacity var(--duration-normal) var(--ease-out-expo);
-  }
-  .social-post-meta {
-    position: absolute;
-    inset: auto 0.875rem 0.75rem 0.875rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    transform: translateY(0.625rem);
-    opacity: 0;
-    transition:
-      opacity var(--duration-normal) var(--ease-out-expo),
-      transform var(--duration-normal) var(--ease-out-expo);
-  }
-  .social-post-caption {
-    margin: 0;
-    font-size: 0.75rem;
-    line-height: 1.4;
-    color: var(--color-cream);
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .social-post-stamp {
-    font-size: 0.625rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--color-bronze-warm);
-    font-variant-numeric: tabular-nums;
-  }
-  .social-post-link:hover .social-post-image { transform: scale(1.06); filter: saturate(1.05); }
-  .social-post-link:hover .social-post-overlay { opacity: 1; }
-  .social-post-link:hover .social-post-meta { opacity: 1; transform: translateY(0); }
 </style>
