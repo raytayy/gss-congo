@@ -31,9 +31,18 @@ export function initLenis(): Lenis | null {
   const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
   if (isTouch || respectsReducedMotion()) return null;
 
+  // Lerp mode: each frame the scroll position moves `lerp` fraction of
+  // the way toward the target (target = wherever the wheel/keyboard input
+  // has pushed us to). Feels more natural + responsive than duration mode
+  // — fast flicks decelerate smoothly, small scrolls settle fast, no
+  // queued ease sequence. 0.1 is the standard "premium studio" tuning.
+  //   0    = no smoothing (native scroll)
+  //   0.05 = very smooth, slow settle
+  //   0.1  = standard
+  //   0.15 = snappy
+  //   1    = instant (no smoothing)
   lenisInstance = new Lenis({
-    duration: 1.1,
-    easing: (t: number) => 1 - Math.pow(1 - t, 4),
+    lerp: 0.1,
     smoothWheel: true,
     wheelMultiplier: 1,
     touchMultiplier: 1,
