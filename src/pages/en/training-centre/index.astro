@@ -123,29 +123,123 @@ const jsonLd = [
     </div>
   </section>
 
-  <!-- ─── VIDEO — training centre promo ─────────────────────────── -->
-  <section class="cf-video" aria-labelledby="cf-video-heading">
-    <div class="cf-video-frame">
-      <div class="cf-video-head" data-reveal>
+  <!-- ─── VIDEO — scroll-scrub showcase (full-bleed expansion) ──── -->
+  <section class="cf-showcase" aria-labelledby="cf-video-heading" data-showcase>
+    <div class="cf-showcase-sticky">
+      <div class="cf-showcase-head">
         <p class="cf-eyebrow cf-eyebrow-on-dark">In video</p>
-        <h2 id="cf-video-heading" class="cf-video-heading">
+        <h2 id="cf-video-heading" class="cf-showcase-heading">
           The training centre, in motion.
         </h2>
       </div>
-      <div class="cf-video-player" data-reveal data-reveal-delay="160">
+      <div class="cf-showcase-media">
         <video
-          controls
-          preload="none"
+          muted
+          loop
           playsinline
+          preload="none"
           poster="/images/formation-promo-poster.jpg"
           width="640"
           height="426"
+          data-showcase-video
         >
           <source src="/videos/formation-promo.mp4" type="video/mp4" />
         </video>
+        <button
+          class="cf-showcase-sound"
+          type="button"
+          aria-label="Turn sound on"
+          data-sound-toggle
+          data-label-on="Turn sound on"
+          data-label-off="Mute sound"
+        >
+          <svg class="ico-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M11 5 6 9H3v6h3l5 4V5Z" stroke-linejoin="round" />
+            <path d="m16 9 5 6M21 9l-5 6" stroke-linecap="round" />
+          </svg>
+          <svg class="ico-sound" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M11 5 6 9H3v6h3l5 4V5Z" stroke-linejoin="round" />
+            <path d="M15.5 9.5a4 4 0 0 1 0 5M18 7a7.5 7.5 0 0 1 0 10" stroke-linecap="round" />
+          </svg>
+        </button>
       </div>
     </div>
   </section>
+
+  <script is:inline>
+    // Scroll-scrub showcase — see FR sibling for the annotated version.
+    (function () {
+      if (window.__gssShowcaseBound) return;
+      window.__gssShowcaseBound = true;
+
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var ticking = false;
+
+      function update() {
+        ticking = false;
+        var section = document.querySelector('[data-showcase]');
+        if (!section) return;
+        var rect = section.getBoundingClientRect();
+        var runway = rect.height - window.innerHeight;
+        if (runway <= 0) return;
+        var p = Math.min(1, Math.max(0, -rect.top / runway));
+        section.style.setProperty('--p', p.toFixed(4));
+      }
+
+      function onScroll() {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      }
+
+      function bindVideo() {
+        var video = document.querySelector('[data-showcase-video]');
+        if (!video || video.dataset.bound === '1') return;
+        video.dataset.bound = '1';
+
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              var pr = video.play();
+              if (pr && pr.catch) pr.catch(function () {});
+            } else {
+              video.pause();
+            }
+          });
+        }, { threshold: 0.15 });
+        io.observe(video);
+
+        var btn = document.querySelector('[data-sound-toggle]');
+        if (btn) {
+          btn.addEventListener('click', function () {
+            video.muted = !video.muted;
+            btn.classList.toggle('is-sound-on', !video.muted);
+            btn.setAttribute(
+              'aria-label',
+              video.muted
+                ? btn.dataset.labelOn || 'Turn sound on'
+                : btn.dataset.labelOff || 'Mute sound'
+            );
+          });
+        }
+      }
+
+      function init() {
+        bindVideo();
+        if (!reduced) {
+          update();
+        }
+      }
+
+      if (!reduced) {
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll, { passive: true });
+      }
+      init();
+      document.addEventListener('astro:page-load', init);
+    })();
+  </script>
 
   <!-- ─── PRACTICAL TRAINING — block 1 (image left, text right) ── -->
   <section class="cf-practical" aria-labelledby="cf-practical-heading">
@@ -593,20 +687,38 @@ const jsonLd = [
     color: var(--color-mute-on-light);
     max-width: 56em;
   }
-  /* ─── VIDEO promo (contained, native size for crisp playback) ── */
-  .cf-video {
+  /* ─── VIDEO showcase — full-bleed scroll-scrub (see FR sibling) ── */
+  .cf-showcase {
+    --p: 0;
+    --start: 0.55;
+    height: 260vh;
     background: var(--color-ink);
-    color: var(--color-cream);
-    padding: clamp(3.5rem, 9vw, 8rem) clamp(1.5rem, 5vw, 4rem);
+    position: relative;
   }
-  .cf-video-frame { max-width: 1000px; margin-inline: auto; }
-  .cf-video-head {
-    max-width: 40em;
-    margin: 0 auto clamp(1.75rem, 3.5vw, 2.75rem);
+  @media (max-width: 767px) {
+    .cf-showcase { --start: 0.86; }
+  }
+  .cf-showcase-sticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  .cf-showcase-head {
+    position: absolute;
+    top: clamp(3rem, 8vh, 5rem);
+    left: 50%;
+    transform: translateX(-50%);
     text-align: center;
+    z-index: 2;
+    width: min(90vw, 40em);
+    opacity: max(0, calc(1 - var(--p) * 2.4));
+    pointer-events: none;
   }
-  .cf-video-head .cf-eyebrow { justify-content: center; }
-  .cf-video-heading {
+  .cf-showcase-head .cf-eyebrow { justify-content: center; }
+  .cf-showcase-heading {
     margin: 0.75rem 0 0;
     font-family: var(--font-display);
     font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
@@ -616,21 +728,61 @@ const jsonLd = [
     color: var(--color-cream);
     text-wrap: balance;
   }
-  /* Cap at the video's native 640px so it never upscales (stays crisp). */
-  .cf-video-player {
-    max-width: 640px;
-    margin-inline: auto;
-    aspect-ratio: 640 / 426;
-    border-radius: var(--radius-md);
+  .cf-showcase-media {
+    position: relative;
+    width: 100vw;
+    height: 100svh;
+    transform: scale(calc(var(--start) + (1 - var(--start)) * var(--p)));
+    border-radius: calc(44px * (1 - var(--p)));
     overflow: hidden;
-    border: 1px solid var(--color-hairline-on-dark);
     background: #000;
-    box-shadow: 0 30px 60px -24px oklch(0% 0 0 / 0.6);
+    box-shadow: 0 40px 90px -30px oklch(0% 0 0 / 0.65);
+    will-change: transform;
   }
-  .cf-video-player video {
+  .cf-showcase-media video {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  .cf-showcase-sound {
+    position: absolute;
+    right: clamp(1rem, 3vw, 2rem);
+    bottom: clamp(1rem, 3vw, 2rem);
+    z-index: 3;
+    width: 3rem;
+    height: 3rem;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    border: 1px solid oklch(100% 0 0 / 0.35);
+    background: oklch(0% 0 0 / 0.45);
+    color: var(--color-cream);
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: border-color var(--duration-normal) var(--ease-out-expo),
+      background-color var(--duration-normal) var(--ease-out-expo);
+  }
+  .cf-showcase-sound:hover { border-color: var(--color-bronze-warm); }
+  .cf-showcase-sound svg { width: 1.3rem; height: 1.3rem; }
+  .cf-showcase-sound .ico-sound { display: none; }
+  .cf-showcase-sound.is-sound-on .ico-muted { display: none; }
+  .cf-showcase-sound.is-sound-on .ico-sound { display: block; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cf-showcase { height: auto; padding: clamp(3.5rem, 9vw, 8rem) clamp(1.5rem, 5vw, 4rem); }
+    .cf-showcase-sticky { position: static; height: auto; overflow: visible; display: block; }
+    .cf-showcase-head {
+      position: static; transform: none; opacity: 1;
+      margin: 0 auto clamp(1.75rem, 3.5vw, 2.75rem);
+    }
+    .cf-showcase-media {
+      width: min(90vw, 720px);
+      height: auto;
+      aspect-ratio: 640 / 426;
+      margin-inline: auto;
+      transform: none;
+      border-radius: var(--radius-md);
+    }
   }
 </style>
