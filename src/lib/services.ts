@@ -59,8 +59,8 @@ export const services: Service[] = [
       en: 'Static and mobile guarding in Kinshasa. Response teams within 20 minutes, 24/7, across industrial, commercial and residential sites.',
     },
     intro: {
-      fr: 'GSS analyse et étudie les risques et menaces de votre environnement, puis engage les moyens humains et techniques nécessaires pour un gardiennage efficace, sur mesure et selon vos besoins. Nous mettons en œuvre des moyens dédiés à la sécurisation de vos locaux pour prévenir tout risque d’intrusion, de dégradation et de vol.',
-      en: 'GSS analyses and studies the risks and threats of your environment, then deploys the human and technical means required for effective bespoke guarding. We deploy dedicated resources to secure your premises against intrusion, damage, and theft.',
+      fr: 'Société de gardiennage à Kinshasa depuis 2014, GSS analyse et étudie les risques et menaces de votre environnement, puis engage les moyens humains et techniques nécessaires pour un gardiennage efficace, sur mesure et selon vos besoins. Nous mettons en œuvre des moyens dédiés à la sécurisation de vos locaux pour prévenir tout risque d’intrusion, de dégradation et de vol.',
+      en: 'A security guard company in Kinshasa since 2014, GSS analyses and studies the risks and threats of your environment, then deploys the human and technical means required for effective bespoke guarding. We deploy dedicated resources to secure your premises against intrusion, damage, and theft.',
     },
     scope: {
       fr: [
@@ -103,8 +103,8 @@ export const services: Service[] = [
       en: 'Protection of private and VIP residences in Kinshasa. Dedicated guards, access control, doubt verification, discretion and consistency.',
     },
     intro: {
-      fr: 'Protéger un foyer ne se fait pas avec les mêmes gestes que protéger une usine. Profil bas, présence rassurante, agents formés à la confidentialité.',
-      en: 'Protecting a home does not require the same posture as protecting a factory. Low profile, reassuring presence, agents trained in discretion.',
+      fr: 'Protéger un foyer ne se fait pas avec les mêmes gestes que protéger une usine. La sécurité résidentielle à Kinshasa exige un profil bas, une présence rassurante et des agents formés à la confidentialité. GSS affecte à chaque résidence des gardiens dédiés, un contrôle des accès rigoureux et des patrouilles discrètes du périmètre — 24h/24 ou aux heures convenues.',
+      en: 'Protecting a home does not require the same posture as protecting a factory. Residential security in Kinshasa calls for a low profile, a reassuring presence and agents trained in discretion. GSS assigns each residence dedicated guards, rigorous access control and discreet perimeter patrols — around the clock or at agreed hours.',
     },
     scope: {
       fr: [
@@ -147,8 +147,8 @@ export const services: Service[] = [
       en: 'Industrial security for sites, warehouses and construction sites in Kinshasa. Guarding, access control, 24/7 perimeter supervision.',
     },
     intro: {
-      fr: 'Chaque site industriel a sa propre carte des risques. Nous l\'établissons avec vous, puis nous déployons un dispositif calibré : ni surdimensionné, ni insuffisant.',
-      en: 'Every industrial site has its own risk map. We draw it with you, then deploy a calibrated posture — neither oversized nor insufficient.',
+      fr: 'Chaque site industriel a sa propre carte des risques. Nous l\'établissons avec vous, puis nous déployons un dispositif calibré : ni surdimensionné, ni insuffisant. C\'est ainsi que GSS aborde la sécurité industrielle en RDC : audit de risques préalable, gardiennage périmétrique, contrôle d\'accès et reporting en temps réel, pour les usines, entrepôts et chantiers.',
+      en: 'Every industrial site has its own risk map. We draw it with you, then deploy a calibrated posture — neither oversized nor insufficient. This is how GSS approaches industrial security in the DRC: a prior risk audit, perimeter guarding, access control and real-time reporting, for factories, warehouses and construction sites.',
     },
     scope: {
       fr: [
@@ -359,8 +359,8 @@ export const services: Service[] = [
       en: '24/7 video supervision in Kinshasa. Secure archiving, real-time doubt verification, response dispatch. Adapted for businesses and residences.',
     },
     intro: {
-      fr: 'Les caméras ne suffisent pas. Ce qu\'il faut, c\'est une équipe qui les regarde — et qui sait quoi faire quand quelque chose change. Notre centre de supervision tourne 24h/24.',
-      en: 'Cameras alone are not enough. What you need is a team watching them — and knowing what to do when something changes. Our supervision centre runs 24/7.',
+      fr: 'Les caméras ne suffisent pas. Ce qu\'il faut, c\'est une équipe qui les regarde — et qui sait quoi faire quand quelque chose change. C\'est le principe de notre service de vidéosurveillance à Kinshasa : un centre de supervision qui tourne 24h/24, une levée de doute en temps réel et une coordination directe avec nos équipes d\'intervention.',
+      en: 'Cameras alone are not enough. What you need is a team watching them — and knowing what to do when something changes. That is the principle behind our video surveillance in Kinshasa: a supervision centre running 24/7, real-time doubt verification and direct coordination with our response teams.',
     },
     scope: {
       fr: [
@@ -401,8 +401,8 @@ export const services: Service[] = [
       en: 'Survey, installation and maintenance of IP camera systems in Kinshasa. Solutions for businesses, residences and sensitive sites, warranty included.',
     },
     intro: {
-      fr: 'Concevoir un système caméra commence par marcher le site. Choix d\'angles, gestion de la lumière, câblage discret. Puis matériel professionnel, mise en service, formation des opérateurs.',
-      en: 'Designing a camera system starts by walking the site. Angle choices, light management, discreet cabling. Then professional gear, commissioning, operator training.',
+      fr: 'Une installation de caméras de surveillance à Kinshasa commence par marcher le site : choix d\'angles, gestion de la lumière, câblage discret. GSS mène l\'étude technique, déploie du matériel professionnel — caméras IP haute définition, enregistrement sécurisé — puis assure la mise en service, la formation de vos opérateurs et la maintenance dans la durée.',
+      en: 'A CCTV installation in Kinshasa starts by walking the site: angle choices, light management, discreet cabling. GSS carries out the technical survey, deploys professional equipment — high-definition IP cameras, secured recording — then handles commissioning, operator training and long-term maintenance.',
     },
     scope: {
       fr: [

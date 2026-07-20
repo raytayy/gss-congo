@@ -3,7 +3,20 @@
   "cleanUrls": false,
   "trailingSlash": true,
   "redirects": [
-    { "source": "/", "destination": "/fr/", "permanent": false },
+    { "source": "/index.html", "destination": "/fr/", "permanent": true },
+    { "source": "/services.html", "destination": "/fr/services/", "permanent": true },
+    { "source": "/our-services.html", "destination": "/fr/services/", "permanent": true },
+    { "source": "/about.html", "destination": "/fr/a-propos/", "permanent": true },
+    { "source": "/about-us.html", "destination": "/fr/a-propos/", "permanent": true },
+    { "source": "/contact.html", "destination": "/fr/contact/", "permanent": true },
+    { "source": "/contact-us.html", "destination": "/fr/contact/", "permanent": true },
+    { "source": "/formation.html", "destination": "/fr/centre-de-formation/", "permanent": true },
+    { "source": "/training.html", "destination": "/fr/centre-de-formation/", "permanent": true },
+    { "source": "/gallery.html", "destination": "/fr/galerie/", "permanent": true },
+    { "source": "/news.html", "destination": "/fr/actualites/", "permanent": true },
+    { "source": "/careers.html", "destination": "/fr/carrieres/", "permanent": true },
+
+    { "source": "/", "destination": "/fr/", "permanent": true },
 
     { "source": "/services", "destination": "/fr/services/", "permanent": true },
     { "source": "/services/", "destination": "/fr/services/", "permanent": true },
@@ -97,7 +110,9 @@
     { "source": "/services/pest-control-and-fumigation", "destination": "/en/services/pest-control-and-fumigation/", "permanent": true },
     { "source": "/services/pest-control-and-fumigation/", "destination": "/en/services/pest-control-and-fumigation/", "permanent": true },
     { "source": "/services/camera-installation", "destination": "/en/services/camera-installation/", "permanent": true },
-    { "source": "/services/camera-installation/", "destination": "/en/services/camera-installation/", "permanent": true }
+    { "source": "/services/camera-installation/", "destination": "/en/services/camera-installation/", "permanent": true },
+
+    { "source": "/:page.html", "destination": "/fr/", "permanent": true }
   ],
   "headers": [
     {
