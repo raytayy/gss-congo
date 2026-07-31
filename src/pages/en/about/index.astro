@@ -276,7 +276,6 @@ const waMessage = 'Hello GSS, I am reaching out from your website. I would like 
     width: 100%; height: 100%;
     object-fit: cover;
     object-position: center 35%;
-    filter: saturate(0.88);
     animation: ap-ken-burns 26s ease-out 0.4s forwards;
   }
   @keyframes ap-ken-burns {
@@ -285,9 +284,7 @@ const waMessage = 'Hello GSS, I am reaching out from your website. I would like 
   }
   .ap-hero-overlay {
     position: absolute; inset: 0;
-    background:
-      linear-gradient(180deg, oklch(8% 0.03 250 / 0.30) 0%, oklch(8% 0.03 250 / 0.55) 55%, oklch(8% 0.03 250 / 0.92) 100%),
-      radial-gradient(80% 50% at 30% 90%, oklch(40% 0.06 70 / 0.20), transparent 70%);
+    background: none;
   }
   .ap-hero-content {
     position: relative;
