@@ -307,14 +307,12 @@ const layout: Array<'lead' | 'portrait' | 'square' | 'banner'> = [
     object-fit: cover;
     object-position: center;
     display: block;
-    filter: saturate(0.88) brightness(0.82);
     transition:
       transform 800ms var(--ease-out-expo),
       filter 800ms var(--ease-out-expo);
   }
   .svc-card-link:hover .svc-card-media img {
     transform: scale(1.05);
-    filter: saturate(0.98) brightness(0.88);
   }
   .svc-card-tone {
     position: absolute;

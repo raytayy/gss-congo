@@ -195,7 +195,7 @@ const jsonLd = [
   jsonLd={jsonLd}
 >
   <!-- ─── HERO ────────────────────────────────────────────────── -->
-  <section class={`svc-hero${service.heroPlain ? ' svc-hero--plain' : ''}`} aria-labelledby="svc-heading">
+  <section class="svc-hero" aria-labelledby="svc-heading">
     <div class="svc-hero-image" aria-hidden="true">
       <img
         src={service.heroImage ?? service.image}
@@ -425,7 +425,6 @@ const jsonLd = [
   .svc-hero-image img {
     width: 100%; height: 100%;
     object-fit: cover;
-    filter: saturate(0.88);
     animation: svc-ken-burns 24s ease-out 0.4s forwards;
   }
   @keyframes svc-ken-burns {
@@ -434,17 +433,7 @@ const jsonLd = [
   }
   .svc-hero-overlay {
     position: absolute; inset: 0;
-    background:
-      linear-gradient(180deg, oklch(8% 0.03 250 / 0.30) 0%, oklch(8% 0.03 250 / 0.55) 55%, oklch(8% 0.03 250 / 0.92) 100%),
-      radial-gradient(80% 50% at 30% 90%, oklch(40% 0.06 70 / 0.22), transparent 70%);
-  }
-  /* Plain mode (heroPlain): no tint, full saturation. */
-  .svc-hero--plain .svc-hero-overlay { background: none; }
-  .svc-hero--plain .svc-hero-image img { filter: none; }
-  .svc-hero--plain .svc-hero-title,
-  .svc-hero--plain .svc-hero-eyebrow,
-  .svc-hero--plain .svc-hero-blurb {
-    text-shadow: 0 1px 12px oklch(0% 0 0 / 0.55), 0 1px 3px oklch(0% 0 0 / 0.5);
+    background: none;
   }
   .svc-hero-content {
     position: relative;
@@ -454,6 +443,7 @@ const jsonLd = [
     margin-inline: auto;
   }
   .svc-hero-eyebrow {
+    text-shadow: 0 1px 12px oklch(0% 0 0 / 0.55), 0 1px 3px oklch(0% 0 0 / 0.5);
     margin: 0 0 1.5rem;
     font-family: var(--font-body);
     font-size: 0.75rem;
@@ -482,6 +472,7 @@ const jsonLd = [
   .svc-hero-num { color: var(--color-cream); font-variant-numeric: tabular-nums; }
   .svc-hero-title {
     margin: 0 0 1.5rem;
+    text-shadow: 0 1px 12px oklch(0% 0 0 / 0.55), 0 1px 3px oklch(0% 0 0 / 0.5);
     font-family: var(--font-display);
     font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 50;
     font-size: clamp(2.75rem, 7vw, 6rem);

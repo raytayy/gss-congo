@@ -44,10 +44,6 @@ export interface Service {
      `image` when absent — lets a service show a square-ish tile on
      the hub mosaic but a wide banner on its own page. */
   heroImage?: string;
-  /** When true, the detail hero renders the image plain — no dark
-     gradient overlay, no desaturation. For banners whose art
-     direction should not be tinted. */
-  heroPlain?: boolean;
 }
 
 export const services: Service[] = [
@@ -393,7 +389,6 @@ export const services: Service[] = [
     icon: 'Video',
     image: '/images/services/video-surveillance.jpg',
     heroImage: '/images/services/video-surveillance-hero.jpg',
-    heroPlain: true,
   },
   {
     slug: { fr: 'installation-cameras', en: 'camera-installation' },
