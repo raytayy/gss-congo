@@ -11,8 +11,9 @@ import { contact, whatsappLink } from '@lib/contact';
 const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
 const isConfigured = accessKey.length > 10;
 
-const phoneTel = `tel:${contact.phones.primary.tel}`;
-const phoneDisplay = contact.phones.primary.display;
+// Candidates route through the centre de formation line.
+const phoneTel = `tel:${contact.phones.training[0].tel}`;
+const phoneDisplay = contact.phones.training[0].display;
 const waMessage = 'Hello GSS, I am reaching out from your website. I would like to enrol in the training centre…';
 ---
 
