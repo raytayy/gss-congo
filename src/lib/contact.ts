@@ -37,7 +37,7 @@ export const contact = {
     number: '+243996666699',
     link: 'https://wa.me/243996666699',
     presetMessage:
-      'Bonjour GSS, je vous contacte depuis votre site internet. Je souhaite obtenir un devis pour…',
+      'Bonjour GSS, je vous contacte depuis votre site gss-congo.com. Je souhaite obtenir un devis. Merci de me recontacter.',
   },
 
   addresses: {
