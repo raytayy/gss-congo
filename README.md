@@ -2,10 +2,6 @@
 
 Site web institutionnel de **Guarde Security Services** (GSS Congo) — société de gardiennage et de sécurité privée à Kinshasa, RDC.
 
-> **Statut :** scaffold initial — Phase 4 démarrée le 2026-05-02.
-> **Cible mise en production :** 2026-06-03.
-> **Source de vérité projet :** [`docs/EXECUTION_PLAN.md`](docs/EXECUTION_PLAN.md)
-
 ---
 
 ## Stack technique
@@ -23,9 +19,7 @@ Site web institutionnel de **Guarde Security Services** (GSS Congo) — sociét�
 | Analytics | Cloudflare Web Analytics + GA4 (consenti) | B11/B12 |
 | Typographie | Fraunces + Inter (variables, self-hosted) | C4/C5/C6 |
 
-Voir [`docs/decisions/01-decisions-log.md`](docs/decisions/01-decisions-log.md) pour le détail.
 
----
 
 ## Démarrage rapide
 
@@ -88,30 +82,10 @@ gss-congo/
 
 ---
 
-## Phase actuelle
 
-**Phase 4 — Frontend build** (15-24 mai 2026 selon le plan ; démarré tôt le 2026-05-02 sur instruction client).
-
-Prochaines étapes :
-- [ ] Bibliothèque de composants (`src/components/`) : Button, Input, Tile, Nav, Footer, ServicesBento, KpiStrip, Quote, MethodPin
-- [ ] Header avec mega-panel services + switch langue
-- [ ] Footer 4 colonnes + microcopie légale
-- [ ] Pages services × 9 (template MDX-driven)
-- [ ] À propos · Centre de formation · Carrières · Actualités · Contact
-- [ ] Forms (Web3Forms) + CV upload (R2 via Worker)
-- [ ] JSON-LD LocalBusiness + Service + FAQPage + Review
-- [ ] Mirror EN
-- [ ] Photographie (en attente de Bechir)
 
 ---
 
-## Liens utiles
-
-- Plan complet : [`docs/EXECUTION_PLAN.md`](docs/EXECUTION_PLAN.md)
-- Décisions : [`docs/decisions/01-decisions-log.md`](docs/decisions/01-decisions-log.md)
-- Brand tokens : [`design/BRAND.md`](design/BRAND.md)
-- Concurrence : [`docs/research/competitive-teardown.md`](docs/research/competitive-teardown.md)
-- Comm client : [`docs/client-comms/`](docs/client-comms/)
 
 ---
 
