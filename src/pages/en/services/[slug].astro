@@ -220,6 +220,17 @@ const jsonLd = [
       {service.intro && (
         <p class="svc-hero-intro" data-reveal data-reveal-delay="240">{service.intro.en}</p>
       )}
+      <div class="svc-hero-actions" data-reveal data-reveal-delay="360">
+        <NeonButton variant="solid" size="lg" href={`/en/contact/?service=${encodeURIComponent(service.name.en)}`}>
+          Request a quote
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </NeonButton>
+        <a class="svc-hero-wa" href={whatsappLink(waMessage)} target="_blank" rel="noopener noreferrer">
+          WhatsApp
+        </a>
+      </div>
     </div>
   </section>
 
@@ -431,6 +442,24 @@ const jsonLd = [
     from { transform: scale(1.02); }
     to   { transform: scale(1.08); }
   }
+  .svc-hero-actions {
+    margin-top: clamp(1.5rem, 2.5vw, 2rem);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+  }
+  .svc-hero-wa {
+    color: var(--color-cream);
+    font-size: 0.9375rem;
+    text-decoration: none;
+    border-bottom: 1px solid oklch(100% 0 0 / 0.35);
+    padding-bottom: 0.15rem;
+    text-shadow: 0 1px 8px oklch(0% 0 0 / 0.5);
+    transition: color var(--duration-normal) var(--ease-out-expo),
+      border-color var(--duration-normal) var(--ease-out-expo);
+  }
+  .svc-hero-wa:hover { color: var(--color-bronze-warm); border-color: var(--color-bronze-warm); }
   .svc-hero-overlay {
     position: absolute; inset: 0;
     background: none;

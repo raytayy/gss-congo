@@ -229,6 +229,28 @@ const jsonLd = [
   </section>
 
   <Faq locale="fr" />
+
+  <script is:inline>
+    // Preselect the service from ?service= (set by the per-service
+    // "Demander un devis" hero buttons). Mirrors the careers ?role=
+    // preselect pattern. Rebinds after view transitions.
+    (function () {
+      function preselectService() {
+        var select = document.querySelector('select[name="service"]');
+        if (!select) return;
+        var wanted = new URLSearchParams(window.location.search).get('service');
+        if (!wanted) return;
+        for (var i = 0; i < select.options.length; i++) {
+          if (select.options[i].value === wanted) {
+            select.value = wanted;
+            return;
+          }
+        }
+      }
+      preselectService();
+      document.addEventListener('astro:page-load', preselectService);
+    })();
+  </script>
 </BaseLayout>
 
 <style>
