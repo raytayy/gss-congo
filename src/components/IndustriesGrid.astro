@@ -165,7 +165,7 @@ const sub = locale === 'fr'
     position: relative;
     flex-shrink: 0;
     width: clamp(22rem, 32vw, 30rem);   /* 352 – 480px */
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 3 / 2;
     border-radius: var(--radius-md);
     overflow: hidden;
     background: var(--color-ink);
@@ -192,7 +192,6 @@ const sub = locale === 'fr'
     object-fit: cover;
     object-position: center;
     display: block;
-    filter: saturate(0.86) brightness(0.78);
     transition:
       transform 900ms var(--ease-out-expo),
       filter 900ms var(--ease-out-expo);
@@ -201,7 +200,6 @@ const sub = locale === 'fr'
   @media (hover: hover) {
     .sector-tile:hover .sector-tile-image {
       transform: scale(1.04);
-      filter: saturate(0.95) brightness(0.86);
     }
   }
 
