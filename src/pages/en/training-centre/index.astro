@@ -134,34 +134,15 @@ const jsonLd = [
       </div>
       <div class="cf-showcase-media">
         <video
-          muted
-          loop
+          controls
           playsinline
           preload="none"
           poster="/images/formation-promo-poster.jpg"
           width="640"
           height="426"
-          data-showcase-video
         >
           <source src="/videos/formation-promo.mp4" type="video/mp4" />
         </video>
-        <button
-          class="cf-showcase-sound"
-          type="button"
-          aria-label="Turn sound on"
-          data-sound-toggle
-          data-label-on="Turn sound on"
-          data-label-off="Mute sound"
-        >
-          <svg class="ico-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-            <path d="M11 5 6 9H3v6h3l5 4V5Z" stroke-linejoin="round" />
-            <path d="m16 9 5 6M21 9l-5 6" stroke-linecap="round" />
-          </svg>
-          <svg class="ico-sound" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-            <path d="M11 5 6 9H3v6h3l5 4V5Z" stroke-linejoin="round" />
-            <path d="M15.5 9.5a4 4 0 0 1 0 5M18 7a7.5 7.5 0 0 1 0 10" stroke-linecap="round" />
-          </svg>
-        </button>
       </div>
     </div>
   </section>
@@ -193,57 +174,8 @@ const jsonLd = [
         }
       }
 
-      function bindVideo() {
-        var video = document.querySelector('[data-showcase-video]');
-        if (!video || video.dataset.bound === '1') return;
-        video.dataset.bound = '1';
-
-        var media = video.closest('.cf-showcase-media');
-        function markState() {
-          if (media) media.classList.toggle('is-paused', video.paused);
-        }
-        video.addEventListener('play', markState);
-        video.addEventListener('pause', markState);
-
-        function tryPlay() {
-          var pr = video.play();
-          if (pr && pr.catch) pr.catch(function () { markState(); });
-        }
-
-        var io = new IntersectionObserver(function (entries) {
-          entries.forEach(function (e) {
-            if (e.isIntersecting) {
-              tryPlay();
-            } else {
-              video.pause();
-            }
-          });
-        }, { threshold: 0.15 });
-        io.observe(video);
-
-        video.addEventListener('click', function () {
-          if (video.paused) tryPlay();
-          else video.pause();
-        });
-        markState();
-
-        var btn = document.querySelector('[data-sound-toggle]');
-        if (btn) {
-          btn.addEventListener('click', function () {
-            video.muted = !video.muted;
-            btn.classList.toggle('is-sound-on', !video.muted);
-            btn.setAttribute(
-              'aria-label',
-              video.muted
-                ? btn.dataset.labelOn || 'Turn sound on'
-                : btn.dataset.labelOff || 'Mute sound'
-            );
-          });
-        }
-      }
 
       function init() {
-        bindVideo();
         if (!reduced) {
           update();
         }
@@ -746,7 +678,7 @@ const jsonLd = [
     position: relative;
     width: 100vw;
     height: 100svh;
-    transform: scale(calc(var(--start) + (1 - var(--start)) * var(--p)));
+    transform: translateY(calc(9svh * (1 - var(--p)))) scale(calc(var(--start) + (1 - var(--start)) * var(--p)));
     border-radius: calc(44px * (1 - var(--p)));
     overflow: hidden;
     background: #000;
@@ -758,48 +690,7 @@ const jsonLd = [
     width: 100%;
     height: 100%;
     object-fit: cover;
-    cursor: pointer;
   }
-  /* Play badge when paused (autoplay refused or user-paused). */
-  .cf-showcase-media.is-paused::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    margin: auto;
-    width: 5rem;
-    height: 5rem;
-    border-radius: 999px;
-    background:
-      oklch(0% 0 0 / 0.45)
-      no-repeat center / 1.9rem
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8 5v14l11-7z' fill='%23F5F0E6'/%3E%3C/svg%3E");
-    border: 1px solid oklch(100% 0 0 / 0.35);
-    backdrop-filter: blur(6px);
-    pointer-events: none;
-  }
-  .cf-showcase-sound {
-    position: absolute;
-    right: clamp(1rem, 3vw, 2rem);
-    bottom: clamp(1rem, 3vw, 2rem);
-    z-index: 3;
-    width: 3rem;
-    height: 3rem;
-    display: grid;
-    place-items: center;
-    border-radius: 999px;
-    border: 1px solid oklch(100% 0 0 / 0.35);
-    background: oklch(0% 0 0 / 0.45);
-    color: var(--color-cream);
-    cursor: pointer;
-    backdrop-filter: blur(8px);
-    transition: border-color var(--duration-normal) var(--ease-out-expo),
-      background-color var(--duration-normal) var(--ease-out-expo);
-  }
-  .cf-showcase-sound:hover { border-color: var(--color-bronze-warm); }
-  .cf-showcase-sound svg { width: 1.3rem; height: 1.3rem; }
-  .cf-showcase-sound .ico-sound { display: none; }
-  .cf-showcase-sound.is-sound-on .ico-muted { display: none; }
-  .cf-showcase-sound.is-sound-on .ico-sound { display: block; }
 
   @media (prefers-reduced-motion: reduce) {
     .cf-showcase { height: auto; padding: clamp(3.5rem, 9vw, 8rem) clamp(1.5rem, 5vw, 4rem); }

@@ -25,8 +25,8 @@ export const contact = {
       { display: '+243 900 049 360', tel: '+243900049360' },
     ],
     /** Centre de formation. */
+    /** Centre de formation — single official line. */
     training: [
-      { display: '+243 999 922 429', tel: '+243999922429' },
       { display: '+243 825 150 807', tel: '+243825150807' },
     ],
   },
