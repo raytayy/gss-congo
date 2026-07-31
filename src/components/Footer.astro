@@ -135,7 +135,18 @@ const labelCoords = t(ui.footer.coordinates, locale);
         <span>N° Impôt&nbsp;{contact.legal.taxId}</span>
       </div>
       <p class="footer-credit">
-        {t(ui.footer.builtBy, locale)} <a href="https://telic.studio">telic.</a>
+        {t(ui.footer.builtBy, locale)}
+        <a class="footer-telic" href="https://telic.studio" target="_blank" rel="noopener noreferrer">
+          <img
+            src="/images/telic-mark.gif"
+            alt=""
+            width="28"
+            height="28"
+            loading="lazy"
+            decoding="async"
+          />
+          <span class="telic-word"><span class="telic-accent">t</span>elic<span class="telic-accent">.</span></span>
+        </a>
       </p>
     </div>
   </div>
@@ -359,14 +370,33 @@ const labelCoords = t(ui.footer.coordinates, locale);
     letter-spacing: 0.02em;
   }
 
-  .footer-credit { margin: 0; }
-  .footer-credit a {
-    color: var(--color-bronze-warm);
-    text-decoration: underline;
-    text-decoration-color: var(--color-bronze-warm);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.2em;
+  .footer-credit {
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  /* telic. lockup — animated mark (top slab recoloured to the site's
+     bronze) + wordmark in the telic brand colours: purple t + dot,
+     cream body on the dark footer. */
+  .footer-telic {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-decoration: none;
     transition: opacity var(--duration-normal) var(--ease-out-expo);
   }
-  .footer-credit a:hover { opacity: 0.75; }
+  .footer-telic:hover { opacity: 0.8; }
+  .footer-telic img {
+    width: 28px;
+    height: 28px;
+    display: block;
+  }
+  .telic-word {
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+    color: var(--color-cream);
+  }
+  .telic-accent { color: #8b5cf6; }
 </style>
