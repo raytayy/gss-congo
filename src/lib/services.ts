@@ -40,6 +40,10 @@ export interface Service {
   icon: string;
   /** Path to hero image (relative to public/). Generated atmospheric photos. */
   image: string;
+  /** Optional wide banner for the service detail hero. Falls back to
+     `image` when absent — lets a service show a square-ish tile on
+     the hub mosaic but a wide banner on its own page. */
+  heroImage?: string;
 }
 
 export const services: Service[] = [
@@ -384,6 +388,7 @@ export const services: Service[] = [
     },
     icon: 'Video',
     image: '/images/services/video-surveillance.jpg',
+    heroImage: '/images/services/video-surveillance-hero.jpg',
   },
   {
     slug: { fr: 'installation-cameras', en: 'camera-installation' },

@@ -193,14 +193,14 @@ const jsonLd = [
   description={service.metaDescription?.fr ?? service.blurb.fr}
   lang="fr"
   altLocaleHref={altLocaleHref}
-  ogImage={service.image}
+  ogImage={service.heroImage ?? service.image}
   jsonLd={jsonLd}
 >
   <!-- ─── HERO ────────────────────────────────────────────────── -->
   <section class="svc-hero" aria-labelledby="svc-heading">
     <div class="svc-hero-image" aria-hidden="true">
       <img
-        src={service.image}
+        src={service.heroImage ?? service.image}
         alt=""
         loading="eager"
         fetchpriority="high"
