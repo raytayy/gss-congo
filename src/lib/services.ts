@@ -44,6 +44,9 @@ export interface Service {
      `image` when absent — lets a service show a square-ish tile on
      the hub mosaic but a wide banner on its own page. */
   heroImage?: string;
+  /** CSS object-position for the detail hero crop. Use when the photo's
+     subject sits off-centre (e.g. faces near the top edge). */
+  heroPosition?: string;
 }
 
 export const services: Service[] = [
@@ -220,6 +223,7 @@ export const services: Service[] = [
     },
     icon: 'UserCheck',
     image: '/images/services/elite.jpg',
+    heroPosition: 'center top',
   },
   {
     slug: { fr: 'escorte-facilitation', en: 'escort-and-facilitation' },
