@@ -65,7 +65,10 @@ export const contact = {
     en: '24 hours, 7 days a week',
   },
 
-  email: 'contact@gss-congo.com', // ⚠️ verify with Bechir
+  /** Primary public inbox — used in JSON-LD and legal pages. */
+  email: 'info@gss-congo.com',
+  /** All public inboxes, in display order — contact page + footer list these. */
+  emails: ['info@gss-congo.com', 'dop@gss-congo.com'],
 
   social: {
     facebook: 'https://www.facebook.com/gsskinshasa/',

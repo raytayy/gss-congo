@@ -120,9 +120,11 @@ const labelCoords = t(ui.footer.coordinates, locale);
           <a href={`tel:${contact.phones.primary.tel}`} class="footer-phone-primary">
             {contact.phones.primary.display}
           </a>
-          <a href={`mailto:${contact.email}`} class="footer-email">
-            {contact.email}
-          </a>
+          {contact.emails.map((email) => (
+            <a href={`mailto:${email}`} class="footer-email">
+              {email}
+            </a>
+          ))}
         </div>
         <p class="footer-hours">{contact.hours[locale]}</p>
       </div>

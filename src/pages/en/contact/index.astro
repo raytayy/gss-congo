@@ -164,12 +164,14 @@ const jsonLd = [
               <span class="ct-channel-value">{contact.phones.primary.display}</span>
             </a>
           </li>
-          <li>
-            <a href={`mailto:${contact.email}`} class="ct-channel">
-              <span class="ct-channel-label">Email</span>
-              <span class="ct-channel-value">{contact.email}</span>
-            </a>
-          </li>
+          {contact.emails.map((email) => (
+            <li>
+              <a href={`mailto:${email}`} class="ct-channel">
+                <span class="ct-channel-label">Email</span>
+                <span class="ct-channel-value">{email}</span>
+              </a>
+            </li>
+          ))}
         </ul>
 
         <div class="ct-locations">
