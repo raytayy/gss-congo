@@ -51,8 +51,8 @@ export function localBusinessSchema(locale: Locale, siteUrl: string) {
     image: abs(siteUrl, '/images/logo.png'),
     description:
       locale === 'fr'
-        ? 'Sécurité privée à Kinshasa depuis 2014 — gardiennage, intervention, sécurité résidentielle, industrielle, escorte, supervision vidéo, formation.'
-        : 'Private security in Kinshasa since 2014 — guarding, intervention, residential and industrial security, escort, video supervision, training.',
+        ? 'Société de gardiennage au Congo (RDC) et de sécurité privée, à Kinshasa depuis 2014 — gardiennage, intervention, sécurité résidentielle, industrielle, escorte, supervision vidéo, formation.'
+        : 'Guarding and private security company in DR Congo, in Kinshasa since 2014 — guarding, intervention, residential and industrial security, escort, video supervision, training.',
     telephone: contact.phones.primary.display,
     email: contact.email,
     foundingDate: String(contact.legal.foundedYear),
@@ -72,10 +72,16 @@ export function localBusinessSchema(locale: Locale, siteUrl: string) {
       latitude: -4.3217,
       longitude: 15.3125,
     },
-    areaServed: {
-      '@type': 'City',
-      name: 'Kinshasa',
-    },
+    areaServed: [
+      {
+        '@type': 'City',
+        name: 'Kinshasa',
+      },
+      {
+        '@type': 'Country',
+        name: 'République démocratique du Congo',
+      },
+    ],
     openingHoursSpecification: {
       '@type': 'OpeningHoursSpecification',
       dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],

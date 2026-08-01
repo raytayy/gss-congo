@@ -54,20 +54,20 @@ export const services: Service[] = [
     slug: { fr: 'gardiennage-intervention', en: 'guarding-and-intervention' },
     name: { fr: 'Gardiennage & Intervention', en: 'Guarding & Intervention' },
     seoTitle: {
-      fr: 'Gardiennage & Intervention à Kinshasa',
-      en: 'Guarding & Intervention in Kinshasa',
+      fr: 'Gardiennage & Intervention à Kinshasa — RDC',
+      en: 'Guarding & Intervention in Kinshasa, DR Congo',
     },
     blurb: {
       fr: 'Présence statique et mobile, équipes en intervention sous 20 minutes.',
       en: 'Static and mobile presence, response teams within 20 minutes.',
     },
     metaDescription: {
-      fr: "Gardiennage statique et mobile à Kinshasa. Équipes d'intervention sous 20 minutes, 24h/24, sur sites industriels, tertiaires et résidentiels.",
-      en: 'Static and mobile guarding in Kinshasa. Response teams within 20 minutes, 24/7, across industrial, commercial and residential sites.',
+      fr: "Société de gardiennage au Congo (RDC) : gardiennage statique et mobile à Kinshasa, équipes d'intervention sous 20 minutes, 24h/24, sur tous types de sites.",
+      en: 'Guarding company in DR Congo: static and mobile guarding in Kinshasa, response teams within 20 minutes, 24/7, across all site types.',
     },
     intro: {
-      fr: 'Société de gardiennage à Kinshasa depuis 2014, GSS analyse et étudie les risques et menaces de votre environnement, puis engage les moyens humains et techniques nécessaires pour un gardiennage efficace, sur mesure et selon vos besoins. Nous mettons en œuvre des moyens dédiés à la sécurisation de vos locaux pour prévenir tout risque d’intrusion, de dégradation et de vol.',
-      en: 'A security guard company in Kinshasa since 2014, GSS analyses and studies the risks and threats of your environment, then deploys the human and technical means required for effective bespoke guarding. We deploy dedicated resources to secure your premises against intrusion, damage, and theft.',
+      fr: 'Société de gardiennage au Congo (RDC) établie à Kinshasa depuis 2014, GSS analyse et étudie les risques et menaces de votre environnement, puis engage les moyens humains et techniques nécessaires pour un gardiennage efficace, sur mesure et selon vos besoins. Nous mettons en œuvre des moyens dédiés à la sécurisation de vos locaux pour prévenir tout risque d’intrusion, de dégradation et de vol.',
+      en: 'A guarding company in DR Congo based in Kinshasa since 2014, GSS analyses and studies the risks and threats of your environment, then deploys the human and technical means required for effective bespoke guarding. We deploy dedicated resources to secure your premises against intrusion, damage, and theft.',
     },
     scope: {
       fr: [
