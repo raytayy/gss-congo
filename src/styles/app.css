@@ -440,6 +440,15 @@ html.js [data-reveal='mask']:not([data-revealed='true']) {
     linear-gradient(180deg, rgba(10, 22, 40, 0.7) 0%, rgba(10, 22, 40, 0.92) 100%),
     radial-gradient(70% 50% at 0% 0%, oklch(20% 0.04 250 / 0.5), transparent 60%);
 }
+/* Mobile: the portrait crop puts bright uniforms right behind the large
+   numerals — deepen the veil so the figures stay legible. */
+@media (max-width: 700px) {
+  .stats-band-overlay {
+    background:
+      linear-gradient(180deg, rgba(10, 22, 40, 0.82) 0%, rgba(10, 22, 40, 0.95) 100%),
+      radial-gradient(70% 50% at 0% 0%, oklch(20% 0.04 250 / 0.5), transparent 60%);
+  }
+}
 
 .stats-band-frame {
   position: relative;

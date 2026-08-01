@@ -197,15 +197,22 @@ const jsonLd = [
   <!-- ─── HERO ────────────────────────────────────────────────── -->
   <section class="svc-hero" aria-labelledby="svc-heading">
     <div class="svc-hero-image" aria-hidden="true">
-      <img
-        src={service.heroImage ?? service.image}
-        alt=""
-        loading="eager"
-        fetchpriority="high"
-        decoding="async"
-        width="2400"
-        height="1600"
-      />
+      {/* Panoramic hero images crop to a sliver on portrait phones —
+          serve the standard 3:2 photo below 700px instead. */}
+      <picture>
+        {service.heroImage && (
+          <source media="(max-width: 700px)" srcset={service.image} />
+        )}
+        <img
+          src={service.heroImage ?? service.image}
+          alt=""
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          width="2400"
+          height="1600"
+        />
+      </picture>
       <div class="svc-hero-overlay"></div>
     </div>
     <div class="svc-hero-content">

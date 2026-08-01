@@ -13,7 +13,7 @@ interface Props {
 
 const {
   locale,
-  backgroundSrc = '/images/careers-graphique.jpg',
+  backgroundSrc = '/images/careers-hero.jpg',
 } = Astro.props;
 
 const eyebrow = locale === 'fr' ? 'Carrières' : 'Careers';
@@ -29,11 +29,9 @@ const ctaLabel = locale === 'fr'
   ? 'Voir les offres de recrutement à Kinshasa'
   : 'See security agent jobs in Kinshasa';
 const ctaHref = `/${locale}/${locale === 'fr' ? 'carrieres' : 'careers'}/`;
-// Brief alt 08-image-alt-text.md → describes the graphic showing GSS staffing
-// numbers. Replaces previous alt="" (broke WCAG 2.2 AA).
 const bgAlt = locale === 'fr'
-  ? "Graphique de l'effectif GSS Congo — 300 agents formés depuis 2014 à Kinshasa"
-  : 'Chart of GSS Congo workforce — 300 trained agents since 2014 in Kinshasa';
+  ? "Agents GSS en uniforme devant l'emblème Guarde Security Service à Kinshasa"
+  : 'GSS agents in uniform in front of the Guarde Security Service emblem in Kinshasa';
 ---
 
 <section class="careers" aria-labelledby="careers-heading">
@@ -75,15 +73,14 @@ const bgAlt = locale === 'fr'
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
-    filter: saturate(0.85);
+    object-position: center 30%;
   }
   .careers-tone {
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(180deg, rgba(10, 22, 40, 0.5) 0%, rgba(10, 22, 40, 0.85) 100%),
-      radial-gradient(70% 50% at 100% 100%, oklch(40% 0.06 70 / 0.25), transparent 70%);
+      linear-gradient(180deg, rgba(10, 22, 40, 0.18) 0%, rgba(10, 22, 40, 0.72) 100%),
+      radial-gradient(70% 50% at 100% 100%, oklch(40% 0.06 70 / 0.2), transparent 70%);
   }
   .careers-frame {
     position: relative;
