@@ -308,6 +308,7 @@ export const services: Service[] = [
     },
     icon: 'ParkingCircle',
     image: '/images/services/parking.jpg',
+    heroImage: '/images/services/parking-hero.jpg',
   },
   {
     slug: { fr: 'desinsectisation-fumigation', en: 'pest-control-and-fumigation' },
