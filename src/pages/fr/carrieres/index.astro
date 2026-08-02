@@ -16,6 +16,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import NeonButton from '@components/NeonButton.astro';
 import { contact, whatsappLink } from '@lib/contact';
 import { breadcrumbSchema } from '@lib/jsonld';
+import { fetchRolesFromSheet } from '@lib/jobs';
 
 const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
 const isConfigured = accessKey.length > 10;
@@ -39,7 +40,7 @@ interface Role {
   type: string;
 }
 
-const roles: Role[] = [
+const fallbackRoles: Role[] = [
   {
     code: 'AGT-01',
     name: 'Agent de prévention et de sécurité',
@@ -83,6 +84,10 @@ const roles: Role[] = [
     type: 'CDI · 3×8',
   },
 ];
+
+// Live postings from Bechir's Google Sheet (build-time fetch, fallback baked in).
+const sheetRoles = await fetchRolesFromSheet();
+const roles: Role[] = sheetRoles?.fr ?? fallbackRoles;
 
 const statusLabel: Record<RoleStatus, string> = {
   open: 'Ouvert',
