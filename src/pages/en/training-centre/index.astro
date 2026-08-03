@@ -689,8 +689,11 @@ const jsonLd = [
   }
   .cf-showcase-media {
     position: relative;
-    width: 100vw;
-    height: 100svh;
+    /* Frame locked to the video's own 640x426 ratio — the full frame is
+       always visible, no cover-crop, capped by the viewport. */
+    width: min(100vw, calc(100svh * (640 / 426)));
+    height: auto;
+    aspect-ratio: 640 / 426;
     transform: translateY(calc(9svh * (1 - var(--p)))) scale(calc(var(--start) + (1 - var(--start)) * var(--p)));
     border-radius: calc(44px * (1 - var(--p)));
     overflow: hidden;
