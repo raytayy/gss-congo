@@ -281,7 +281,7 @@ export const articles: Article[] = [
       fr: 'Du premier entretien à la première mission, voici les étapes que traverse une promotion d’agents avant d’être déployée.',
       en: 'From the first interview to the first mission, here are the steps a cohort of agents goes through before deployment.',
     },
-    image: '/images/careers-graphique.jpg',
+    image: '/images/formation-hero.jpg',
     publishedAt: '2026-05-06',
     readingTime: { fr: '5 min de lecture', en: '5 min read' },
     body: {
