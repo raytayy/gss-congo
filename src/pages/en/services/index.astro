@@ -69,7 +69,7 @@ const jsonLd = [breadcrumbs, collection];
             >
               <a class="svc-card-link" href={getServiceUrl(s, 'en')}>
                 <div class="svc-card-media">
-                  <img src={s.image} alt="" loading="lazy" decoding="async" />
+                  <img src={s.image} alt="" loading="lazy" decoding="async" style={s.tilePosition ? `object-position: ${s.tilePosition}` : undefined} />
                   <div class="svc-card-tone" aria-hidden="true"></div>
                 </div>
                 <div class="svc-card-content">

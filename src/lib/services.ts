@@ -47,6 +47,8 @@ export interface Service {
   /** CSS object-position for the detail hero crop. Use when the photo's
      subject sits off-centre (e.g. faces near the top edge). */
   heroPosition?: string;
+  /** CSS object-position for the hub mosaic tile crop. */
+  tilePosition?: string;
 }
 
 export const services: Service[] = [
@@ -266,6 +268,7 @@ export const services: Service[] = [
     },
     icon: 'Car',
     image: '/images/services/escorte-2.jpg',
+    heroPosition: 'center top',
   },
   {
     slug: { fr: 'securite-parking', en: 'parking-security' },
@@ -435,6 +438,7 @@ export const services: Service[] = [
     },
     icon: 'Cctv',
     image: '/images/services/cameras.jpg',
+    tilePosition: 'center top',
   },
 ];
 

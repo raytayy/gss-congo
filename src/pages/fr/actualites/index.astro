@@ -123,22 +123,6 @@ const fbUrl = contact.social.facebook;
     </div>
   </section>
 
-  <!-- ─── LIVE FEED (React island) ────────────────────────────── -->
-  <section class="ac-feed" aria-labelledby="ac-feed-heading">
-    <div class="ac-feed-frame">
-      <header class="ac-feed-head" data-reveal>
-        <p class="ac-eyebrow">Le fil</p>
-        <h2 id="ac-feed-heading" class="ac-section-heading">
-          Le fil, en temps réel.
-        </h2>
-        <p class="ac-feed-sub">
-          Une vue unifiée des dernières publications Instagram et Facebook,
-          triées par date.
-        </p>
-      </header>
-      <SocialFeedLive client:visible posts={posts} locale="fr" igUrl={igUrl} fbUrl={fbUrl} />
-    </div>
-  </section>
 
   <!-- ─── CLOSING CTA ─────────────────────────────────────────── -->
   <section class="ac-cta" aria-labelledby="ac-cta-heading">

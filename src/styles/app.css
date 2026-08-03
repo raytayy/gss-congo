@@ -430,22 +430,30 @@ html.js [data-reveal='mask']:not([data-revealed='true']) {
   background-image: var(--stats-bg, none);
   background-size: cover;
   background-position: center;
-  filter: saturate(0.9);
 }
 .stats-band-overlay {
   position: absolute;
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(180deg, rgba(10, 22, 40, 0.7) 0%, rgba(10, 22, 40, 0.92) 100%),
-    radial-gradient(70% 50% at 0% 0%, oklch(20% 0.04 250 / 0.5), transparent 60%);
+    linear-gradient(180deg, rgba(10, 22, 40, 0.28) 0%, rgba(10, 22, 40, 0.5) 100%),
+    radial-gradient(70% 50% at 0% 0%, oklch(20% 0.04 250 / 0.35), transparent 60%);
+}
+.stats-band-eyebrow,
+.stats-band-heading,
+.stats-band-lead-value,
+.stats-band-lead-label,
+.stats-band-lead-sub,
+.stats-band-support-value,
+.stats-band-support-item {
+  text-shadow: 0 1px 14px rgba(4, 10, 20, 0.65), 0 1px 3px rgba(4, 10, 20, 0.55);
 }
 /* Mobile: the portrait crop puts bright uniforms right behind the large
    numerals — deepen the veil so the figures stay legible. */
 @media (max-width: 700px) {
   .stats-band-overlay {
     background:
-      linear-gradient(180deg, rgba(10, 22, 40, 0.82) 0%, rgba(10, 22, 40, 0.95) 100%),
+      linear-gradient(180deg, rgba(10, 22, 40, 0.5) 0%, rgba(10, 22, 40, 0.72) 100%),
       radial-gradient(70% 50% at 0% 0%, oklch(20% 0.04 250 / 0.5), transparent 60%);
   }
 }
