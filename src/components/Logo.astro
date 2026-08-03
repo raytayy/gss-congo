@@ -73,6 +73,8 @@ const variantClass = `logo-${variant}`;
   .logo-on-dark { color: var(--color-cream); }
 
   .logo-on-dark .logo-mark {
-    filter: none;
+    /* The arc lettering is baked into the PNG in dark gold — lift it and
+       halo it with light so it reads against the navy footer. */
+    filter: brightness(1.22) drop-shadow(0 0 10px rgba(255, 246, 224, 0.28));
   }
 </style>
