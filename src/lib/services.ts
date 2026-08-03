@@ -265,7 +265,7 @@ export const services: Service[] = [
       en: 'Executives on assignment · Delegations · VIP families · Media',
     },
     icon: 'Car',
-    image: '/images/services/escorte.jpg',
+    image: '/images/services/escorte-2.jpg',
   },
   {
     slug: { fr: 'securite-parking', en: 'parking-security' },
