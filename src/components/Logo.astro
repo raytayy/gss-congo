@@ -32,7 +32,7 @@ const variantClass = `logo-${variant}`;
 >
   <img
     class="logo-mark"
-    src="/images/logo.png"
+    src={variant === 'on-dark' ? '/images/logo-footer.png' : '/images/logo.png'}
     alt="Guarde Security Service"
     width="200"
     height="220"
@@ -72,9 +72,9 @@ const variantClass = `logo-${variant}`;
   .logo-on-light { color: var(--color-ink); }
   .logo-on-dark { color: var(--color-cream); }
 
+  /* on-dark uses logo-footer.png — same mark with the arc lettering
+     recolored cream so it reads on navy. No filter needed. */
   .logo-on-dark .logo-mark {
-    /* The arc lettering is baked into the PNG in dark gold — lift it and
-       halo it with light so it reads against the navy footer. */
-    filter: brightness(1.22) drop-shadow(0 0 10px rgba(255, 246, 224, 0.28));
+    filter: none;
   }
 </style>
