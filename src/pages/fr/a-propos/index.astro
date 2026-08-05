@@ -660,4 +660,30 @@ const phoneDisplay = contact.phones.primary.display;
   @media (prefers-reduced-motion: reduce) {
     .ap-hero-image img { animation: none; }
   }
+
+  /* Mobile: the landscape client photos cover-crop badly in tall heroes —
+     show the full photo as a banner with the text below it instead. */
+  @media (max-width: 700px) {
+    .ap-hero {
+      display: block;
+      min-height: auto;
+      padding: 0 0 2.5rem;
+      background: var(--color-ink);
+    }
+    .ap-hero-image {
+      position: relative;
+      inset: auto;
+      z-index: auto;
+    }
+    .ap-hero-image img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      animation: none;
+      transform: none;
+    }
+    .ap-hero-content {
+      padding: 1.75rem 1.5rem 0;
+    }
+  }
 </style>

@@ -439,4 +439,30 @@ const jsonLd = [breadcrumbs, collection];
     .svc-card-link, .svc-card-media img { transition: none; }
     .svc-hub-hero-image img { animation: none; }
   }
+
+  /* Mobile: the landscape client photos cover-crop badly in tall heroes —
+     show the full photo as a banner with the text below it instead. */
+  @media (max-width: 700px) {
+    .svc-hub-hero {
+      display: block;
+      min-height: auto;
+      padding: 0 0 2.5rem;
+      background: var(--color-ink);
+    }
+    .svc-hub-hero-image {
+      position: relative;
+      inset: auto;
+      z-index: auto;
+    }
+    .svc-hub-hero-image img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      animation: none;
+      transform: none;
+    }
+    .svc-hub-frame {
+      padding: 1.75rem 1.5rem 0;
+    }
+  }
 </style>
