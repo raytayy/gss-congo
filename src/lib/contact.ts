@@ -6,8 +6,6 @@
  * by Bechir on 2026-05-17 (waiting for postal verification). NAP must stay
  * consistent across GBP + JSON-LD + visible site content — any divergence
  * weakens the local-pack ranking signal.
- *
- * Remaining placeholders: training centre phone + address (CDC §13 #4-5).
  */
 
 export const contact = {
