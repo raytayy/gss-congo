@@ -133,6 +133,9 @@ const jsonLd = [
             <textarea name="message" required rows="5" placeholder="Décrivez le site, le contexte, les contraintes éventuelles…"></textarea>
           </label>
 
+          <div class="h-captcha" data-captcha="true"></div>
+          <script is:inline src="https://web3forms.com/client/script.js" async defer></script>
+
           <div class="ct-actions">
             <NeonButton type="submit" variant="solid" size="lg">
               Envoyer la demande
