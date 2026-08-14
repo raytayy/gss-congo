@@ -27,6 +27,8 @@ const hasGa4 = ga4Id.startsWith('G-');
 
 interface Props {
   title: string;
+  /** Set on utility pages (thank-you etc.) to keep them out of the index. */
+  noindex?: boolean;
   description: string;
   lang?: 'fr' | 'en';
   /** Path of the current page in the OTHER locale, for hreflang. */
@@ -39,6 +41,7 @@ interface Props {
 
 const {
   title,
+  noindex = false,
   description,
   lang = 'fr',
   altLocaleHref,
@@ -70,9 +73,10 @@ const extraSchemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 <html lang={lang} dir="ltr">
   <head>
     <meta charset="utf-8" />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>{title} · GSS Congo</title>
+    <title>{title.includes('GSS Congo') ? title : `${title} · GSS Congo`}</title>
     <meta name="description" content={description} />
 
     {/* Google Search Console — domain ownership verification. Keep

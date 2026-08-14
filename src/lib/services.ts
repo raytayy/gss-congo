@@ -64,11 +64,11 @@ export const services: Service[] = [
       en: 'Static and mobile presence, response teams within 20 minutes.',
     },
     metaDescription: {
-      fr: "Société de gardiennage au Congo (RDC) : gardiennage statique et mobile à Kinshasa, équipes d'intervention sous 20 minutes, 24h/24, sur tous types de sites.",
+      fr: "Gardiennage statique et mobile à Kinshasa : équipes d'intervention sous 20 minutes, 24h/24, agents formés en interne, sur tous types de sites.",
       en: 'Guarding company in DR Congo: static and mobile guarding in Kinshasa, response teams within 20 minutes, 24/7, across all site types.',
     },
     intro: {
-      fr: 'Société de gardiennage au Congo (RDC) établie à Kinshasa depuis 2014, GSS analyse et étudie les risques et menaces de votre environnement, puis engage les moyens humains et techniques nécessaires pour un gardiennage efficace, sur mesure et selon vos besoins. Nous mettons en œuvre des moyens dédiés à la sécurisation de vos locaux pour prévenir tout risque d’intrusion, de dégradation et de vol.',
+      fr: 'Société de gardiennage établie à Kinshasa depuis 2014, GSS analyse et étudie les risques et menaces de votre environnement, puis engage les moyens humains et techniques nécessaires pour un gardiennage efficace, sur mesure et selon vos besoins. Nous mettons en œuvre des moyens dédiés à la sécurisation de vos locaux pour prévenir tout risque d’intrusion, de dégradation et de vol.',
       en: 'A guarding company in DR Congo based in Kinshasa since 2014, GSS analyses and studies the risks and threats of your environment, then deploys the human and technical means required for effective bespoke guarding. We deploy dedicated resources to secure your premises against intrusion, damage, and theft.',
     },
     scope: {

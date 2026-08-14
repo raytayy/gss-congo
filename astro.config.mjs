@@ -33,6 +33,12 @@ export default defineConfig({
     mdx(),
     react(),
     sitemap({
+      // '/' 308-redirects to /fr/ and utility pages shouldn't compete for
+      // crawl budget — keep them out of the sitemap (audit 2026-08-09).
+      filter: (page) =>
+        !page.endsWith('gss-congo.com/') &&
+        !page.includes('/merci/') &&
+        !page.includes('/thank-you/'),
       i18n: {
         defaultLocale: 'fr',
         locales: {

@@ -81,6 +81,39 @@ const fallbackRoles: Role[] = [
 const sheetRoles = await fetchRolesFromSheet();
 const roles: Role[] = sheetRoles?.en ?? fallbackRoles;
 
+
+// JobPosting JSON-LD for genuinely open roles — Google Jobs surface.
+// datePosted/validThrough refresh on each build (sheet edits redeploy the site).
+const buildDate = new Date().toISOString().slice(0, 10);
+const validThrough = new Date(Date.now() + 60 * 86400000).toISOString().slice(0, 10);
+const jobPostings = roles
+  .filter((r) => r.status === 'open')
+  .map((r) => ({
+    '@context': 'https://schema.org',
+    '@type': 'JobPosting',
+    title: r.name,
+    description: `<p>${r.summary} Training provided by the GSS training centre. Position based in Kinshasa (${r.type}).</p>`,
+    datePosted: buildDate,
+    validThrough,
+    employmentType: 'FULL_TIME',
+    hiringOrganization: {
+      '@type': 'Organization',
+      name: 'Guarde Security Services',
+      sameAs: 'https://gss-congo.com/',
+      logo: 'https://gss-congo.com/images/logo.png',
+    },
+    jobLocation: {
+      '@type': 'Place',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'Infinity Center, Avenue du 24 novembre, Gombe',
+        addressLocality: 'Kinshasa',
+        addressCountry: 'CD',
+      },
+    },
+    directApply: true,
+  }));
+
 const statusLabel: Record<RoleStatus, string> = {
   open: 'Open',
   next: 'Next cohort',
@@ -99,7 +132,7 @@ const careersWaMessage = 'Hello GSS, I am reaching out from your website. I woul
   description="Join the agents who protect Kinshasa. Continuous recruitment, in-house training, field and supervisory roles. Apply online at GSS Congo."
   lang="en"
   altLocaleHref="/fr/carrieres/"
-  jsonLd={breadcrumbs}
+  jsonLd={[breadcrumbs, ...jobPostings]}
 >
   <!-- ─── HERO ────────────────────────────────────────────────── -->
   <section class="cr-hero" aria-labelledby="cr-heading">

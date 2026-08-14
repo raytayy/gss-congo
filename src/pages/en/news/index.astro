@@ -13,6 +13,7 @@ import SocialFeedLive from '@components/SocialFeedLive.tsx';
 import { fetchInstagramPosts, fetchFacebookPosts } from '@lib/social-feed';
 import { contact } from '@lib/contact';
 import { breadcrumbSchema } from '@lib/jsonld';
+import { articles } from '@lib/news';
 
 const siteUrl = Astro.site?.toString() ?? 'https://gss-congo.com/';
 const breadcrumbs = breadcrumbSchema(
@@ -57,6 +58,35 @@ const fbUrl = contact.social.facebook;
   </section>
 
   <!-- ─── PRESENCE CARDS ──────────────────────────────────────── -->
+  <!-- ─── ANALYSES — published articles ───────────────────────── -->
+  <section class="ac-articles" aria-labelledby="ac-articles-heading">
+    <div class="ac-articles-frame">
+      <div class="ac-articles-head">
+        <p class="ac-eyebrow" data-reveal>Insights</p>
+        <h2 id="ac-articles-heading" class="ac-section-heading" data-reveal data-reveal-delay="100">
+          Field notes from our teams.
+        </h2>
+      </div>
+      <ul class="ac-articles-grid">
+        {articles.map((a, i) => (
+          <li data-reveal data-reveal-delay={String(140 + i * 90)} style={`--reveal-delay: ${140 + i * 90}ms;`}>
+            <a class="ac-article-link" href={`/en/news/${a.slug.en}/`}>
+              <div class="ac-article-media">
+                <img src={a.image} alt="" loading="lazy" decoding="async" />
+              </div>
+              <div class="ac-article-body">
+                <p class="ac-article-meta"><time datetime={a.publishedAt}>{new Date(a.publishedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</time> · {a.readingTime.en}</p>
+                <h3 class="ac-article-title">{a.title.en}</h3>
+                <p class="ac-article-excerpt">{a.excerpt.en}</p>
+                <span class="ac-article-cue">Read the analysis <span aria-hidden="true">→</span></span>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
   <section class="ac-presence" aria-labelledby="ac-presence-heading">
     <div class="ac-presence-frame">
       <header class="ac-presence-head" data-reveal>
@@ -332,6 +362,23 @@ const fbUrl = contact.social.facebook;
   }
   .ac-eyebrow-on-dark { color: var(--color-bronze-warm); }
   .ac-eyebrow-on-dark::before { background: var(--color-bronze-warm); }
+
+  /* ─── Analyses (published articles) ─────────────────────────── */
+  .ac-articles { background: var(--color-cream); padding: clamp(4rem, 9vw, 7rem) clamp(1.5rem, 5vw, 4rem); }
+  .ac-articles-frame { max-width: 1280px; margin-inline: auto; }
+  .ac-articles-head { max-width: 40em; margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .ac-articles-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: clamp(1rem, 2vw, 1.75rem); }
+  @media (min-width: 800px) { .ac-articles-grid { grid-template-columns: repeat(3, 1fr); } }
+  .ac-article-link { display: flex; flex-direction: column; height: 100%; text-decoration: none; color: inherit; background: #fff; border: 1px solid var(--color-hairline, #e6dfd0); border-radius: var(--radius-md); overflow: hidden; transition: transform 300ms var(--ease-out-expo), box-shadow 300ms var(--ease-out-expo); }
+  .ac-article-link:hover { transform: translateY(-4px); box-shadow: 0 18px 40px -22px oklch(20% 0.05 250 / 0.35); }
+  .ac-article-media { aspect-ratio: 16 / 9; overflow: hidden; }
+  .ac-article-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ac-article-body { display: flex; flex-direction: column; gap: 0.5rem; padding: 1.1rem 1.25rem 1.35rem; }
+  .ac-article-meta { margin: 0; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-bronze); }
+  .ac-article-title { margin: 0; font-family: var(--font-display); font-size: 1.25rem; line-height: 1.25; color: var(--color-ink); }
+  .ac-article-excerpt { margin: 0; font-size: 0.925rem; line-height: 1.55; color: var(--color-ink-soft, #45586b); }
+  .ac-article-cue { margin-top: auto; padding-top: 0.5rem; font-size: 0.875rem; font-weight: 600; color: var(--color-bronze); }
+
   .ac-section-heading {
     margin: 0;
     font-family: var(--font-display);

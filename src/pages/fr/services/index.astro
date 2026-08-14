@@ -47,7 +47,7 @@ const layout: Array<'lead' | 'portrait' | 'square' | 'banner'> = [
 
 <BaseLayout
   title="Services de gardiennage et de sécurité — Kinshasa, RDC"
-  description="Gardiennage, sécurité résidentielle et industrielle, escorte, vidéosurveillance, formation : les services de GSS Congo, société de gardiennage au Congo (RDC)."
+  description="Tous les services de notre société de sécurité à Kinshasa : gardiennage, résidentiel et industriel, escorte, vidéosurveillance, installation caméras, formation."
   lang="fr"
   altLocaleHref="/en/services/"
   jsonLd={jsonLd}
@@ -64,8 +64,11 @@ const layout: Array<'lead' | 'portrait' | 'square' | 'banner'> = [
       </h1>
       <p class="svc-hub-sub" data-reveal data-reveal-delay="240">
         11 ans à pratiquer la sécurité privée à Kinshasa. Chaque dispositif est calibré
-        au site, jamais surdimensionné, jamais insuffisant. Voici le détail de ce que
-        nous prenons en charge.
+        au site, jamais surdimensionné, jamais insuffisant. Du
+        <a class="svc-hub-sub-link" href="/fr/services/gardiennage-intervention/">gardiennage à Kinshasa</a>
+        à la <a class="svc-hub-sub-link" href="/fr/services/video-surveillance/">vidéosurveillance</a>,
+        chaque agent sort de notre
+        <a class="svc-hub-sub-link" href="/fr/centre-de-formation/">centre de formation</a>.
       </p>
     </div>
   </section>
@@ -203,6 +206,8 @@ const layout: Array<'lead' | 'portrait' | 'square' | 'banner'> = [
     font-variation-settings: 'opsz' 144, 'wght' 400, 'SOFT' 100;
     color: var(--color-bronze-warm);
   }
+  .svc-hub-sub-link { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+  .svc-hub-sub-link:hover { color: var(--color-bronze-warm); }
   .svc-hub-sub {
     margin: 0;
     font-size: clamp(1.0625rem, 1.4vw, 1.25rem);

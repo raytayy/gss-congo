@@ -23,6 +23,7 @@ const {
   locale,
   videoSrc = '/videos/hero.mp4',
   webmSrc = '/videos/hero.webm',
+  mobileVideoSrc = '/videos/hero-mobile.mp4',
   poster = '/images/hero-poster.jpg',
 } = Astro.props;
 
@@ -69,6 +70,13 @@ const copy = locale === 'fr'
   function setupHeroVideo() {
     const v = document.querySelector('.hero-plate');
     if (!v) return;
+    // Sources are injected here, not statically: phones get the 1.5 MB
+    // 540p file instead of the 8-11 MB desktop video (CWV/data cost).
+    if (!v.dataset.wired) {
+      v.dataset.wired = '1';
+      const mobile = window.matchMedia('(max-width: 1023px)').matches;
+      v.src = mobile ? v.dataset.srcMobile : v.dataset.srcDesktop;
+    }
     v.classList.remove('is-ready');
     // After a view transition, autoplay can be skipped — kick it manually.
     const p = v.play && v.play();
@@ -87,6 +95,7 @@ const copy = locale === 'fr'
 
 <section class="hero" aria-label={locale === 'fr' ? 'Présentation' : 'Introduction'}>
   <div class="hero-media" aria-hidden="true">
+    <link rel="preload" as="image" href={poster} fetchpriority="high" />
     <video
       class="hero-plate"
       poster={poster}
@@ -94,14 +103,13 @@ const copy = locale === 'fr'
       muted
       loop
       playsinline
-      preload="metadata"
+      preload="none"
       disablepictureinpicture
       width="1920"
       height="1080"
-    >
-      <source src={webmSrc} type="video/webm" />
-      <source src={videoSrc} type="video/mp4" />
-    </video>
+      data-src-desktop={videoSrc}
+      data-src-mobile={mobileVideoSrc}
+    ></video>
     <div class="hero-overlay-tone"></div>
     <div class="hero-overlay-vignette"></div>
   </div>
