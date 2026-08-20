@@ -154,6 +154,31 @@ const fbUrl = contact.social.facebook;
   </section>
 
 
+
+  <!-- ─── FIL FACEBOOK (embed officiel, sans token — toujours à jour) ── -->
+  <section class="ac-fb" aria-labelledby="ac-fb-heading">
+    <div class="ac-fb-frame">
+      <header class="ac-fb-head" data-reveal>
+        <p class="ac-eyebrow">Le fil</p>
+        <h2 id="ac-fb-heading" class="ac-section-heading">Nos publications Facebook, en direct.</h2>
+        <p class="ac-fb-sub">Patrouilles, formations, annonces — le quotidien de GSS, publié par nos équipes.</p>
+      </header>
+      <div class="ac-fb-embed" data-reveal data-reveal-delay="150">
+        <iframe
+          src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(fbUrl)}&tabs=timeline&width=500&height=680&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false&locale=fr_FR`}
+          title="Publications Facebook de GSS Congo"
+          width="500"
+          height="680"
+          style="border:none;overflow:hidden"
+          scrolling="no"
+          frameborder="0"
+          loading="lazy"
+          allow="encrypted-media"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
   <!-- ─── CLOSING CTA ─────────────────────────────────────────── -->
   <section class="ac-cta" aria-labelledby="ac-cta-heading">
     <div class="ac-cta-frame">
@@ -676,4 +701,19 @@ const fbUrl = contact.social.facebook;
     flex-wrap: wrap;
     gap: 0.875rem;
   }
+
+  /* Facebook live-feed embed */
+  .ac-fb { background: var(--color-cream); padding: clamp(3.5rem, 9vw, 7rem) clamp(1.5rem, 5vw, 4rem); }
+  .ac-fb-frame { max-width: 1100px; margin-inline: auto; }
+  .ac-fb-head { max-width: 40em; margin-bottom: clamp(1.75rem, 3.5vw, 2.75rem); }
+  .ac-fb-sub { margin: 0.75rem 0 0; color: var(--color-mute-on-light); font-size: 1.0125rem; line-height: 1.6; }
+  .ac-fb-embed {
+    display: flex; justify-content: center;
+    background: var(--color-cream-2);
+    border: 1px solid var(--color-hairline-on-light);
+    border-radius: var(--radius-md);
+    padding: clamp(0.75rem, 2vw, 1.5rem);
+    overflow-x: auto;
+  }
+  .ac-fb-embed iframe { max-width: 100%; }
 </style>
