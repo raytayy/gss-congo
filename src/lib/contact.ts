@@ -16,12 +16,9 @@ export const contact = {
       tel: '+243996666699',
       label: 'Standard',
     },
-    /** Additional numbers from the legacy site. Status: see CDC §13 #3 — keep
-       until Bechir confirms which to retire. */
-    alt: [
-      { display: '+243 972 125 400', tel: '+243972125400' },
-      { display: '+243 900 049 360', tel: '+243900049360' },
-    ],
+    /* Legacy numbers (+243 972 125 400, +243 900 049 360) retired 2026-09-15
+       per NAP-unification directive: one number everywhere. They were never
+       rendered by the current site; kept as a note only. */
     /** Centre de formation. */
     /** Centre de formation — single official line. */
     training: [

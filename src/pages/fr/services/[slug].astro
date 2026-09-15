@@ -312,6 +312,24 @@ const jsonLd = [
     </section>
   )}
 
+
+  <!-- ─── EN PRATIQUE (profondeur SEO — faits CDC uniquement) ─── -->
+  {service.detail && (
+    <section class="svc-section svc-detail" aria-labelledby="svc-detail-heading">
+      <div class="svc-detail-frame">
+        <p class="svc-eyebrow" data-reveal>En pratique</p>
+        <h2 id="svc-detail-heading" class="svc-section-heading" data-reveal data-reveal-delay="100">
+          {service.name.fr} à Kinshasa, concrètement.
+        </h2>
+        <div class="svc-detail-body">
+          {service.detail.fr.map((p) => (
+            <p data-reveal>{p}</p>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
   <!-- ─── FAQ (top 3 services only) ──────────────────────────── -->
   {faqs && (
     <section class="svc-section svc-faq" aria-labelledby="svc-faq-heading">
@@ -945,5 +963,21 @@ const jsonLd = [
     .svc-hero-content {
       padding: 1.75rem 1.5rem 0;
     }
+  }
+
+  /* ─── EN PRATIQUE / IN PRACTICE ───────────────────── */
+  .svc-detail-frame {
+    max-width: 46rem;
+    margin-inline: auto;
+  }
+  .svc-detail-body {
+    margin-top: 1.5rem;
+  }
+  .svc-detail-body p {
+    margin: 0 0 1.15rem;
+    font-size: 1.0125rem;
+    line-height: 1.7;
+    color: var(--color-ink);
+    opacity: 0.86;
   }
 </style>

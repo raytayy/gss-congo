@@ -94,6 +94,31 @@ const jsonLd = [breadcrumbs, collection];
     </div>
   </section>
 
+  <!-- ─── SEO DEPTH — CDC facts only ────────────────── -->
+  <section class="svc-hub-seo" aria-labelledby="svc-hub-seo-heading">
+    <div class="svc-hub-seo-frame">
+      <h2 id="svc-hub-seo-heading" class="svc-hub-seo-heading" data-reveal>
+        A complete security company, based in Kinshasa.
+      </h2>
+      <p data-reveal data-reveal-delay="100">
+        GSS is a private security company in DR Congo, registered under RCCM
+        (CD/KIN/RCCM/14-B-5645) and active in Kinshasa since 2014. Our 300
+        agents are recruited then trained in our in-house training centre — 5
+        programmes, from the security-agent common core to defensive driving —
+        before any assignment. Every deployment is followed by our 24/7
+        coordination, with mobile response teams able to react in under 20
+        minutes on average.
+      </p>
+      <p data-reveal data-reveal-delay="180">
+        From industrial-site guarding to residential security, from supervised
+        video surveillance to camera installation, we cover the full security
+        needs of companies, institutions and families in Kinshasa. The price of
+        each service depends on the site, the hours and the risk level: the
+        study is free and the quote comes back within 24 hours.
+      </p>
+    </div>
+  </section>
+
   <section class="svc-hub-cta" aria-labelledby="svc-hub-cta-heading">
     <div class="svc-hub-cta-frame">
       <div class="svc-hub-cta-text" data-reveal>
@@ -469,5 +494,29 @@ const jsonLd = [breadcrumbs, collection];
     .svc-hub-frame {
       padding: 1.75rem 1.5rem 0;
     }
+  }
+
+  /* ─── SEO prose block ─────────────────────────── */
+  .svc-hub-seo {
+    background: var(--color-cream);
+    padding: 0 clamp(1.5rem, 5vw, 4rem) clamp(4rem, 8vw, 7rem);
+  }
+  .svc-hub-seo-frame { max-width: 46rem; margin-inline: auto; }
+  .svc-hub-seo-heading {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
+    font-size: clamp(1.5rem, 2.4vw, 2.125rem);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    margin: 0 0 1.25rem;
+    text-wrap: balance;
+  }
+  .svc-hub-seo p {
+    margin: 0 0 1.15rem;
+    font-size: 1.0125rem;
+    line-height: 1.7;
+    color: var(--color-ink);
+    opacity: 0.86;
   }
 </style>

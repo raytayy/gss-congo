@@ -109,6 +109,32 @@ const layout: Array<'lead' | 'portrait' | 'square' | 'banner'> = [
     </div>
   </section>
 
+  <!-- ─── PROFONDEUR SEO — faits CDC uniquement ─────────── -->
+  <section class="svc-hub-seo" aria-labelledby="svc-hub-seo-heading">
+    <div class="svc-hub-seo-frame">
+      <h2 id="svc-hub-seo-heading" class="svc-hub-seo-heading" data-reveal>
+        Une société de sécurité complète, basée à Kinshasa.
+      </h2>
+      <p data-reveal data-reveal-delay="100">
+        GSS est une entreprise de sécurité privée en RDC, enregistrée au RCCM
+        (CD/KIN/RCCM/14-B-5645) et active à Kinshasa depuis 2014. Nos 300 agents
+        sont recrutés puis formés dans notre centre de formation interne — 5
+        cursus, du tronc commun d'agent de prévention et de sécurité à la
+        conduite défensive — avant toute affectation. Chaque dispositif est
+        suivi par notre coordination 24 h/24, avec des équipes d'intervention
+        mobiles capables de réagir en moins de 20 minutes en moyenne.
+      </p>
+      <p data-reveal data-reveal-delay="180">
+        Du gardiennage de sites industriels à la sécurité résidentielle, de la
+        vidéosurveillance supervisée à l'installation de caméras, nous couvrons
+        l'ensemble des besoins de sécurité des entreprises, institutions et
+        familles à Kinshasa. Le prix de chaque prestation dépend du site, des
+        horaires et du niveau de risque : l'étude est gratuite et le devis
+        revient sous 24 heures.
+      </p>
+    </div>
+  </section>
+
   <section class="svc-hub-cta" aria-labelledby="svc-hub-cta-heading">
     <div class="svc-hub-cta-frame">
       <div class="svc-hub-cta-text" data-reveal>
@@ -511,5 +537,29 @@ const layout: Array<'lead' | 'portrait' | 'square' | 'banner'> = [
     .svc-hub-frame {
       padding: 1.75rem 1.5rem 0;
     }
+  }
+
+  /* ─── SEO prose block ─────────────────────────── */
+  .svc-hub-seo {
+    background: var(--color-cream);
+    padding: 0 clamp(1.5rem, 5vw, 4rem) clamp(4rem, 8vw, 7rem);
+  }
+  .svc-hub-seo-frame { max-width: 46rem; margin-inline: auto; }
+  .svc-hub-seo-heading {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'wght' 440, 'SOFT' 30;
+    font-size: clamp(1.5rem, 2.4vw, 2.125rem);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    margin: 0 0 1.25rem;
+    text-wrap: balance;
+  }
+  .svc-hub-seo p {
+    margin: 0 0 1.15rem;
+    font-size: 1.0125rem;
+    line-height: 1.7;
+    color: var(--color-ink);
+    opacity: 0.86;
   }
 </style>
