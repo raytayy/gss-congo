@@ -171,6 +171,13 @@ const labelCoords = t(ui.footer.coordinates, locale);
     margin-inline: auto;
     padding: clamp(2rem, 4vw, 3.25rem) clamp(1.25rem, 4vw, 3rem) clamp(1.25rem, 2.5vw, 2rem);
   }
+  /* Below 1024px the fixed MobileActionBar (56px + safe area) overlays the
+     page bottom — give the footer clearance so the telic credit stays visible. */
+  @media (max-width: 1023px) {
+    .footer-shell {
+      padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+    }
+  }
   /* Subtle highlight rail at the very top of the rounded shell */
   .footer-rail {
     position: absolute;
