@@ -12,8 +12,8 @@ export const contact = {
   phones: {
     /** Primary number — locked by GBP registration 2026-05-17. */
     primary: {
-      display: '+243 996 666 699',
-      tel: '+243996666699',
+      display: '+243 890 256 240',
+      tel: '+243890256240',
       label: 'Standard',
     },
     /* Legacy numbers (+243 972 125 400, +243 900 049 360) retired 2026-09-15
@@ -29,8 +29,8 @@ export const contact = {
   whatsapp: {
     /** Bound to the same line as `phones.primary` by default. If GSS has a
        dedicated WhatsApp Business number on a different line, override here. */
-    number: '+243996666699',
-    link: 'https://wa.me/243996666699',
+    number: '+243890256240',
+    link: 'https://wa.me/243890256240',
     presetMessage:
       'Bonjour GSS, je vous contacte depuis votre site gss-congo.com. Je souhaite obtenir un devis. Merci de me recontacter.',
   },
